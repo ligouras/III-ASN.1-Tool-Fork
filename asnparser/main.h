@@ -1387,7 +1387,9 @@ public:
   virtual void GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const;
   virtual void GenerateConst(std::ostream & hdr, std::ostream & cxx) const;
 
+  #if (__SIZEOF_LONG__ != 8)
   operator boost::int64_t() const { return value; }
+  #endif
   operator long() const { return (long)value; }
 
 protected:
