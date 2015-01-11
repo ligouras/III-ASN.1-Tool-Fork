@@ -70,6 +70,8 @@ Thumbs.db
 
 # VS generated files #
 ######################
+*.bsc
+*.sbr
 *.obj
 *.exe
 *.pdb
@@ -140,6 +142,7 @@ hs_err_pid*
 ##############################
 **/.deps/
 
-# ASN1 generated # 
-##################
+# ASN.1 generated files # 
+########################
 **/cxx/
+*.def
