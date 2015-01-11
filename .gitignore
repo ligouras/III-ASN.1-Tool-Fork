@@ -23,6 +23,7 @@ asn_ref_lex.*
 *.a
 *.d
 
+
 # Make #
 ########
 config.build
@@ -108,7 +109,7 @@ lib64/
 *codeanalysis*
 
 # Eclipse generated files #
-###################
+###########################
 #.project
 #.cproject
 .settings
@@ -117,7 +118,7 @@ cmake-build/
 RemoteSystemsTempFiles/
 
 # Eclipse Maven m2e generated files #
-###################
+#####################################
 **/target/
 
 
@@ -126,13 +127,19 @@ RemoteSystemsTempFiles/
 *.bak
 
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-###################
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml #
+##########################################################################################
 hs_err_pid*
 
 
-#Eclipse generated class directory
+# Eclipse generated class directory #
+#####################################
 /cls
 
-# makedep dependencies files
+# makedep dependencies files #
+##############################
 **/.deps/
+
+# ASN1 generated # 
+##################
+**/cxx/

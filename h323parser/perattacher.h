@@ -10,6 +10,9 @@
  * any later version.
  *
  * $Log: perattacher.h,v $
+ * Revision 1.3  2011/09/06 13:47:11  arunasr
+ * Genesys fixes, includes contributions from Rodrigo Coimbra
+ *
  * Revision 1.2  2005/12/02 03:40:19  mangelo
  * *** empty log message ***
  *
@@ -53,6 +56,7 @@ private:
 	bool do_visit(ASN1::AbstractString& value);
 	bool do_visit(ASN1::BMPString& value);
 	bool do_visit(ASN1::GeneralizedTime& value);
+	bool do_visit(ASN1::UTCTime& value);
 	bool do_visit(ASN1::CHOICE& value);
 	bool do_visit(ASN1::SEQUENCE_OF_Base& value);
 	bool do_visit(ASN1::OpenData& value);

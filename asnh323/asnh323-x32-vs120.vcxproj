@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4E4B52F7-9D54-4183-99A7-00212102BCBF}</ProjectGuid>
+    <ProjectName>asnh323</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\..\Lib\</OutDir>
+    <IntDir>.\Release\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Lib\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <TargetName>$(ProjectName)d</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>.;..\asn1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_LIB;__WIN32__;WIN32;ASN1_HAS_IOSTREAM;ASN1_ALLOCATOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>.\Release/asnh323.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0404</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>.\..\Lib\asnh323s.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;..\asn1;../asn1;../asnh323/cxx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_LIB;__WIN32__;WIN32;ASN1_HAS_IOSTREAM;ASN1_ALLOCATOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>.\Debug/asnh323.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0404</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>..\LIB\asnh323sd.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="cxx\addressing_data_elements.cxx" />
+    <ClCompile Include="cxx\call_completion_operations.cxx" />
+    <ClCompile Include="cxx\call_diversion_operations.cxx" />
+    <ClCompile Include="cxx\call_hold_operations.cxx" />
+    <ClCompile Include="cxx\call_offer_operations.cxx" />
+    <ClCompile Include="cxx\call_park_pickup_operations.cxx" />
+    <ClCompile Include="cxx\call_transfer_operations.cxx" />
+    <ClCompile Include="cxx\call_waiting_operations.cxx" />
+    <ClCompile Include="cxx\h225_generic_parameters_definition.cxx" />
+    <ClCompile Include="cxx\h235_security_messages.cxx" />
+    <ClCompile Include="cxx\h323_messages.cxx" />
+    <ClCompile Include="cxx\h4501_general_error_list.cxx" />
+    <ClCompile Include="cxx\h4501_supplementary_serviceapdu_structure.cxx" />
+    <ClCompile Include="cxx\hm_aliasaddress.cxx" />
+    <ClCompile Include="cxx\hm_alternategk.cxx" />
+    <ClCompile Include="cxx\hm_callidentifier.cxx" />
+    <ClCompile Include="cxx\hm_supportedprefix.cxx" />
+    <ClCompile Include="cxx\hm_transportaddress.cxx" />
+    <ClCompile Include="cxx\media_gateway_control.cxx" />
+    <ClCompile Include="cxx\message_waiting_indication_operations.cxx" />
+    <ClCompile Include="cxx\msc_capabilitytableentry.cxx" />
+    <ClCompile Include="cxx\msc_openlogicalchannel.cxx" />
+    <ClCompile Include="cxx\msc_t38faxprofile.cxx" />
+    <ClCompile Include="cxx\msc_transportaddress.cxx" />
+    <ClCompile Include="cxx\multimedia_system_control.cxx" />
+    <ClCompile Include="cxx\name_operations.cxx" />
+    <ClCompile Include="cxx\remote_operations_apdus.cxx" />
+    <ClCompile Include="cxx\remote_operations_information_objects.cxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="h2250v4.asn">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Lib\asnparser -o cxx -v -c  -m H323 h245v7.asn h235v2.asn h2250v4.asn h248.asn ro.asn address.asn h4501.asn h4502.asn h4503.asn h4504.asn h4505.asn h4506.asn h4507.asn h4508.asn h4509.asn h45010.asn lgc.asn
+del cxx\lgc.cxx
+del cxx\lgc.h
+del cxx\address.cxx
+del cxx\address.h
+del cxx\cap.cxx
+del cxx\cap.h
+del cxx\aliases.cxx
+del cxx\cidmodule.cxx
+del cxx\cidmodule.h
+</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\asnparser.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cxx/addressing_data_elements.cxx;cxx/addressing_data_elements.h;cxx/addressing_data_elements.inl;cxx/aliases.h;cxx/alternategk_module.cxx;cxx/alternategk_module.h;cxx/call_completion_operations.cxx;cxx/call_completion_operations.h;cxx/call_completion_operations.inl;cxx/call_diversion_operations.cxx;cxx/call_diversion_operations.h;cxx/call_diversion_operations.inl;cxx/call_hold_operations.cxx;cxx/call_hold_operations.h;cxx/call_hold_operations.inl;cxx/call_offer_operations.cxx;cxx/call_offer_operations.h;cxx/call_offer_operations.inl;cxx/call_park_pickup_operations.cxx;cxx/call_park_pickup_operations.h;cxx/call_park_pickup_operations.inl;cxx/call_transfer_operations.cxx;cxx/call_transfer_operations.h;cxx/call_transfer_operations.inl;cxx/call_waiting_operations.cxx;cxx/call_waiting_operations.h;cxx/call_waiting_operations.inl;cxx/h225_generic_parameters_definition.cxx;cxx/h225_generic_parameters_definition.h;cxx/h235_security_messages.cxx;cxx/h235_security_messages.h;cxx/h235_security_messages.inl;cxx/h235_security_messages_t.cxx;cxx/h323_messages.cxx;cxx/h323_messages.h;cxx/h323_messages.inl;cxx/h4501_general_error_list.cxx;cxx/h4501_general_error_list.h;cxx/h4501_supplementary_serviceapdu_structure.cxx;cxx/h4501_supplementary_serviceapdu_structure.h;cxx/h4501_supplementary_serviceapdu_structure.inl;cxx/hm_aliasaddress.cxx;cxx/hm_aliasaddress.h;cxx/hm_aliasaddress.inl;cxx/hm_alternategk.cxx;cxx/hm_alternategk.h;cxx/hm_alternategk.inl;cxx/hm_callidentifier.cxx;cxx/hm_callidentifier.h;cxx/hm_callidentifier.inl;cxx/hm_supportedprefix.cxx;cxx/hm_supportedprefix.h;cxx/hm_supportedprefix.inl;cxx/hm_transportaddress.cxx;cxx/hm_transportaddress.h;cxx/hm_transportaddress.inl;cxx/manufacturer_specific_service_extension_definition.cxx;cxx/manufacturer_specific_service_extension_definition.h;cxx/manufacturer_specific_service_extension_definition.inl;cxx/manufacturer_specific_service_extension_definition_t.cxx;cxx/media_gateway_control.cxx;cxx/media_gateway_control.h;cxx/media_gateway_control.inl;cxx/message_waiting_indication_operations.cxx;cxx/message_waiting_indication_operations.h;cxx/message_waiting_indication_operations.inl;cxx/msc_capabilitytableentry.cxx;cxx/msc_capabilitytableentry.h;cxx/msc_capabilitytableentry.inl;cxx/msc_openlogicalchannel.cxx;cxx/msc_openlogicalchannel.h;cxx/msc_openlogicalchannel.inl;cxx/msc_t38faxprofile.cxx;cxx/msc_t38faxprofile.h;cxx/msc_t38faxprofile.inl;cxx/msc_transportaddress.cxx;cxx/msc_transportaddress.h;cxx/msc_transportaddress.inl;cxx/multimedia_system_control.cxx;cxx/multimedia_system_control.h;cxx/multimedia_system_control.inl;cxx/name_operations.cxx;cxx/name_operations.h;cxx/name_operations.inl;cxx/remote_operations_apdus.cxx;cxx/remote_operations_apdus.h;cxx/remote_operations_apdus.inl;cxx/remote_operations_apdus_t.cxx;cxx/remote_operations_information_objects.cxx;cxx/remote_operations_information_objects.h;cxx/remote_operations_information_objects.inl;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\lib\asnparser -o cxx -v -c -m H323 h245v7.asn h235v2.asn h2250v4.asn h248.asn ro.asn address.asn h4501.asn h4502.asn h4503.asn h4504.asn h4505.asn h4506.asn h4507.asn h4508.asn h4509.asn h45010.asn lgc.asn
+del cxx\lgc.cxx
+del cxx\lgc.h
+del cxx\address.cxx
+del cxx\address.h
+del cxx\cap.cxx
+del cxx\cap.h
+del cxx\aliases.cxx
+del cxx\cidmodule.cxx
+del cxx\cidmodule.h
+</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\lib\asnparser.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cxx/addressing_data_elements.cxx;cxx/addressing_data_elements.h;cxx/addressing_data_elements.inl;cxx/aliases.h;cxx/alternategk_module.cxx;cxx/alternategk_module.h;cxx/call_completion_operations.cxx;cxx/call_completion_operations.h;cxx/call_completion_operations.inl;cxx/call_diversion_operations.cxx;cxx/call_diversion_operations.h;cxx/call_diversion_operations.inl;cxx/call_hold_operations.cxx;cxx/call_hold_operations.h;cxx/call_hold_operations.inl;cxx/call_offer_operations.cxx;cxx/call_offer_operations.h;cxx/call_offer_operations.inl;cxx/call_park_pickup_operations.cxx;cxx/call_park_pickup_operations.h;cxx/call_park_pickup_operations.inl;cxx/call_transfer_operations.cxx;cxx/call_transfer_operations.h;cxx/call_transfer_operations.inl;cxx/call_waiting_operations.cxx;cxx/call_waiting_operations.h;cxx/call_waiting_operations.inl;cxx/h225_generic_parameters_definition.cxx;cxx/h225_generic_parameters_definition.h;cxx/h235_security_messages.cxx;cxx/h235_security_messages.h;cxx/h235_security_messages.inl;cxx/h235_security_messages_t.cxx;cxx/h323_messages.cxx;cxx/h323_messages.h;cxx/h323_messages.inl;cxx/h4501_general_error_list.cxx;cxx/h4501_general_error_list.h;cxx/h4501_supplementary_serviceapdu_structure.cxx;cxx/h4501_supplementary_serviceapdu_structure.h;cxx/h4501_supplementary_serviceapdu_structure.inl;cxx/hm_aliasaddress.cxx;cxx/hm_aliasaddress.h;cxx/hm_aliasaddress.inl;cxx/hm_alternategk.cxx;cxx/hm_alternategk.h;cxx/hm_alternategk.inl;cxx/hm_callidentifier.cxx;cxx/hm_callidentifier.h;cxx/hm_callidentifier.inl;cxx/hm_supportedprefix.cxx;cxx/hm_supportedprefix.h;cxx/hm_supportedprefix.inl;cxx/hm_transportaddress.cxx;cxx/hm_transportaddress.h;cxx/hm_transportaddress.inl;cxx/manufacturer_specific_service_extension_definition.cxx;cxx/manufacturer_specific_service_extension_definition.h;cxx/manufacturer_specific_service_extension_definition.inl;cxx/manufacturer_specific_service_extension_definition_t.cxx;cxx/media_gateway_control.cxx;cxx/media_gateway_control.h;cxx/media_gateway_control.inl;cxx/message_waiting_indication_operations.cxx;cxx/message_waiting_indication_operations.h;cxx/message_waiting_indication_operations.inl;cxx/msc_capabilitytableentry.cxx;cxx/msc_capabilitytableentry.h;cxx/msc_capabilitytableentry.inl;cxx/msc_openlogicalchannel.cxx;cxx/msc_openlogicalchannel.h;cxx/msc_openlogicalchannel.inl;cxx/msc_t38faxprofile.cxx;cxx/msc_t38faxprofile.h;cxx/msc_t38faxprofile.inl;cxx/msc_transportaddress.cxx;cxx/msc_transportaddress.h;cxx/msc_transportaddress.inl;cxx/multimedia_system_control.cxx;cxx/multimedia_system_control.h;cxx/multimedia_system_control.inl;cxx/name_operations.cxx;cxx/name_operations.h;cxx/name_operations.inl;cxx/remote_operations_apdus.cxx;cxx/remote_operations_apdus.h;cxx/remote_operations_apdus.inl;cxx/remote_operations_apdus_t.cxx;cxx/remote_operations_information_objects.cxx;cxx/remote_operations_information_objects.h;cxx/remote_operations_information_objects.inl;%(Outputs)</Outputs>
+    </CustomBuild>
+    <None Include="cxx\addressing_data_elements.inl" />
+    <None Include="cxx\call_completion_operations.inl" />
+    <None Include="cxx\call_diversion_operations.inl" />
+    <None Include="cxx\call_hold_operations.inl" />
+    <None Include="cxx\call_offer_operations.inl" />
+    <None Include="cxx\call_park_pickup_operations.inl" />
+    <None Include="cxx\call_transfer_operations.inl" />
+    <None Include="cxx\call_waiting_operations.inl" />
+    <None Include="cxx\h235_security_messages.inl" />
+    <None Include="cxx\h323_messages.inl" />
+    <None Include="cxx\h4501_supplementary_serviceapdu_structure.inl" />
+    <None Include="cxx\hm_aliasaddress.inl" />
+    <None Include="cxx\hm_alternategk.inl" />
+    <None Include="cxx\hm_callidentifier.inl" />
+    <None Include="cxx\hm_supportedprefix.inl" />
+    <None Include="cxx\hm_transportaddress.inl" />
+    <None Include="cxx\manufacturer_specific_service_extension_definition.inl" />
+    <None Include="cxx\media_gateway_control.inl" />
+    <None Include="cxx\message_waiting_indication_operations.inl" />
+    <None Include="cxx\msc_capabilitytableentry.inl" />
+    <None Include="cxx\msc_openlogicalchannel.inl" />
+    <None Include="cxx\msc_t38faxprofile.inl" />
+    <None Include="cxx\msc_transportaddress.inl" />
+    <None Include="cxx\multimedia_system_control.inl" />
+    <None Include="cxx\name_operations.inl" />
+    <None Include="cxx\remote_operations_apdus.inl" />
+    <None Include="cxx\remote_operations_information_objects.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cxx\addressing_data_elements.h" />
+    <ClInclude Include="cxx\call_completion_operations.h" />
+    <ClInclude Include="cxx\call_diversion_operations.h" />
+    <ClInclude Include="cxx\call_hold_operations.h" />
+    <ClInclude Include="cxx\call_offer_operations.h" />
+    <ClInclude Include="cxx\call_park_pickup_operations.h" />
+    <ClInclude Include="cxx\call_transfer_operations.h" />
+    <ClInclude Include="cxx\call_waiting_operations.h" />
+    <ClInclude Include="cxx\h225_generic_parameters_definition.h" />
+    <ClInclude Include="cxx\h235_security_messages.h" />
+    <ClInclude Include="cxx\h323_messages.h" />
+    <ClInclude Include="cxx\h4501_general_error_list.h" />
+    <ClInclude Include="cxx\h4501_supplementary_serviceapdu_structure.h" />
+    <ClInclude Include="cxx\hm_aliasaddress.h" />
+    <ClInclude Include="cxx\hm_alternategk.h" />
+    <ClInclude Include="cxx\hm_callidentifier.h" />
+    <ClInclude Include="cxx\hm_supportedprefix.h" />
+    <ClInclude Include="cxx\hm_transportaddress.h" />
+    <ClInclude Include="cxx\manufacturer_specific_service_extension_definition.h" />
+    <ClInclude Include="cxx\media_gateway_control.h" />
+    <ClInclude Include="cxx\message_waiting_indication_operations.h" />
+    <ClInclude Include="cxx\msc_capabilitytableentry.h" />
+    <ClInclude Include="cxx\msc_openlogicalchannel.h" />
+    <ClInclude Include="cxx\msc_t38faxprofile.h" />
+    <ClInclude Include="cxx\msc_transportaddress.h" />
+    <ClInclude Include="cxx\multimedia_system_control.h" />
+    <ClInclude Include="cxx\name_operations.h" />
+    <ClInclude Include="cxx\remote_operations_apdus.h" />
+    <ClInclude Include="cxx\remote_operations_information_objects.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\asn1\ASN1-x32-vs120.vcxproj">
+      <Project>{cc4dce75-9957-4642-a86b-ea14dbcebf54}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\asnparser\asnparser-x32-vs120.vcxproj">
+      <Project>{1eed4b13-2a75-4c49-a198-12f2a46f5944}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

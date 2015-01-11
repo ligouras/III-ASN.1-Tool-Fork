@@ -10,6 +10,9 @@
  * any later version.
  *
  * $Log: perattacher.cpp,v $
+ * Revision 1.4  2011/09/06 13:47:11  arunasr
+ * Genesys fixes, includes contributions from Rodrigo Coimbra
+ *
  * Revision 1.3  2005/12/02 03:40:19  mangelo
  * *** empty log message ***
  *
@@ -167,6 +170,11 @@ bool PERAttacher::do_visit(ASN1::BMPString& value)
 }
 
 bool PERAttacher::do_visit(ASN1::GeneralizedTime& value)
+{
+    return do_visit(static_cast<ASN1::AbstractData&>(value));
+}
+
+bool PERAttacher::do_visit(ASN1::UTCTime& value)
 {
     return do_visit(static_cast<ASN1::AbstractData&>(value));
 }

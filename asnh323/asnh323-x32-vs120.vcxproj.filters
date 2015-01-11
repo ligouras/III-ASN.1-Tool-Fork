@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{b17e0b4a-5c56-4a85-9d01-e9a178a2768d}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{bbab484d-cb81-457a-8353-16d6811baf69}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cxx\addressing_data_elements.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\call_completion_operations.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\call_diversion_operations.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\call_hold_operations.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\call_offer_operations.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\call_park_pickup_operations.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\call_transfer_operations.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\call_waiting_operations.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\h225_generic_parameters_definition.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\h235_security_messages.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\h323_messages.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\h4501_general_error_list.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\h4501_supplementary_serviceapdu_structure.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\hm_aliasaddress.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\hm_alternategk.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\hm_callidentifier.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\hm_supportedprefix.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\hm_transportaddress.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\media_gateway_control.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\message_waiting_indication_operations.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\msc_capabilitytableentry.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\msc_openlogicalchannel.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\msc_t38faxprofile.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\msc_transportaddress.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\multimedia_system_control.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\name_operations.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\remote_operations_apdus.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cxx\remote_operations_information_objects.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cxx\addressing_data_elements.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\call_completion_operations.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\call_diversion_operations.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\call_hold_operations.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\call_offer_operations.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\call_park_pickup_operations.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\call_transfer_operations.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\call_waiting_operations.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\h235_security_messages.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\h323_messages.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\h4501_supplementary_serviceapdu_structure.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\hm_aliasaddress.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\hm_alternategk.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\hm_callidentifier.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\hm_supportedprefix.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\hm_transportaddress.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\manufacturer_specific_service_extension_definition.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\media_gateway_control.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\message_waiting_indication_operations.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\msc_capabilitytableentry.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\msc_openlogicalchannel.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\msc_t38faxprofile.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\msc_transportaddress.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\multimedia_system_control.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\name_operations.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\remote_operations_apdus.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cxx\remote_operations_information_objects.inl">
+      <Filter>Header Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cxx\addressing_data_elements.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\call_completion_operations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\call_diversion_operations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\call_hold_operations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\call_offer_operations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\call_park_pickup_operations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\call_transfer_operations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\call_waiting_operations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\h225_generic_parameters_definition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\h235_security_messages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\h323_messages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\h4501_general_error_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\h4501_supplementary_serviceapdu_structure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\hm_aliasaddress.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\hm_alternategk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\hm_callidentifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\hm_supportedprefix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\hm_transportaddress.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\manufacturer_specific_service_extension_definition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\media_gateway_control.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\message_waiting_indication_operations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\msc_capabilitytableentry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\msc_openlogicalchannel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\msc_t38faxprofile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\msc_transportaddress.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\multimedia_system_control.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\name_operations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\remote_operations_apdus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cxx\remote_operations_information_objects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="h2250v4.asn">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

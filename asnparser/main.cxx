@@ -31,11 +31,17 @@
  * All Rights Reserved.
  *
  * The code is modified by Genesys Telecommunications Labs UK, 2003-2011
- * Contributors: 
+ * Contributors:
  *    Arunas Ruksnaitis <arunas.ruksnaitis@genesyslab.com>
  *    Rustam Mirzaev <rustam.mirzaev@genesyslab.com>
  *
  * $Log: main.cxx,v $
+ * Revision 1.27  2014/06/22 06:12:06  francisandre
+ * c++11 updates: replace outdated strstream by sstream.add <cstring> for strlen. fix up method resolution
+ *
+ * Revision 1.26  2011/09/06 13:47:11  arunasr
+ * Genesys fixes, includes contributions from Rodrigo Coimbra
+ *
  * Revision 1.25  2011/08/09 18:12:43  arunasr
  * Genesys fixes: 3.0 release candidate
  *
@@ -186,14 +192,13 @@ extern int optind;
 #include <algorithm>
 #include <numeric>
 #include <set>
-#include <strstream>
+#include <sstream>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <cstring>
 #include <assert.h>
 #include "asn_grammar.h"
-#include <cstring>
-#include <limits.h>
 
 #ifdef _WIN32
 #define DIR_SEPARATOR '\\'
@@ -464,7 +469,7 @@ void OutputFile::Close()
 
 class Indent {
 public:
-  Indent(int i) : space(i){}
+  Indent(std::streamsize i) : space(i){}
   Indent operator + (int i) const { return Indent(space +i); }
   Indent operator - (int i) const { return Indent(space -i); }
   Indent& operator += (int i) { space+= i; return *this;}
@@ -474,7 +479,7 @@ public:
   { return os << std::setw(indent.space) << ""; }
 
 private:
-  int space;
+  std::streamsize space;
 };
 
 void AddRemoveItem(const char* item)
@@ -507,11 +512,11 @@ std::ostream& operator << (std::ostream& os, const std::vector<boost::shared_ptr
 class Unfreezer
 {
 public:
-  Unfreezer(std::strstream& strm) : stream(strm) {}
-  ~Unfreezer() { stream.freeze(false); }
+  Unfreezer(std::stringstream& strm) : stream(strm) {}
+  ~Unfreezer() { }
 
 private:
-  std::strstream& stream;
+  std::stringstream& stream;
 };
 
 /////////////////////////////////////////////////////////
@@ -521,7 +526,7 @@ private:
 
 int verbose=0;
 std::string dllMacroExport;
-std::string dllMacroStatic;
+std::string dllMacroDLL;
 bool includeConfigH = true;
 std::string useReinterpretCast;
 
@@ -575,8 +580,8 @@ int main(int argc, char** argv)
     case 'm':
       dllMacroExport = optarg;
       dllMacroExport += "_EXPORT ";
-      dllMacroStatic = optarg;
-      dllMacroStatic += "_STATIC";
+      dllMacroDLL    = optarg;
+      dllMacroDLL    += "_DLL";
       break;
 
     case 'C':
@@ -1247,7 +1252,7 @@ ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectField(const st
   }
   if (elem->elements.size()) {
     ConstraintElementPtr elm =
-      boost::shared_static_cast<ConstraintElementBase>(elem);
+      boost::static_pointer_cast<ConstraintElementBase>(elem);
     return ConstraintPtr(new Constraint(elm));
   }
 
@@ -1272,7 +1277,7 @@ ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectSetField(const
   }
   if (elem->elements.size()){
     ConstraintElementPtr elm =
-      boost::shared_static_cast<ConstraintElementBase>(elem);
+      boost::static_pointer_cast<ConstraintElementBase>(elem);
     return ConstraintPtr(new Constraint(elm));
   }
 
@@ -1371,7 +1376,7 @@ void SingleValueConstraintElement::GenerateCplusplus(const std::string & fn, std
 
 void SingleValueConstraintElement::GetConstraint(std::string& str) const
 {
-  std::strstream strm;
+  std::stringstream strm;
   Unfreezer unfreezer(strm);
 
   if (dynamic_cast<const IntegerValue*>(value.get())) {
@@ -1382,7 +1387,6 @@ void SingleValueConstraintElement::GetConstraint(std::string& str) const
     strm << *value << std::ends;
     str += strm.str();
   }
-  strm.freeze(0);
 }
 
 bool SingleValueConstraintElement::HasPERInvisibleConstraint(const Parameter& ) const
@@ -1446,7 +1450,7 @@ void ValueRangeConstraintElement::GetConstraint(std::string& str) const
     str_replace(str,"FromConstraint", "FromRangeConstraint");
   }
 
-  std::strstream strm;
+  std::stringstream strm;
   Unfreezer unfreezer(strm);
   strm << *lower << ", " << *upper << std::ends;
   str += strm.str();
@@ -1523,7 +1527,7 @@ void SubTypeConstraintElement::GenerateCplusplus(const std::string & str, std::o
 
 void SubTypeConstraintElement::GetConstraint(std::string& str) const
 {
-  std::strstream strm;
+  std::stringstream strm;
   Unfreezer unfreezer(strm);
   strm << str << subtype->GetTypeName() << "::LowerLimit, "
        << subtype->GetTypeName() << "::UpperLimit" << std::ends;
@@ -1661,7 +1665,7 @@ std::string FromConstraintElement::GetCharacterSet(const char* canonicalSet, int
 
 int FromConstraintElement::GetRange(std::ostream& cxx) const
 {
-  std::strstream inl, hdr, tmpcxx;
+  std::stringstream inl, hdr, tmpcxx;
   Unfreezer unfreezer1(inl),unfreezer2(hdr),unfreezer3(tmpcxx);
   std::string str;
   constraint->GenerateCplusplus(str,hdr, tmpcxx, inl);
@@ -3050,8 +3054,6 @@ void EnumeratedType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::
        << "::nameList[] = {\n"
           "    \"";
 
-  int prevNum = -1;
-
   NamedNumberList::iterator itr, last = enumerations.end();
 
   for(int i=0; i<=maxEnumValue; i++) {
@@ -3235,8 +3237,6 @@ void BitStringType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::o
       if (maxNamedValue < num)
         maxNamedValue = num;
     }
-
-    int prevNum = -1;
 
     for(int i=0; i<=maxNamedValue; i++) {
       itr = std::find_if(allowedBits.begin(), last, CompareNamedNumber (i));
@@ -3517,13 +3517,13 @@ void SequenceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std
         << indent <<   "};\n";
 
   // Output the Component scope classes and accessor/mutator functions
-  std::strstream tmpcxx;
+  std::stringstream tmpcxx;
   Unfreezer unfreezer(tmpcxx);
   for (i = 0, itr=fields.begin() ; itr != last ; ++i, ++itr) {
     GenerateComponent(**itr, hdr, tmpcxx, inl, i);
   }
 
-  std::strstream decoder;
+  std::stringstream decoder;
   Unfreezer unfreezer1(decoder);
   for (itr=fields.begin() ; itr != last; ++itr) {
       (*itr)->GenerateDecoder(decoder);
@@ -3564,7 +3564,7 @@ void SequenceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std
   GenerateInfo(this, hdr, cxx);
 
   decoder << std::ends;
-  if (strlen(decoder.str()) )
+  if (strlen(decoder.str().c_str()) )
   {
       hdr << indent << "static ASN1::AbstractData* create(const void*);\n"
           << indent << "bool do_accept(ASN1::Visitor& visitor);\n";
@@ -3662,7 +3662,7 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
     hdr << indent << "class " << componentIdentifier << ";\n";
     SequenceOfType& type = *static_cast<SequenceOfType*>(&field);
     type.SetNonTypedef(true);
-    std::strstream dummy;
+    std::stringstream dummy;
     type.GenerateCplusplus(inl, cxx, dummy);
   }
   hdr.precision(hdr.precision() - 4);
@@ -3686,12 +3686,12 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
       primitiveFieldType = "typename " + primitiveFieldType;
   }
 
-  std::strstream varName;
+  std::stringstream varName;
   Unfreezer unfreezer1(varName);
   varName << "*static_cast<" << typenameKeyword << componentIdentifier << "::pointer>(fields[" << id << "])"
           << std::ends;
 
-  std::strstream constVarName;
+  std::stringstream constVarName;
   Unfreezer unfreezer2(constVarName);
   constVarName << "*static_cast<" << typenameKeyword << componentIdentifier << "::const_pointer>(fields["
                << id << "])" << std::ends;
@@ -4627,7 +4627,7 @@ void ChoiceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std::
   bool needExtraLine = false;
 
   hdr.precision(hdr.precision()+4);
-  std::strstream tmpcxx;
+  std::stringstream tmpcxx;
   Unfreezer unfreezer(tmpcxx);
   for (i = 0; i < nFields; i++) {
     GenerateComponent(*sortedFields[i], hdr, tmpcxx, inl, i);
@@ -4935,7 +4935,7 @@ void StringTypeBase::GenerateConstructors(std::ostream & hdr, std::ostream & , s
 void StringTypeBase::GenerateOperators(std::ostream & hdr, std::ostream & , const TypeBase & actualType)
 {
   std::string atname = actualType.GetIdentifier();
-  Indent indent(hdr.precision());
+  Indent indent(hdr.precision()+4);
   hdr << indent << atname << "& operator=(const ASN1_STD string& that)\n"
       << indent << "{ Inherited::operator=(that); return *this; }\n"
       << indent << atname << "& operator=(const char* that)\n"
@@ -5052,7 +5052,7 @@ void BMPStringType::GenerateConstructors(std::ostream & hdr, std::ostream & , st
 void BMPStringType::GenerateOperators(std::ostream & hdr, std::ostream & , const TypeBase & actualType)
 {
   std::string atname = actualType.GetIdentifier();
-  Indent indent(hdr.precision());
+  Indent indent(hdr.precision()+4);
   hdr << indent << atname << "& operator=(const std::wstring& that)\n"
       << indent << "{ Inherited::operator=(that); return *this; }\n"
       << indent << atname << "& operator=(const wchar_t* that)\n"
@@ -5954,7 +5954,7 @@ void ObjectIdentifierValue::GenerateConst(std::ostream & hdr, std::ostream & cxx
   hdr << "extern const ASN1::OBJECT_IDENTIFIER " << GetName() << ";\n\n";
   cxx << "const ASN1::OBJECT_IDENTIFIER " << GetName()  << '(';
 
-  std::strstream dummy;
+  std::stringstream dummy;
   GenerateCplusplus(hdr, cxx, dummy);
 
   cxx << ");\n\n";
@@ -6410,7 +6410,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 
     for (i = 0; i < types.size(); i++) {
       if (types[i]->HasParameters()) {
-                    std::strstream dummy;
+                    std::stringstream dummy;
                     Unfreezer uf(dummy);
                     types[i]->GenerateCplusplus(dummy, templateFile, dummy);
       }
@@ -6450,7 +6450,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
     if (!cxxFile.Open(dpath, numFiles > 1 ? "_1" : "" , cppExt))
       return;
 
-    std::strstream inl;
+    std::stringstream inl;
     Unfreezer unfreezer(inl);
 
     std::string headerName = ::GetFileName(dpath) + ".h";
@@ -6480,16 +6480,16 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
     for (i = 0; i < subModules.size() ; ++i)
       hdrFile << "#include \"" << subModules[i]->GetFileName() << ".h\"\n";
 
-     if (dllMacroStatic.size() > 0)
+     if (dllMacroDLL.size() > 0)
      {
         hdrFile << '\n'
                 << "#ifndef " << dllMacroExport << '\n'
-                << "#if !defined( " << dllMacroStatic << ") && defined(_MSC_VER)\n"
+                << "#if defined( " << dllMacroDLL << ") && defined(_MSC_VER)\n"
                 << "#define " << dllMacroExport << " __declspec(dllimport)\n"
                 << "#else\n"
                 << "#define " << dllMacroExport << '\n'
-                << "#endif //" << dllMacroStatic << '\n'
-                << "#endif //"<< dllMacroExport << "\n\n";
+                << "#endif // " << dllMacroDLL << '\n'
+                << "#endif // " << dllMacroExport << "\n\n";
      }
 
     hdrFile << "namespace " << cModuleName << " {\n"
@@ -6514,11 +6514,11 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
         if (verbose)
           std::cout << "Completed " << cxxFile.GetFilePath() << std::endl;
 
-        std::strstream suffix;
+        std::stringstream suffix;
         Unfreezer unfreezer(suffix);
         suffix << '_' << i/classesPerFile+1 << std::ends;
 
-        if (!cxxFile.Open(dpath, suffix.str(), cppExt))
+        if (!cxxFile.Open(dpath, suffix.str().c_str(), cppExt))
         {
           std::cout << "Cannot open file " << dpath << "_" << i/classesPerFile+1 << cppExt << "\n";
           return;
@@ -6556,7 +6556,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
       std::cerr << "Generating " << types[i]->GetName() << std::endl;
 
       if (types[i]->HasParameters()) {
-        std::strstream dummy;
+        std::stringstream dummy;
         types[i]->GenerateCplusplus(hdrFile, dummy, inl);
       }
       else {
@@ -6580,7 +6580,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
     cxxFile << "} // namespace " << cModuleName << "\n";
 
     inl << std::ends;
-    if (strlen(inl.str()))
+    if (strlen(inl.str().c_str()))
     {
       OutputFile inlFile;
       if (!inlFile.Open(dpath, "", ".inl"))
@@ -6628,7 +6628,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& cxxFile, std::ostream& inl)
 {
   size_t i;
-  std::strstream tmphdr, tmpcxx;
+  std::stringstream tmphdr, tmpcxx;
   Unfreezer unfreezer1(tmphdr),unfreezer2(tmpcxx);
   for (i = 0 ; i < informationObjects.size(); ++i)
     informationObjects[i]->GenerateCplusplus(tmphdr, tmpcxx, inl);
@@ -6663,7 +6663,7 @@ void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& 
   }
 
   tmphdr << std::ends;
-  if (strlen(tmphdr.str()))
+  if (strlen(tmphdr.str().c_str()))
   {
     hdrFile << "class Module : public ASN1::Module\n"
             << "{\n"
@@ -7905,7 +7905,7 @@ void ObjectClassDefn::GenerateCplusplus(std::ostream& hdr, std::ostream& cxx, st
   size_t i;
   for (i = 0; i < fieldSpecs->size(); ++i)
   {
-    std::strstream strm;
+    std::stringstream strm;
     Unfreezer unfreezer(strm);
     (*fieldSpecs)[i]->FwdDeclare(strm);
     strm << std::ends;
@@ -8367,11 +8367,11 @@ void FieldSetting::GenerateCplusplus(const std::string& prefix, std::ostream & h
 
 void FieldSetting::GenerateInitializationList(std::ostream & hdr, std::ostream & cxx, std::ostream & inl)
 {
-  std::strstream tmp;
+  std::stringstream tmp;
   Unfreezer unfreezer(tmp);
   setting->GenerateInitializationList(hdr, tmp, inl);
   tmp << std::ends;
-  if (strlen(tmp.str())) {
+  if (strlen(tmp.str().c_str())) {
         cxx << identifier << "(" << tmp.str() << ")";
   }
 }
@@ -8525,7 +8525,7 @@ void DefaultObjectDefn::PrintOn(std::ostream & strm) const
 
 void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx, std::ostream & inl)
 {
-  std::strstream tmphdr;
+  std::stringstream tmphdr;
   Unfreezer unfreezer(tmphdr);
   tmphdr << std::setprecision(8);
   unsigned flags =0;
@@ -8537,7 +8537,7 @@ void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx
 
 
   tmphdr << std::ends;
-  if (strlen(tmphdr.str()))
+  if (strlen(tmphdr.str().c_str()))
   {
     int has_type_setting = (flags & Setting::has_type_setting);
     int has_objectSet_setting = (flags & Setting::has_objectSet_setting);
@@ -8584,11 +8584,11 @@ void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx
     bool hasInitizationList = false;
     for (i = 0 ; i < settings->size(); ++i)
     {
-      std::strstream tmp;
+      std::stringstream tmp;
       Unfreezer unfreezer(tmp);
       (*settings)[i]->GenerateInitializationList(hdr, tmp, inl);
       tmp << std::ends;
-      if (strlen(tmp.str()))
+      if (strlen(tmp.str().c_str()))
       {
         if (!hasInitizationList)
           cxx << "\n  : " << tmp.str();
@@ -8932,11 +8932,11 @@ void InformationObjectSetDefn::GenerateType(std::ostream& hdr, std::ostream& cxx
 
 bool InformationObjectSetDefn::GenerateTypeConstructor(std::ostream& cxx) const
 {
-  std::strstream tmp;
+  std::stringstream tmp;
   Unfreezer unfreezer(tmp);
   rep->GenerateObjSetAccessCode(tmp);
   tmp << std::ends;
-  if (strlen(tmp.str()))
+  if (strlen(tmp.str().c_str()))
   {
     cxx << tmp.str();
     return true;
@@ -9030,7 +9030,7 @@ ParameterizedObjectSet::~ParameterizedObjectSet()
 
 std::string ParameterizedObjectSet::GetName() const
 {
-  std::strstream strm;
+  std::stringstream strm;
   Unfreezer unfreezer(strm);
   strm << referenceName << *arguments << std::ends;
   return std::string(strm.str());

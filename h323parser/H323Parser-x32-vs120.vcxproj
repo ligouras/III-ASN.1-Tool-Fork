@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EF024D3D-64DA-4ED8-9C2B-CF9CE434D5C9}</ProjectGuid>
+    <ProjectName>H323Parser</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)d</TargetName>
+    <IncludePath>.;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/H323Parser.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/Zm300  %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>.;..\asn1;.\cxx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_USRDLL;H323PARSER_EXPORTS;ASN1_HAS_IOSTREAM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>.\Release/H323Parser.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0404</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>nmapi.lib;odbc32.lib;odbccp32.lib;asn1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>Release/IIIh323Parser.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\LIB;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\H323.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>.\Release/IIIh323Parser.pdb</ProgramDatabaseFile>
+      <ImportLibrary>.\Release/IIIh323Parser.lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/H323Parser.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/D /Zm500  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;..\asn1;.\cxx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;__WIN32__;_WINDOWS;_USRDLL;H323PARSER_EXPORTS;ASN1_HAS_IOSTREAM;ASN1_ALLOCATOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderOutputFile>.\Debug/H323Parser.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0404</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>Debug\IIIh323Parser.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\LIB;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\H323.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/IIIh323Parser.pdb</ProgramDatabaseFile>
+      <ImportLibrary>.\Debug/IIIh323Parser.lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="cxx\addressing_data_elements.cxx" />
+    <ClCompile Include="cxx\call_completion_operations.cxx" />
+    <ClCompile Include="cxx\call_diversion_operations.cxx" />
+    <ClCompile Include="cxx\call_hold_operations.cxx" />
+    <ClCompile Include="cxx\call_offer_operations.cxx" />
+    <ClCompile Include="cxx\call_park_pickup_operations.cxx" />
+    <ClCompile Include="cxx\call_transfer_operations.cxx" />
+    <ClCompile Include="cxx\call_waiting_operations.cxx" />
+    <ClCompile Include="cxx\h225_generic_parameters_definition.cxx" />
+    <ClCompile Include="cxx\h235_security_messages.cxx" />
+    <ClCompile Include="cxx\h323_messages.cxx" />
+    <ClCompile Include="H323Parser.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="cxx\h4501_general_error_list.cxx" />
+    <ClCompile Include="cxx\h4501_supplementary_serviceapdu_structure.cxx" />
+    <ClCompile Include="cxx\hm_aliasaddress.cxx" />
+    <ClCompile Include="cxx\hm_callidentifier.cxx" />
+    <ClCompile Include="cxx\manufacturer_specific_service_extension_definition.cxx" />
+    <ClCompile Include="cxx\media_gateway_control.cxx" />
+    <ClCompile Include="cxx\message_waiting_indication_operations.cxx" />
+    <ClCompile Include="cxx\mgc_signalsdescriptor.cxx" />
+    <ClCompile Include="cxx\multimedia_system_control.cxx" />
+    <ClCompile Include="cxx\name_operations.cxx" />
+    <ClCompile Include="perattacher.cpp" />
+    <ClCompile Include="Q931pdu.cpp" />
+    <ClCompile Include="cxx\remote_operations_apdus.cxx" />
+    <ClCompile Include="cxx\remote_operations_information_objects.cxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\asnh323\h2250v4.asn">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">transform_h2250.js</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">h2250v4_new.asn;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sed -f h225.sed ..\asnh323\h2250v4.asn &gt; h2250v4_new.asn
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">h2250v4_new.asn;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="h2250v4_new.asn">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cd ..\asnh323
+..\Lib\asnparser -v -c -o ..\h323parser\cxx h245v7.asn h235v2.asn h248.asn ..\h323parser\h2250v4_new.asn ro.asn h4501.asn h4502.asn h4503.asn h4504.asn h4505.asn h4506.asn h4507.asn h4508.asn h4509.asn h45010.asn
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cxx/addressing_data_elements.cxx;cxx/addressing_data_elements.h;cxx/addressing_data_elements.inl;cxx/call_completion_operations.cxx;cxx/call_completion_operations.h;cxx/call_completion_operations.inl;cxx/call_diversion_operations.cxx;cxx/call_diversion_operations.h;cxx/call_diversion_operations.inl;cxx/call_hold_operations.cxx;cxx/call_hold_operations.h;cxx/call_hold_operations.inl;cxx/call_offer_operations.cxx;cxx/call_offer_operations.h;cxx/call_offer_operations.inl;cxx/call_park_pickup_operations.cxx;cxx/call_park_pickup_operations.h;cxx/call_park_pickup_operations.inl;cxx/call_transfer_operations.cxx;cxx/call_transfer_operations.h;cxx/call_transfer_operations.inl;cxx/call_waiting_operations.cxx;cxx/call_waiting_operations.h;cxx/call_waiting_operations.inl;cxx/h225_generic_parameters_definition.cxx;cxx/h225_generic_parameters_definition.h;cxx/h235_security_messages.cxx;cxx/h235_security_messages.h;cxx/h235_security_messages.inl;cxx/h235_security_messages_t.cxx;cxx/h323_messages.cxx;cxx/h323_messages.h;cxx/h323_messages.inl;cxx/h4501_general_error_list.cxx;cxx/h4501_general_error_list.h;cxx/h4501_supplementary_serviceapdu_structure.cxx;cxx/h4501_supplementary_serviceapdu_structure.h;cxx/h4501_supplementary_serviceapdu_structure.inl;cxx/hm_aliasaddress.cxx;cxx/hm_aliasaddress.h;cxx/hm_aliasaddress.inl;cxx/hm_callidentifier.cxx;cxx/hm_callidentifier.h;cxx/hm_callidentifier.inl;cxx/manufacturer_specific_service_extension_definition.cxx;cxx/manufacturer_specific_service_extension_definition.h;cxx/manufacturer_specific_service_extension_definition.inl;cxx/manufacturer_specific_service_extension_definition_t.cxx;cxx/media_gateway_control.cxx;cxx/media_gateway_control.h;cxx/media_gateway_control.inl;cxx/message_waiting_indication_operations.cxx;cxx/message_waiting_indication_operations.h;cxx/message_waiting_indication_operations.inl;cxx/mgc_signalsdescriptor.cxx;cxx/mgc_signalsdescriptor.h;cxx/mgc_signalsdescriptor.inl;cxx/multimedia_system_control.cxx;cxx/multimedia_system_control.h;cxx/multimedia_system_control.inl;cxx/name_operations.cxx;cxx/name_operations.h;cxx/name_operations.inl;cxx/remote_operations_apdus.cxx;cxx/remote_operations_apdus.h;cxx/remote_operations_apdus.inl;cxx/remote_operations_apdus_t.cxx;cxx/remote_operations_information_objects.cxx;cxx/remote_operations_information_objects.h;cxx/remote_operations_information_objects.inl;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cd ..\asnh323
+..\Lib\asnparser -v -c -o ..\h323parser\cxx h245v7.asn h235v2.asn h248.asn ..\h323parser\h2250v4_new.asn ro.asn h4501.asn h4502.asn h4503.asn h4504.asn h4505.asn h4506.asn h4507.asn h4508.asn h4509.asn h45010.asn
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cxx/addressing_data_elements.cxx;cxx/addressing_data_elements.h;cxx/addressing_data_elements.inl;cxx/call_completion_operations.cxx;cxx/call_completion_operations.h;cxx/call_completion_operations.inl;cxx/call_diversion_operations.cxx;cxx/call_diversion_operations.h;cxx/call_diversion_operations.inl;cxx/call_hold_operations.cxx;cxx/call_hold_operations.h;cxx/call_hold_operations.inl;cxx/call_offer_operations.cxx;cxx/call_offer_operations.h;cxx/call_offer_operations.inl;cxx/call_park_pickup_operations.cxx;cxx/call_park_pickup_operations.h;cxx/call_park_pickup_operations.inl;cxx/call_transfer_operations.cxx;cxx/call_transfer_operations.h;cxx/call_transfer_operations.inl;cxx/call_waiting_operations.cxx;cxx/call_waiting_operations.h;cxx/call_waiting_operations.inl;cxx/h225_generic_parameters_definition.cxx;cxx/h225_generic_parameters_definition.h;cxx/h235_security_messages.cxx;cxx/h235_security_messages.h;cxx/h235_security_messages.inl;cxx/h235_security_messages_t.cxx;cxx/h323_messages.cxx;cxx/h323_messages.h;cxx/h323_messages.inl;cxx/h4501_general_error_list.cxx;cxx/h4501_general_error_list.h;cxx/h4501_supplementary_serviceapdu_structure.cxx;cxx/h4501_supplementary_serviceapdu_structure.h;cxx/h4501_supplementary_serviceapdu_structure.inl;cxx/hm_aliasaddress.cxx;cxx/hm_aliasaddress.h;cxx/hm_aliasaddress.inl;cxx/hm_callidentifier.cxx;cxx/hm_callidentifier.h;cxx/hm_callidentifier.inl;cxx/manufacturer_specific_service_extension_definition.cxx;cxx/manufacturer_specific_service_extension_definition.h;cxx/manufacturer_specific_service_extension_definition.inl;cxx/manufacturer_specific_service_extension_definition_t.cxx;cxx/media_gateway_control.cxx;cxx/media_gateway_control.h;cxx/media_gateway_control.inl;cxx/message_waiting_indication_operations.cxx;cxx/message_waiting_indication_operations.h;cxx/message_waiting_indication_operations.inl;cxx/mgc_signalsdescriptor.cxx;cxx/mgc_signalsdescriptor.h;cxx/mgc_signalsdescriptor.inl;cxx/multimedia_system_control.cxx;cxx/multimedia_system_control.h;cxx/multimedia_system_control.inl;cxx/name_operations.cxx;cxx/name_operations.h;cxx/name_operations.inl;cxx/remote_operations_apdus.cxx;cxx/remote_operations_apdus.h;cxx/remote_operations_apdus.inl;cxx/remote_operations_apdus_t.cxx;cxx/remote_operations_information_objects.cxx;cxx/remote_operations_information_objects.h;cxx/remote_operations_information_objects.inl;%(Outputs)</Outputs>
+    </CustomBuild>
+    <None Include="H323.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="netmon.h" />
+    <ClInclude Include="perattacher.h" />
+    <ClInclude Include="Q931pdu.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\asn1\ASN1-x32-vs120.vcxproj">
+      <Project>{cc4dce75-9957-4642-a86b-ea14dbcebf54}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\asnparser\asnparser-x32-vs120.vcxproj">
+      <Project>{1eed4b13-2a75-4c49-a198-12f2a46f5944}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

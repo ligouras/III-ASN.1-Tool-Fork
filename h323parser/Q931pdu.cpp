@@ -300,7 +300,7 @@ void UserUserInformationElement::attachProperties(HFRAME hFrame, HPROPERTY hProp
 		strlen(buf) + 1, buf , 0, 2, 0);
 
     H323_MESSAGES::H323_UserInformation userInformation;
-    ASN1::PERDecoder decoder((char*)data+4, (char*)data+len, env);
+    ASN1::PERDecoder decoder((char*)data+4, len, env);
     PERAttacher attacher(decoder, hFrame, hProperty, "H323_UserInformation ",2);
 	userInformation.accept(attacher);
 }
@@ -309,7 +309,7 @@ bool UserUserInformationElement::decodeIE() const
 {
 
     H323_MESSAGES::H323_UserInformation userInformation;
-	ASN1::PERDecoder decoder((char*)data+4, (char*)data+len);
+	ASN1::PERDecoder decoder((char*)data+4, len);
 	return userInformation.accept(decoder);
 }
 

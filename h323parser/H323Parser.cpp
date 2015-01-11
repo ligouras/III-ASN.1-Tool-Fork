@@ -756,7 +756,7 @@ LPBYTE BHAPI RAS_RecognizeFrame( HFRAME      hFrame,
 
 	try {
         H323_MESSAGES::RasMessage msg;
-		ASN1::PERDecoder decoder((char*)pFrame, (char*)pFrame+BytesLeft);
+		ASN1::PERDecoder decoder((char*)pFrame, BytesLeft);
         if (msg.accept(decoder))
 			*pProtocolStatus = PROTOCOL_STATUS_CLAIMED;
 	}
@@ -808,7 +808,7 @@ LPBYTE BHAPI RAS_AttachProperties( HFRAME      hFrame,
 		0, 0, 0);
 
     H323_MESSAGES::RasMessage msg;
-    ASN1::PERDecoder decoder((char*)pFrame, (char*)pFrame+BytesLeft, env);
+    ASN1::PERDecoder decoder((char*)pFrame, BytesLeft, env);
     PERAttacher attacher(decoder, hFrame, RasPropertyInfo.hProperty, "RasMessage ",1);
 	msg.accept(attacher);
 
@@ -956,7 +956,7 @@ LPBYTE BHAPI H245_RecognizeFrame( HFRAME      hFrame,
 	*pProtocolStatus = PROTOCOL_STATUS_NOT_RECOGNIZED;
 
 
-    ASN1::PERDecoder decoder((char*)pFrame, (char*)pFrame+BytesLeft, env, true);
+    ASN1::PERDecoder decoder((char*)pFrame, BytesLeft, env, true);
     MULTIMEDIA_SYSTEM_CONTROL::MultimediaSystemControlMessage msg;
 
 	try
@@ -1035,7 +1035,7 @@ LPBYTE BHAPI H245_AttachProperties( HFRAME      hFrame,
 {
    // Decode the first byte to determine the type of the message
 
-    ASN1::PERDecoder decoder((char*)pFrame, (char*)pFrame+BytesLeft, env);
+    ASN1::PERDecoder decoder((char*)pFrame, BytesLeft, env);
     ASN1::PERDecoder::memento_type memento = decoder.get_memento();
     MULTIMEDIA_SYSTEM_CONTROL::MultimediaSystemControlMessage msg;
     msg.accept(decoder);

@@ -22,6 +22,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern "C"	char* optarg;
+extern "C"	int optind;
+extern "C"	int opterr;
+extern "C"	char *nextchar_;
+extern "C"	int getopt(int argc_, char** argv_, const char* optstring_);
 
 
 
@@ -89,7 +94,8 @@ int main(int argc, char* argv[])
 	while ((c=getopt(argc, argv, opt)) != -1) {
 		switch (c) {
 			case 'l':
-	            libfilename = optarg; 
+				libfilename = optarg; 
+				break;
 			case 'x':
 				ignore_file.open(optarg);
 				break;
@@ -105,7 +111,7 @@ int main(int argc, char* argv[])
 	// Although it's OK to use pipe when the program is run under windows command prompt, 
 	// it causes some trouble when the program used in the Visual Studio custom build. For
 	// some strange reason, VS will redirect the stdout of child process to the Output 
-	// Window instead of using the pipe which has been assigned by the parent proces.
+	// Window instead of using the pipe which has been assigned by the parent process.
 	// Therefore, I just use a temporary file instead of pipe.
 
 	int fdStdOutPipe[2];
@@ -134,6 +140,8 @@ int main(int argc, char* argv[])
 	arg[3] = libfilename.c_str();
 
 	const char* outfile = out+5;
+
+	cout << "makedef -l " << libfilename << " " << outfile << endl;
 
 	if (_spawnvpe(_P_WAIT  ,"dumpbin", arg, p) !=0) {
 		cerr << "Error when executing \"dumpbin\"\n";
@@ -189,7 +197,8 @@ int main(int argc, char* argv[])
 
 	while (symfile) {
 		char line[9192];
-		symfile.getline(line, 9192);
+		memset(line, 0, sizeof(line));
+		symfile.getline(line, sizeof(line));
 		char* namepos = strchr(line, '|');
 		if (namepos != NULL) {
 			*namepos = '\0';
@@ -204,7 +213,14 @@ int main(int argc, char* argv[])
 				SymbolMap::iterator it = def_symbols.find(namepos);
 				if (it != def_symbols.end())
 					it->second.in_lib = true;
-				else if (strncmp(namepos,"??_C@_", 6) != 0 &&
+				else
+				if (strncmp(namepos, "_wmemcmp", 8) != 0 &&
+					strncmp(namepos, "_wmemcpy", 8) != 0 &&
+					strncmp(namepos, "_wmemmove", 9) != 0 &&
+					strncmp(namepos, "_wmemset", 8) != 0 &&
+					strncmp(namepos, "___@@_", 6) != 0 &&
+					strncmp(namepos, "__CT??", 6) != 0 &&
+					strncmp(namepos, "??_C@_", 6) != 0 &&
 					strncmp(namepos, "__real@", 7) != 0 &&
 					strncmp(namepos, "?__LINE__Var@", 13) !=0) 
 				{
@@ -228,15 +244,18 @@ int main(int argc, char* argv[])
 
 	ofstream odeffile(argv[optind]);
 
-	if (!odeffile.is_open())	
+	if (!odeffile.is_open())
+	{
+		cerr << "cannot open deffile\n";
+		symfile.close(); // need to close otherwise temp file will not be removed
+		remove(outfile);
 		return 1;
+	}
 	char* enddeffile = strrchr(def_filename, '.');
 	*enddeffile = '\0';
 	odeffile << "LIBRARY " << def_filename << '\n'
             << "EXPORTS" << endl;
 
-	
-	
 	copy(def_symbols.begin(), def_symbols.end(), 
 		 ostream_iterator<SymbolMap::value_type>(odeffile));
 		 
@@ -250,6 +269,7 @@ int main(int argc, char* argv[])
 		 output_symbol(odeffile, itr->first, i, itr->second);
 	}
 
+	symfile.close(); // need to close otherwise temp file will not be removed
 	remove(outfile);
 	
 	return 0;
