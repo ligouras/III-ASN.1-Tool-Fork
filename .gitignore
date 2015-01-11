@@ -35,6 +35,8 @@ subdir.mk
 objects.mk
 sources.mk
 makefile
+aclocal.m4
+
 
 # CMake #
 ########
