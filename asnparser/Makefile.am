@@ -20,17 +20,17 @@
 # `http://iiiasn1.sourceforge.net'.
 #
 
-AUTOMAKE_OPTIONS = dist-zip
+AUTOMAKE_OPTIONS = nostdinc dist-zip
 
-EXTRA_DIST		= asnparser.dsp asnparser.vcproj unistd.h getopt.c\
-			  asn_grammar.y asn_lex.l asn_ref_grammar.y asn_ref_lex.l\
-			  main.cxx
+EXTRA_DIST	= asnparser.dsp asnparser.vcproj unistd.h getopt.c\
+		  asn_grammar.y asn_lex.l asn_ref_grammar.y asn_ref_lex.l\
+		  main.cxx
 
-bin_PROGRAMS = asnparser
+bin_PROGRAMS 	= asnparser
 
 noinst_HEADERS 	= main.h
 
-AM_CPPFLAGS 	=  @PIPEFLAG@ @DEBUGFLAG@
+AM_CPPFLAGS 	= -iquote -I. -I$(top_builddir) @PIPEFLAG@ @DEBUGFLAG@
   
 asnparser_LDADD = asn_grammar.o asn_ref_grammar.o asn_lex.o asn_ref_lex.o main.o @LIBSTL@
 			
