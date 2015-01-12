@@ -35,7 +35,7 @@ H323Parser_FILES = h323parser/perattacher.h\
 				   h323parser/H323Parser.vcproj
 				   
 				  
-config_FIELS = config/ac_cxx_have_new_iostream.m4\
+config_FILES = config/ac_cxx_have_new_iostream.m4\
                config/ac_cxx_have_stl.m4\
 	       config/ac_cxx_have_wstring.m4\
 	       config/ac_cxx_namespaces.m4\
@@ -53,7 +53,7 @@ config_FIELS = config/ac_cxx_have_new_iostream.m4\
 	  
 makedef_FILES = makedef/makedef.cpp makedef/makedef.dsp makedef/makedef.vcproj
 				   
-EXTRA_DIST = configure mpl-1.0.htm iiiasn1.dsw iiiasn1.sln $(H323Parser_FILES) $(config_FIELS) $(makedef_FILES)
+EXTRA_DIST = configure mpl-1.0.htm iiiasn1.dsw iiiasn1.sln $(H323Parser_FILES) $(config_FILES) $(makedef_FILES)
 
 SUBDIRS = asnparser asn1 @asnh323dir@
 
