@@ -206,7 +206,7 @@ move %(Filename)_tab.h %(Filename).h
   <ItemGroup>
     <ClInclude Include="asn_grammar.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="unistd.h" />
+    <ClInclude Include="unixstd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

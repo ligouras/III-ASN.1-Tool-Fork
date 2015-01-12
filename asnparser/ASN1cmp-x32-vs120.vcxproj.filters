@@ -37,7 +37,7 @@
     <ClInclude Include="main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="unistd.h">
+    <ClInclude Include="unixstd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
