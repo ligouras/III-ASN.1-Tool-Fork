@@ -188,10 +188,10 @@ namespace ASN1
 
         iterator insert(iterator pos, const value_type& val)
         {
-            if (pos != end() && operator()(*pos, val) &&
+            if (pos != end() && this->operator()(*pos, val) &&
                 (pos == end() - 1 ||
-                    !operator()(val, pos[1]) &&
-                        operator()(pos[1], val)))
+                    !this->operator()(val, pos[1]) &&
+                        this->operator()(pos[1], val)))
             {
                 return Base::insert(pos, val);
             }
@@ -242,7 +242,7 @@ namespace ASN1
         iterator find(const key_type& k)
         {
             iterator i(lower_bound(k));
-            if (i != end() && operator()(k, i->first))
+            if (i != end() && this->operator()(k, i->first))
             {
                 i = end();
             }
@@ -252,7 +252,7 @@ namespace ASN1
         const_iterator find(const key_type& k) const
         {
             const_iterator i(lower_bound(k));
-            if (i != end() && operator()(k, i->first))
+            if (i != end() && this->operator()(k, i->first))
             {
                 i = end();
             }
