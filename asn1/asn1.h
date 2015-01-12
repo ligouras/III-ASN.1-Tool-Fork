@@ -143,6 +143,8 @@ namespace std {
 }
 #endif
 
+extern unsigned CountBits(UINT_TYPE range);
+ 
 #include "AssocVector.h"
 
 /////////////////////////////////////////////////////////////////////////////
