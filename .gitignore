@@ -38,8 +38,11 @@ objects.mk
 sources.mk
 makefile
 Makefile
+Makefile.in
 aclocal.m4
 configure
+config.h
+config.status
 
 
 # CMake #
