@@ -1,4 +1,5 @@
-// makedef.cpp : Defines the entry point for the console application.
+// makedef.cpp : 
+// Defines the entry point for the console application.
 //
 
 #if _MSC_VER <= 1200
