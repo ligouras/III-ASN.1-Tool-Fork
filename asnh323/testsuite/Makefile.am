@@ -29,7 +29,8 @@ check_PROGRAMS = h323test
 
 noinst_HEADERS 	= asn1test.h
 
-INCLUDES =  @PIPEFLAG@ @DEBUGFLAG@  -I$(top_builddir)/asn1 -I$(top_srcdir)/asn1 -I$(top_builddir)/asnh323
+AM_CPPFLAGS =  @PIPEFLAG@ @DEBUGFLAG@  -I$(top_builddir)/asn1 -I$(top_srcdir)/asn1 -I$(top_builddir)/asnh323
+
 h323test_LDADD =$(top_builddir)/asnh323/libasnh323.a $(top_builddir)/asn1/libasn1.a @LIBSTL@
 			
 h323test_SOURCES = h323test.cpp \

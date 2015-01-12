@@ -26,7 +26,7 @@ EXTRA_DIST	= asnh323.dsp asnh323.vcproj asnh323_dll.dsp asnh323_dll.vcproj asnh3
 
 lib_LIBRARIES = libasnh323.a
 
-INCLUDES = @PIPEFLAG@ @DEBUGFLAG@ -I$(top_builddir)/asn1 -I$(top_srcdir)/asn1 
+AM_CPPFLAGS = @PIPEFLAG@ @DEBUGFLAG@ -I$(top_builddir)/asn1 -I$(top_srcdir)/asn1 
 
 # specify the header files that should be installed
 

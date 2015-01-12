@@ -25,20 +25,20 @@
 AUTOMAKE_OPTIONS = dist-zip
 
 
-EXTRA_DIST		= ASN1.dsp ASN1.vcproj asn1_dll.dsp asn1_dll.vcproj dllmain.cxx asn1.dtf
+EXTRA_DIST			= ASN1.dsp ASN1.vcproj asn1_dll.dsp asn1_dll.vcproj dllmain.cxx asn1.dtf
 
-INCLUDES		= @PIPEFLAG@ @DEBUGFLAG@
+AM_CPPFLAGS			= @PIPEFLAG@ @DEBUGFLAG@
 
 # specify the header files that should be installed
 include_HEADERS 	= asn1.h AssocVector.h
 
 #specify the header files used only when building the library
-noinst_HEADERS = ios_helper.h
+noinst_HEADERS 		= ios_helper.h
 
 # specify the name of the library
-lib_LIBRARIES = libasn1.a
+lib_LIBRARIES 		= libasn1.a
 
 # specify the source files of the library
-libasn1_a_SOURCES = asn1.cxx BEREncoder.cxx BERDecoder.cxx PEREncoder.cxx PERDecoder.cxx AVNEncoder.cxx AVNDecoder.cxx ValidChecker.cxx CoderEnv.cxx InvalidTracer.cxx ios_helper.cxx
+libasn1_a_SOURCES 	= asn1.cxx BEREncoder.cxx BERDecoder.cxx PEREncoder.cxx PERDecoder.cxx AVNEncoder.cxx AVNDecoder.cxx ValidChecker.cxx CoderEnv.cxx InvalidTracer.cxx ios_helper.cxx
 
 SUBDIRS = . testsuite

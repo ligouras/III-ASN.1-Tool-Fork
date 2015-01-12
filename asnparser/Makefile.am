@@ -30,7 +30,8 @@ bin_PROGRAMS = asnparser
 
 noinst_HEADERS 	= main.h
 
-INCLUDES =  @PIPEFLAG@ @DEBUGFLAG@  
+AM_CPPFLAGS 	=  @PIPEFLAG@ @DEBUGFLAG@
+  
 asnparser_LDADD = asn_grammar.o asn_ref_grammar.o asn_lex.o asn_ref_lex.o main.o @LIBSTL@
 			
 asnparser_SOURCES = 

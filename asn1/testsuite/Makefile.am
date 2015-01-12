@@ -23,7 +23,7 @@
 AUTOMAKE_OPTIONS = dist-zip
 EXTRA_DIST = asn1test.dsp asn1test.vcproj test.asn
 
-INCLUDES =  @PIPEFLAG@ @DEBUGFLAG@ -I$(top_builddir)/asn1 -I$(top_srcdir)/asn1 -I$(top_builddir)/asnh323
+AM_CPPFLAGS =  @PIPEFLAG@ @DEBUGFLAG@ -I$(top_builddir)/asn1 -I$(top_srcdir)/asn1 -I$(top_builddir)/asnh323
 
 TESTS = asn1test
 
