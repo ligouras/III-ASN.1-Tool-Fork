@@ -1,10 +1,15 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ASN1", "asn1\ASN1-x32-vs120.vcxproj", "{CC4DCE75-9957-4642-A86B-EA14DBCEBF54}"
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ASN1rts", "asn1\ASN1rts-x32-vs120.vcxproj", "{CC4DCE75-9957-4642-A86B-EA14DBCEBF54}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FA18351A-6E6C-4033-AEB5-FDC8E5BC4B20} = {FA18351A-6E6C-4033-AEB5-FDC8E5BC4B20}
+	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asn1test", "asn1\testsuite\asn1test-x32-vs120.vcxproj", "{F012966D-7796-4562-8587-6ADF79466B8F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ASN1test", "asn1\testsuite\ASN1test-x32-vs120.vcxproj", "{F012966D-7796-4562-8587-6ADF79466B8F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asn1_dll", "asn1\asn1_dll-x32-vs120.vcxproj", "{6AA1BC61-0F68-4D2D-BD3E-AEC4E2F2DB8E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ASN1dll", "asn1\ASN1dll-x32-vs120.vcxproj", "{6AA1BC61-0F68-4D2D-BD3E-AEC4E2F2DB8E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asnh323", "asnh323\asnh323-x32-vs120.vcxproj", "{4E4B52F7-9D54-4183-99A7-00212102BCBF}"
 EndProject
@@ -12,7 +17,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asnh323_dll", "asnh323\asnh
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "h323test", "asnh323\testsuite\h323test-x32-vs120.vcxproj", "{103FA5DD-4312-47E7-8B6A-5433EC4014D5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asnparser", "asnparser\asnparser-x32-vs120.vcxproj", "{1EED4B13-2A75-4C49-A198-12F2A46F5944}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ASN1cmp", "asnparser\ASN1cmp-x32-vs120.vcxproj", "{1EED4B13-2A75-4C49-A198-12F2A46F5944}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "H323Parser", "h323parser\H323Parser-x32-vs120.vcxproj", "{EF024D3D-64DA-4ED8-9C2B-CF9CE434D5C9}"
 EndProject

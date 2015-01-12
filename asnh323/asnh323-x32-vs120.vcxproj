@@ -102,7 +102,7 @@
       <Culture>0x0404</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>..\LIB\asnh323sd.lib</OutputFile>
+      <OutputFile>../lib/$(TargetFileName)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
@@ -138,7 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="h2250v4.asn">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Lib\asnparser -o cxx -v -c  -m H323 h245v7.asn h235v2.asn h2250v4.asn h248.asn ro.asn address.asn h4501.asn h4502.asn h4503.asn h4504.asn h4505.asn h4506.asn h4507.asn h4508.asn h4509.asn h45010.asn lgc.asn
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\asnparserd -o cxx -v -c  -m H323 h245v7.asn h235v2.asn h2250v4.asn h248.asn ro.asn address.asn h4501.asn h4502.asn h4503.asn h4504.asn h4505.asn h4506.asn h4507.asn h4508.asn h4509.asn h45010.asn lgc.asn
 del cxx\lgc.cxx
 del cxx\lgc.h
 del cxx\address.cxx
@@ -149,7 +149,7 @@ del cxx\aliases.cxx
 del cxx\cidmodule.cxx
 del cxx\cidmodule.h
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\asnparser.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\asnparserd.exe;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cxx/addressing_data_elements.cxx;cxx/addressing_data_elements.h;cxx/addressing_data_elements.inl;cxx/aliases.h;cxx/alternategk_module.cxx;cxx/alternategk_module.h;cxx/call_completion_operations.cxx;cxx/call_completion_operations.h;cxx/call_completion_operations.inl;cxx/call_diversion_operations.cxx;cxx/call_diversion_operations.h;cxx/call_diversion_operations.inl;cxx/call_hold_operations.cxx;cxx/call_hold_operations.h;cxx/call_hold_operations.inl;cxx/call_offer_operations.cxx;cxx/call_offer_operations.h;cxx/call_offer_operations.inl;cxx/call_park_pickup_operations.cxx;cxx/call_park_pickup_operations.h;cxx/call_park_pickup_operations.inl;cxx/call_transfer_operations.cxx;cxx/call_transfer_operations.h;cxx/call_transfer_operations.inl;cxx/call_waiting_operations.cxx;cxx/call_waiting_operations.h;cxx/call_waiting_operations.inl;cxx/h225_generic_parameters_definition.cxx;cxx/h225_generic_parameters_definition.h;cxx/h235_security_messages.cxx;cxx/h235_security_messages.h;cxx/h235_security_messages.inl;cxx/h235_security_messages_t.cxx;cxx/h323_messages.cxx;cxx/h323_messages.h;cxx/h323_messages.inl;cxx/h4501_general_error_list.cxx;cxx/h4501_general_error_list.h;cxx/h4501_supplementary_serviceapdu_structure.cxx;cxx/h4501_supplementary_serviceapdu_structure.h;cxx/h4501_supplementary_serviceapdu_structure.inl;cxx/hm_aliasaddress.cxx;cxx/hm_aliasaddress.h;cxx/hm_aliasaddress.inl;cxx/hm_alternategk.cxx;cxx/hm_alternategk.h;cxx/hm_alternategk.inl;cxx/hm_callidentifier.cxx;cxx/hm_callidentifier.h;cxx/hm_callidentifier.inl;cxx/hm_supportedprefix.cxx;cxx/hm_supportedprefix.h;cxx/hm_supportedprefix.inl;cxx/hm_transportaddress.cxx;cxx/hm_transportaddress.h;cxx/hm_transportaddress.inl;cxx/manufacturer_specific_service_extension_definition.cxx;cxx/manufacturer_specific_service_extension_definition.h;cxx/manufacturer_specific_service_extension_definition.inl;cxx/manufacturer_specific_service_extension_definition_t.cxx;cxx/media_gateway_control.cxx;cxx/media_gateway_control.h;cxx/media_gateway_control.inl;cxx/message_waiting_indication_operations.cxx;cxx/message_waiting_indication_operations.h;cxx/message_waiting_indication_operations.inl;cxx/msc_capabilitytableentry.cxx;cxx/msc_capabilitytableentry.h;cxx/msc_capabilitytableentry.inl;cxx/msc_openlogicalchannel.cxx;cxx/msc_openlogicalchannel.h;cxx/msc_openlogicalchannel.inl;cxx/msc_t38faxprofile.cxx;cxx/msc_t38faxprofile.h;cxx/msc_t38faxprofile.inl;cxx/msc_transportaddress.cxx;cxx/msc_transportaddress.h;cxx/msc_transportaddress.inl;cxx/multimedia_system_control.cxx;cxx/multimedia_system_control.h;cxx/multimedia_system_control.inl;cxx/name_operations.cxx;cxx/name_operations.h;cxx/name_operations.inl;cxx/remote_operations_apdus.cxx;cxx/remote_operations_apdus.h;cxx/remote_operations_apdus.inl;cxx/remote_operations_apdus_t.cxx;cxx/remote_operations_information_objects.cxx;cxx/remote_operations_information_objects.h;cxx/remote_operations_information_objects.inl;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\lib\asnparser -o cxx -v -c -m H323 h245v7.asn h235v2.asn h2250v4.asn h248.asn ro.asn address.asn h4501.asn h4502.asn h4503.asn h4504.asn h4505.asn h4506.asn h4507.asn h4508.asn h4509.asn h45010.asn lgc.asn
 del cxx\lgc.cxx

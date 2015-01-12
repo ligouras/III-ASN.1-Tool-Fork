@@ -64,7 +64,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <OutputFile>../lib/asnh323d.dll</OutputFile>
+      <OutputFile>../lib/$(TargetFileName)</OutputFile>
       <ModuleDefinitionFile>asnh323d.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)asnh323_dll.pdb</ProgramDatabaseFile>
@@ -87,20 +87,20 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <OutputFile>../lib/asnh323.dll</OutputFile>
-      <ModuleDefinitionFile>asnh323.def</ModuleDefinitionFile>
+      <OutputFile>../lib/asnh323d.dll</OutputFile>
+      <ModuleDefinitionFile>asnh323d.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <ImportLibrary>../lib/asnh323.lib</ImportLibrary>
+      <ImportLibrary>../lib/asnh323d.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CustomBuild Include="asnh323.dtf">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\makedef -l ..\lib\asnh323sd.lib asnh323d.def</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\asnh323sd.lib;..\lib\makedef.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\makedefd -l ..\lib\asnh323sd.lib asnh323d.def</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\lib\asnh323sd.lib;..\lib\makedefd.exe;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">asnh323d.def;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\lib\makedef -l ..\lib\asnh323s.lib asnh323.def</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\lib\makedef.exe;..\lib\asnh323s.lib;%(AdditionalInputs)</AdditionalInputs>
