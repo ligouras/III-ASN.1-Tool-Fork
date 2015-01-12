@@ -2830,7 +2830,7 @@ ObjIdComponentList
       {
 	$1->push_back(*$2);
 	$$ = $1;
-	delete $2
+	delete $2;
       }
   ;
 
