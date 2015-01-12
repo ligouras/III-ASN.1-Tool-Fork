@@ -2448,7 +2448,7 @@ namespace ASN1 {
 
     template <class InputIterator>
     SET_OF(InputIterator first, InputIterator last) : Inherited(&theInfo)
-    {   insert(Inherited::begin(), first, last);  }
+    {   this->insert(Inherited::begin(), first, last);  }
 
     SET_OF(const SET_OF<T, Constraint>& other) : Inherited(other) {}
     SET_OF<T, Constraint>& operator = (const SET_OF<T, Constraint>& x)  {
