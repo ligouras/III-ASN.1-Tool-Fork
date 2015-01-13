@@ -58,23 +58,6 @@
 	#include "Platform_POSIX.h"
 #endif
 
-// Reduce bloat imported by "ASN1/UnWindows.h"
-#if defined(_WIN32)
-	#if !defined(_WIN32_WINNT)
-		#define _WIN32_WINNT 0x0501
-	#endif
-	#if !defined(WIN32_LEAN_AND_MEAN) && !defined(ASN1_BLOATED_WIN32)
-		#define WIN32_LEAN_AND_MEAN
-	#endif
-#endif
-
-
-// Unicode Support
-#if defined(UNICODE) && !defined(ASN1_WIN32_UTF8)
-	#define ASN1_WIN32_UTF8
-#endif
-
-
 //
 // Ensure that ASN1_DLL is default unless ASN1_STATIC is defined
 //
