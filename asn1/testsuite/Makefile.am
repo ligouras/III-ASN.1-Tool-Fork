@@ -31,13 +31,13 @@ check_PROGRAMS = asn1test
 
 asn1test_LDADD =$(top_builddir)/asn1/libasn1.a @LIBSTL@
 
-BUILT_SOURCES = myhttp.cxx test1.cxx test1.h test1.inl myhttp.h myhttp.inl
+BUILT_SOURCES = cxx/myhttp.cxx cxx/test1.cxx cxx/test1.h cxx/test1.inl cxx/myhttp.h cxx/myhttp.inl
 	
 asn1test_SOURCES = $(BUILT_SOURCES) asn1test.cpp 	
 	
 
 $(BUILT_SOURCES) : test.asn
-	@ASNPARSER@ -v -c $(srcdir)/test.asn
+	@ASNPARSER@ -v -o cxx -c $(srcdir)/test.asn
 
 DISTFILES = $(DIST_COMMON) $(EXTRA_DIST) asn1test.h asn1test.cpp
 
