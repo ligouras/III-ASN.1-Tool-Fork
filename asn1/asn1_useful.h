@@ -7,7 +7,7 @@
 #ifndef __ASN1_USEFUL_H
 #define __ASN1_USEFUL_H
 
-#include <asn1.h>
+#include "asn1.h"
 
 
 namespace ASN1 {
