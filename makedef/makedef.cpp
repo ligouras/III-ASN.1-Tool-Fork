@@ -8,7 +8,6 @@
 #pragma warning(disable:4996)
 #endif
 
-
 #include <unistd.h>
 #include <map>
 #include <set>
