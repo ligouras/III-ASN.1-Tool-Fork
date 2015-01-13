@@ -155,3 +155,5 @@ hs_err_pid*
 ########################
 **/cxx/
 *.def
+/ipch
+/config.h.in
