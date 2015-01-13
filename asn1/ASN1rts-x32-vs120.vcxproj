@@ -55,7 +55,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.;../asn1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;__WIN32__;WIN32;_USRDLL;ASN1_DLL_EXPORTS;ASN1_EXPORTS;ASN1_DLL;ASN1_HAS_IOSTREAM;ASN1_ALLOCATOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;__WIN32__;WIN32;_USRDLL;ASN1_EXPORTS;ASN1_DLL;ASN1_HAS_IOSTREAM;ASN1_ALLOCATOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -148,6 +148,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">asn1.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="InvalidTracer.cxx">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
@@ -164,6 +165,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="ValidChecker.cxx">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
@@ -174,6 +176,10 @@
     <ClInclude Include="asn1_useful.h" />
     <ClInclude Include="AssocVector.h" />
     <ClInclude Include="ios_helper.h" />
+    <ClInclude Include="Platform.h" />
+    <ClInclude Include="Platform_WIN32.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
