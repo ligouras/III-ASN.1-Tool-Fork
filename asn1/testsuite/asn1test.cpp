@@ -92,7 +92,7 @@ void ValueNotationTests()
   env.set_encodingRule(CoderEnv::avn);
 
   INTEGER a(5),b;
-  TEST("INTEGER ValueNoation", env ,a, b , "5");
+  TEST("INTEGER ValueNotation", env ,a, b , "5");
 
   a = 0 - a;
   TEST("negative INTEGER ValueNotation", env ,a, b , "-5");
