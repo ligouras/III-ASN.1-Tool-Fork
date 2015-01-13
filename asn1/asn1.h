@@ -46,28 +46,19 @@
 #ifndef _ASN1_H
 #define _ASN1_H
 
-#if defined(_MSC_VER) && (_MSC_VER <= 1200)
-#pragma warning(disable: 4786)
+#include "Platform.h"
+
+#if defined(_WIN32)
+	#include "Platform_WIN32.h"
+#elif defined(__VMS)
+	#include "Platform_VMS.h"
+#elif defined(ALS_VXWORKS)
+	#include "Platform_VX.h"
+#elif defined(ALS_OS_FAMILY_UNIX)
+	#include "Platform_POSIX.h"
 #endif
 
-#if defined(_MSC_VER) && !defined(NDEBUG) && !defined(_CPPRTTI)
-#error Please Use /GR compiler option for debug version. In Visual Stdio, check the Enable RTTI box under C++ Language of C/C++ Tab in Project/Settings
-#endif
-
-// Verify that we're built with the multithreaded 
-// versions of the runtime libraries
-#if defined(_MSC_VER) && !defined(_MT)
-	#error Must compile with /MD, /MDd, /MT or /MTd
-#endif
-
-
-// Check debug/release settings consistency
-#if defined(NDEBUG) && defined(_DEBUG)
-	#error Inconsistent build settings (check for /MD[d])
-#endif
-
-
-// Reduce bloat imported by "ALS/UnWindows.h"
+// Reduce bloat imported by "ASN1/UnWindows.h"
 #if defined(_WIN32)
 	#if !defined(_WIN32_WINNT)
 		#define _WIN32_WINNT 0x0501
@@ -115,13 +106,6 @@
 	#endif
 #endif
 
-#if 0
-#if defined(ASN1_DLL) && defined(_MSC_VER)
-	#define ASN1_EXPORT __declspec(dllimport)
-#else
-	#define ASN1_EXPORT
-#endif
-#endif
 //
 // The following block is the standard way of creating macros which make exporting
 // from a DLL simpler. All files within this DLL are compiled with the ASN1_EXPORTS
@@ -133,10 +117,8 @@
 #if defined(_WIN32) && defined(ASN1_DLL)
 	#if defined(ASN1_EXPORTS)
 		#define ASN1_API __declspec(dllexport)
-		#define ASN1_EXPORT
 	#else
 		#define ASN1_API __declspec(dllimport)
-		#define ASN1_EXPORT 
 	#endif
 #endif
 
@@ -145,12 +127,9 @@
 	#define ASN1_API
 #endif
 
-#if !defined(ASN1_EXPORT)
-	#define ASN1_EXPORT
-#endif
 
 //
-// Automatically link NSAP library.
+// Automatically link ASN1 library.
 //
 #if defined(_MSC_VER)
 	#if !defined(ASN1_NO_AUTOMATIC_LIBS) && !defined(ASN1_EXPORTS)
@@ -559,7 +538,7 @@ namespace ASN1 {
     bool operator >  (const Null& ) const { return false; }
     bool operator <= (const Null& ) const { return false; }
     bool operator >= (const Null& ) const { return false; }
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
 
@@ -617,7 +596,7 @@ namespace ASN1 {
     bool operator >  (bool rhs) const { return value >  rhs ; }
     bool operator <= (bool rhs) const { return value <= rhs ; }
     bool operator >= (bool rhs) const { return value >= rhs ; }
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -711,7 +690,7 @@ namespace ASN1 {
     int_type operator * (int_type rhs) { int_type t(getValue()); return t*=rhs;}
     int_type operator / (int_type rhs) { int_type t(getValue()); return t/=rhs;}
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
 
@@ -884,7 +863,7 @@ namespace ASN1 {
     int_type operator * (int_type rhs) const { int_type t(getValue()); return t*=rhs;}
     int_type operator / (int_type rhs) const { int_type t(getValue()); return t/=rhs;}
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -970,7 +949,7 @@ namespace ASN1 {
   protected:
     OBJECT_IDENTIFIER(const void* info) : AbstractData(info) {}
   public:
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
 
     OBJECT_IDENTIFIER() : AbstractData(&theInfo) {}
 
@@ -1120,7 +1099,7 @@ namespace ASN1 {
 
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
 
   private:
     friend class BERDecoder;
@@ -1154,7 +1133,7 @@ namespace ASN1 {
   };
 
   template <class Constraint>
-  class ASN1_API Constrained_BIT_STRING : public BIT_STRING
+  class Constrained_BIT_STRING : public BIT_STRING
   {
     typedef BIT_STRING Inherited;
   protected:
@@ -1171,7 +1150,7 @@ namespace ASN1 {
     }
 
     Constrained_BIT_STRING * clone() const { return static_cast<Constrained_BIT_STRING*>(BIT_STRING::clone());}
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
   };
@@ -1242,7 +1221,7 @@ namespace ASN1 {
 
     operator ASN1_STD string () const { return ASN1_STD string(begin(), end()); }
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -1254,7 +1233,7 @@ namespace ASN1 {
   };
 
   template <class Constraint>
-  class ASN1_API Constrained_OCTET_STRING : public OCTET_STRING
+  class Constrained_OCTET_STRING : public OCTET_STRING
   {
     typedef OCTET_STRING Inherited;
   protected:
@@ -1291,7 +1270,7 @@ namespace ASN1 {
     static AbstractData* create();
     void swap(Constrained_OCTET_STRING& other) { OCTET_STRING::swap(other); }
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
@@ -1409,7 +1388,7 @@ namespace ASN1 {
     static AbstractData* create();
     void swap(NumericString& other) { base_string::swap(other); }
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
@@ -1429,7 +1408,7 @@ namespace ASN1 {
     PrintableString * clone() const { return static_cast<PrintableString *>(AbstractString::clone()); }
     static AbstractData* create();
     void swap(PrintableString& other) { base_string::swap(other); }
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
@@ -1449,7 +1428,7 @@ namespace ASN1 {
     GraphicString * clone() const { return static_cast<GraphicString *>(AbstractString::clone()); }
     static AbstractData* create();
     void swap(GraphicString& other) { base_string::swap(other); }
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
@@ -1527,7 +1506,7 @@ namespace ASN1 {
     static AbstractData* create();
     void swap(VisibleString& other) { base_string::swap(other); }
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
@@ -1548,7 +1527,7 @@ namespace ASN1 {
     static AbstractData* create();
     void swap(IA5String& other) { base_string::swap(other); }
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
@@ -1569,7 +1548,7 @@ namespace ASN1 {
     static AbstractData* create();
     void swap(GeneralString& other) { base_string::swap(other); }
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
@@ -1647,7 +1626,7 @@ namespace ASN1 {
       return align ? info()->charSetAlignedBits : info()->charSetUnalignedBits;
     }
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
     size_type first_illegal_at() const;
@@ -1717,7 +1696,7 @@ namespace ASN1 {
     static AbstractData* create(const void* info);
     bool isStrictlyValid() const;
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -1771,7 +1750,7 @@ namespace ASN1 {
     static AbstractData* create(const void* info);
     bool isStrictlyValid() const;
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -2000,7 +1979,7 @@ namespace ASN1 {
     BitMap optionMap;
     BitMap extensionMap;
 
-    ASN1_EXPORT static const unsigned defaultTag;
+    static const unsigned defaultTag;
 
     struct InfoType
     {
@@ -2459,7 +2438,7 @@ namespace ASN1 {
 
     void reverse() { ASN1_STD reverse(container.begin(), container.end());}
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -2567,7 +2546,7 @@ namespace ASN1 {
     }
     SET_OF<T, Constraint>* clone() const { return static_cast<SET_OF<T, Constraint>*>(Inherited::clone()); }
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
@@ -2636,7 +2615,7 @@ namespace ASN1 {
     bool operator <= (const OpenData& rhs) const { return do_compare(rhs) <= 0; }
     bool operator >= (const OpenData& rhs) const { return do_compare(rhs) >= 0; }
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -2671,7 +2650,7 @@ namespace ASN1 {
   };
 
   template <class T>
-  class ASN1_API Constrained_OpenData : public TypeConstrainedOpenData
+  class Constrained_OpenData : public TypeConstrainedOpenData
   {
     typedef T data_type;
     typedef TypeConstrainedOpenData Inherited;
@@ -2699,7 +2678,7 @@ namespace ASN1 {
     Constrained_OpenData<T>* clone() const { return static_cast<Constrained_OpenData<T>*>(OpenData::clone()); }
     void swap(Constrained_OpenData<T>& other) { OpenData::swap(other); }
 
-    ASN1_EXPORT static const InfoType theInfo;
+    static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
