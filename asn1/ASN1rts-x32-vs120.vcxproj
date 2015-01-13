@@ -22,7 +22,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v120</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
@@ -54,8 +54,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;../asn1;../asnh323/cxx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;__WIN32__;WIN32;ASN1_HAS_IOSTREAM;ASN1_ALLOCATOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;../asn1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;__WIN32__;WIN32;_USRDLL;ASN1_DLL_EXPORTS;ASN1_EXPORTS;ASN1_DLL;ASN1_HAS_IOSTREAM;ASN1_ALLOCATOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -77,6 +77,18 @@
       <OutputFile>../lib/$(TargetFileName)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
+    <Link>
+      <OutputFile>../lib/$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <Link>
+      <ProgramDatabaseFile>../lib/$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <Link>
+      <ProfileGuidedDatabase>../lib/$(TargetName).pgd</ProfileGuidedDatabase>
+    </Link>
+    <Link>
+      <ImportLibrary>../lib/$(TargetName).lib</ImportLibrary>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
