@@ -6433,7 +6433,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
     hdrFile << "#ifndef __" << ToUpper(GetFileName()) << "_H\n"
                "#define __" << ToUpper(GetFileName()) << "_H\n"
                "\n"
-               "#include <asn1.h>\n"
+               "#include \"asn1.h\"\n"
                "\n";
 
     hdrFile << std::setprecision(0);
