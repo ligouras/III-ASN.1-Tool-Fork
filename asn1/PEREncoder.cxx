@@ -44,7 +44,7 @@
 
 namespace ASN1 {
 
-extern unsigned CountBits(UINT_TYPE range);
+unsigned CountBits(UINT_TYPE range);
 
 void PEREncoder::encodeBitMap(const ASN1_STD vector<char>& bitData, unsigned nBits)
 {

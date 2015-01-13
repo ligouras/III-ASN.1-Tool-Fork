@@ -145,6 +145,10 @@
 	#define ASN1_API
 #endif
 
+#if !defined(ASN1_EXPORT)
+	#define ASN1_EXPORT
+#endif
+
 //
 // Automatically link NSAP library.
 //
@@ -239,8 +243,10 @@ namespace std {
 }
 #endif
 
-extern unsigned CountBits(UINT_TYPE range);
- 
+namespace ASN1 {
+	ASN1_API unsigned CountBits(UINT_TYPE range);
+} 
+
 #include "AssocVector.h"
 
 /////////////////////////////////////////////////////////////////////////////
