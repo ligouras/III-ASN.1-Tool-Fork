@@ -16,7 +16,7 @@ namespace ASN1 {
 // EXTERNAL_encoding
 //
 
-class EXTERNAL_encoding : public ASN1::CHOICE
+class ASN1_API EXTERNAL_encoding : public ASN1::CHOICE
 {
     typedef ASN1::CHOICE Inherited;
 protected:
@@ -149,7 +149,7 @@ private:
 // EXTERNAL
 //
 
-class EXTERNAL : public ASN1::SEQUENCE
+class ASN1_API EXTERNAL : public ASN1::SEQUENCE
 {
     typedef ASN1::SEQUENCE Inherited;
 protected:
@@ -300,7 +300,7 @@ private:
 // ABSTRACT-SYNTAX
 //
 
-class ABSTRACT_SYNTAX
+class ASN1_API ABSTRACT_SYNTAX
 {
 public:
     typedef ASN1::OBJECT_IDENTIFIER key_type;

@@ -54,6 +54,107 @@
 #error Please Use /GR compiler option for debug version. In Visual Stdio, check the Enable RTTI box under C++ Language of C/C++ Tab in Project/Settings
 #endif
 
+// Verify that we're built with the multithreaded 
+// versions of the runtime libraries
+#if defined(_MSC_VER) && !defined(_MT)
+	#error Must compile with /MD, /MDd, /MT or /MTd
+#endif
+
+
+// Check debug/release settings consistency
+#if defined(NDEBUG) && defined(_DEBUG)
+	#error Inconsistent build settings (check for /MD[d])
+#endif
+
+
+// Reduce bloat imported by "ALS/UnWindows.h"
+#if defined(_WIN32)
+	#if !defined(_WIN32_WINNT)
+		#define _WIN32_WINNT 0x0501
+	#endif
+	#if !defined(WIN32_LEAN_AND_MEAN) && !defined(ASN1_BLOATED_WIN32)
+		#define WIN32_LEAN_AND_MEAN
+	#endif
+#endif
+
+
+// Unicode Support
+#if defined(UNICODE) && !defined(ASN1_WIN32_UTF8)
+	#define ASN1_WIN32_UTF8
+#endif
+
+
+//
+// Ensure that ASN1_DLL is default unless ASN1_STATIC is defined
+//
+#if defined(_WIN32) && defined(_DLL)
+	#if !defined(ASN1_DLL) && !defined(ASN1_STATIC)
+		#define ASN1_DLL
+	#endif
+#endif
+
+#if defined(_MSC_VER)
+	#if defined(ASN1_DLL)
+		#if defined(_DEBUG)
+			#define ASN1_LIB_SUFFIX "d.lib"
+		#else
+			#define ASN1_LIB_SUFFIX ".lib"
+		#endif
+	#elif defined(_DLL)
+		#if defined(_DEBUG)
+			#define ASN1_LIB_SUFFIX "mdd.lib"
+		#else
+			#define ASN1_LIB_SUFFIX "md.lib"
+		#endif
+	#else
+		#if defined(_DEBUG)
+			#define ASN1_LIB_SUFFIX "mtd.lib"
+		#else
+			#define ASN1_LIB_SUFFIX "mt.lib"
+		#endif
+	#endif
+#endif
+
+#if 0
+#if defined(ASN1_DLL) && defined(_MSC_VER)
+	#define ASN1_EXPORT __declspec(dllimport)
+#else
+	#define ASN1_EXPORT
+#endif
+#endif
+//
+// The following block is the standard way of creating macros which make exporting
+// from a DLL simpler. All files within this DLL are compiled with the ASN1_EXPORTS
+// symbol defined on the command line. this symbol should not be defined on any project
+// that uses this DLL. This way any other project whose source files include this file see
+// ASN1_API functions as being imported from a DLL, wheras this DLL sees symbols
+// defined with this macro as being exported.
+//
+#if defined(_WIN32) && defined(ASN1_DLL)
+	#if defined(ASN1_EXPORTS)
+		#define ASN1_API __declspec(dllexport)
+		#define ASN1_EXPORT
+	#else
+		#define ASN1_API __declspec(dllimport)
+		#define ASN1_EXPORT 
+	#endif
+#endif
+
+
+#if !defined(ASN1_API)
+	#define ASN1_API
+#endif
+
+//
+// Automatically link NSAP library.
+//
+#if defined(_MSC_VER)
+	#if !defined(ASN1_NO_AUTOMATIC_LIBS) && !defined(ASN1_EXPORTS)
+		#pragma comment(lib, "ASN1rts" ASN1_LIB_SUFFIX)
+	#endif
+#endif
+
+
 #ifdef min
 #undef min
 #endif
@@ -105,11 +206,6 @@
   #define UINT_TYPE  unsigned int
 #endif
 
-#if defined(ASN1_DLL) && defined(_MSC_VER)
-#define ASN1_EXPORT __declspec(dllimport)
-#else
-#define ASN1_EXPORT
-#endif
 
 //----------------------------------------------------------------------------
 
@@ -219,7 +315,7 @@ namespace ASN1 {
 
   // faulty implementation of auto_ptr by M$oft and old DEC CXX
   template<class T>
-  class asn_ptr : public ASN1_STD auto_ptr<T>
+  class ASN1_API asn_ptr : public ASN1_STD auto_ptr<T>
   {
     typedef ASN1_STD auto_ptr<T> Base;
   public:
@@ -254,7 +350,7 @@ namespace ASN1 {
    *  However all the copy constructors do copy the  constraints and tags from the object been copied.
    *  It is the programmer's responsibility to prevent using copy constructor on different types.
    */
-  class AbstractData
+  class ASN1_API AbstractData
   {
   public:
     virtual ~AbstractData() {};
@@ -413,7 +509,7 @@ namespace ASN1 {
 
   /** Base class for constrained ASN encoding/decoding.
    */
-  class ConstrainedObject : public AbstractData
+  class ASN1_API ConstrainedObject : public AbstractData
   {
   public:
     ConstrainedObject(const void* info) : AbstractData(info){}
@@ -438,7 +534,7 @@ namespace ASN1 {
 
   /** Class for ASN Null type.
    */
-  class Null : public AbstractData
+  class ASN1_API Null : public AbstractData
   {
     Null(const void* info) : AbstractData(info){}
   public:
@@ -470,7 +566,7 @@ namespace ASN1 {
 
   /** Class for ASN Boolean type.
    */
-  class BOOLEAN : public AbstractData
+  class ASN1_API BOOLEAN : public AbstractData
   {
   protected:
     BOOLEAN(const void* info);
@@ -529,7 +625,7 @@ namespace ASN1 {
 
   /** Class for ASN Integer type.
    */
-  class INTEGER : public ConstrainedObject
+  class ASN1_API INTEGER : public ConstrainedObject
   {
   protected:
     INTEGER(const void* info);
@@ -625,7 +721,7 @@ namespace ASN1 {
 
   /**
     */
-  class IntegerWithNamedNumber : public INTEGER
+  class ASN1_API IntegerWithNamedNumber : public INTEGER
   {
   public:
     struct NameEntry
@@ -782,7 +878,7 @@ namespace ASN1 {
     int_type operator * (int_type rhs) const { int_type t(getValue()); return t*=rhs;}
     int_type operator / (int_type rhs) const { int_type t(getValue()); return t/=rhs;}
 
-    static const InfoType theInfo;
+    ASN1_EXPORT static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -793,7 +889,7 @@ namespace ASN1 {
   // I don't know, why the else-part doesn't work on VAC++5/AiX...
   const typename ConstrainedObject::InfoType Constrained_INTEGER<contraint, lower, upper>::theInfo =
 #else
-  const typename Constrained_INTEGER<contraint, lower, upper>::InfoType Constrained_INTEGER<contraint, lower, upper>::theInfo =
+   const typename Constrained_INTEGER<contraint, lower, upper>::InfoType Constrained_INTEGER<contraint, lower, upper>::theInfo =
 #endif //!defined (__IBMCPP__)
   {
     &INTEGER::create,
@@ -807,7 +903,7 @@ namespace ASN1 {
 
   /** Class for ASN Enumerated type.
    */
-  class ENUMERATED : public AbstractData
+  class ASN1_API ENUMERATED : public AbstractData
   {
   protected:
     ENUMERATED(const void* info);
@@ -863,7 +959,7 @@ namespace ASN1 {
 
   /** Class for ASN Object Identifier type.
    */
-  class OBJECT_IDENTIFIER : public AbstractData
+  class ASN1_API OBJECT_IDENTIFIER : public AbstractData
   {
   protected:
     OBJECT_IDENTIFIER(const void* info) : AbstractData(info) {}
@@ -932,7 +1028,7 @@ namespace ASN1 {
 
   /** Class for ASN Bit String type.
    */
-  class BIT_STRING : public ConstrainedObject
+  class ASN1_API BIT_STRING : public ConstrainedObject
   {
   protected:
     BIT_STRING(const void* info);
@@ -1052,7 +1148,7 @@ namespace ASN1 {
   };
 
   template <class Constraint>
-  class Constrained_BIT_STRING : public BIT_STRING
+  class ASN1_API Constrained_BIT_STRING : public BIT_STRING
   {
     typedef BIT_STRING Inherited;
   protected:
@@ -1069,7 +1165,7 @@ namespace ASN1 {
     }
 
     Constrained_BIT_STRING * clone() const { return static_cast<Constrained_BIT_STRING*>(BIT_STRING::clone());}
-    static const InfoType theInfo;
+    ASN1_EXPORT static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     { return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }
   };
@@ -1086,7 +1182,7 @@ namespace ASN1 {
 
   /** Class for ASN Octet String type.
    */
-  class OCTET_STRING : public ConstrainedObject, public ASN1_STD vector<char>
+  class ASN1_API OCTET_STRING : public ConstrainedObject, public ASN1_STD vector<char>
   {
     typedef ASN1_STD vector<char> ContainerType;
   protected:
@@ -1152,7 +1248,7 @@ namespace ASN1 {
   };
 
   template <class Constraint>
-  class Constrained_OCTET_STRING : public OCTET_STRING
+  class ASN1_API Constrained_OCTET_STRING : public OCTET_STRING
   {
     typedef OCTET_STRING Inherited;
   protected:
@@ -1189,7 +1285,7 @@ namespace ASN1 {
     static AbstractData* create();
     void swap(Constrained_OCTET_STRING& other) { OCTET_STRING::swap(other); }
 
-    static const InfoType theInfo;
+    ASN1_EXPORT static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
@@ -1206,7 +1302,7 @@ namespace ASN1 {
 
   /** Base class for ASN String types.
    */
-  class AbstractString : public ConstrainedObject, public ASN1_STD string
+  class ASN1_API AbstractString : public ConstrainedObject, public ASN1_STD string
   {
   protected:
     typedef ASN1_STD string base_string;
@@ -1290,7 +1386,7 @@ namespace ASN1 {
     const InfoType* info() const { return static_cast<const InfoType*>(info_);}
   };
 
-  class NumericString : public AbstractString {
+  class ASN1_API NumericString : public AbstractString {
   protected:
     NumericString(const void* info) : AbstractString(info) { }
   public:
@@ -1312,7 +1408,7 @@ namespace ASN1 {
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
 
-  class PrintableString : public AbstractString {
+  class ASN1_API PrintableString : public AbstractString {
   protected:
     PrintableString(const void* info) : AbstractString(info) { }
   public:
@@ -1332,7 +1428,7 @@ namespace ASN1 {
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
 
-  class GraphicString : public AbstractString {
+  class ASN1_API GraphicString : public AbstractString {
   protected:
     GraphicString(const void* info) : AbstractString(info) { }
   public:
@@ -1352,7 +1448,7 @@ namespace ASN1 {
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
 
-  class ObjectDescriptor : public GraphicString
+  class ASN1_API ObjectDescriptor : public GraphicString
   {
   protected:
     ObjectDescriptor(const void* info) : GraphicString(info) { }
@@ -1374,9 +1470,12 @@ namespace ASN1 {
     //
 //    virtual bool isValid(const bool raise=false) const;
 //    virtual bool isStrictlyValid(const bool raise=false) const;
-    virtual void setFromValueNotation(const ASN1_STD string& valueString);
+
+#ifdef FIXME
+	virtual void setFromValueNotation(const ASN1_STD string& valueString);
     virtual ASN1_STD string asValueNotation() const;
     virtual const class AbstractType* typeDynamic() const;
+#endif
     //
     // AbstractData standard friend functions
     //
@@ -1394,15 +1493,19 @@ namespace ASN1 {
     //
     // AbstractData standard derived class methods.
     //
-    static const AbstractType* typeStatic();
-    //
+#ifdef FIXME
+	static const AbstractType* typeStatic();
+#else
+	static const AbstractData* typeStatic();
+#endif
+	//
     // Specialized access: same methods as ANSI Standard Library String.
     //
   }; // end class ASN1::ObjectDescriptor
 
   /**
    */
-  class VisibleString : public AbstractString {
+  class ASN1_API VisibleString : public AbstractString {
   protected:
     VisibleString(const void* info) : AbstractString(info) { }
   public:
@@ -1423,7 +1526,7 @@ namespace ASN1 {
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
 
-  class IA5String : public AbstractString {
+  class ASN1_API IA5String : public AbstractString {
   protected:
     IA5String(const void* info) : AbstractString(info) { }
   public:
@@ -1444,7 +1547,7 @@ namespace ASN1 {
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
 
-  class GeneralString : public AbstractString {
+  class ASN1_API GeneralString : public AbstractString {
   protected:
     GeneralString(const void* info) : AbstractString(info) { }
   public:
@@ -1468,7 +1571,7 @@ namespace ASN1 {
   /**
    * Class for ASN BMP (16 bit) String type.
    */
-  class BMPString : public ConstrainedObject, public ASN1_STD wstring
+  class ASN1_API BMPString : public ConstrainedObject, public ASN1_STD wstring
   {
   protected:
     typedef ASN1_STD wstring base_string;
@@ -1555,7 +1658,7 @@ namespace ASN1 {
 
   /**
    */
-  class UTCTime : public AbstractData
+  class ASN1_API UTCTime : public AbstractData
   {
   protected:
     UTCTime(const void* info);
@@ -1623,7 +1726,7 @@ namespace ASN1 {
     bool utc;
   };
 
-  class GeneralizedTime : public UTCTime
+  class ASN1_API GeneralizedTime : public UTCTime
   {
   public:
   protected:
@@ -1680,7 +1783,7 @@ namespace ASN1 {
 
   /** Class for ASN Choice type.
    */
-  class CHOICE : public AbstractData
+  class ASN1_API CHOICE : public AbstractData
   {
   public:
     enum Id {
@@ -1795,7 +1898,7 @@ namespace ASN1 {
 
   /** Class for ASN Sequence type.
    */
-  class SEQUENCE : public AbstractData
+  class ASN1_API SEQUENCE : public AbstractData
   {
   public:
     enum {
@@ -1857,7 +1960,7 @@ namespace ASN1 {
 
     static AbstractData* create(const void*);
 
-    class FieldVector : public ASN1_STD vector<AbstractData*>
+    class ASN1_API FieldVector : public ASN1_STD vector<AbstractData*>
     {
     public:
       FieldVector(){};
@@ -1874,7 +1977,7 @@ namespace ASN1 {
     {
       mandatory_ = -1
     };
-    struct BitMap
+    struct ASN1_API BitMap
     {
       BitMap() : totalBits(0) {}
       unsigned size() const { return totalBits;}
@@ -1928,7 +2031,7 @@ namespace ASN1 {
 
   /** Class for ASN set type.
    */
-  class SET : public SEQUENCE
+  class ASN1_API SET : public SEQUENCE
   {
   public:
     SET * clone() const { return static_cast<SET*>(SEQUENCE::clone()); }
@@ -1938,7 +2041,7 @@ namespace ASN1 {
 
   /** Class for ASN SEQUENCE type.
    */
-  class SEQUENCE_OF_Base : public ConstrainedObject
+  class ASN1_API SEQUENCE_OF_Base : public ConstrainedObject
   {
   public:
     typedef ASN1_STD vector<AbstractData*> Container;
@@ -2350,7 +2453,7 @@ namespace ASN1 {
 
     void reverse() { ASN1_STD reverse(container.begin(), container.end());}
 
-    static const InfoType theInfo;
+    ASN1_EXPORT static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -2386,7 +2489,7 @@ namespace ASN1 {
   };
 
   template <class T, class Constraint>
-  const typename SEQUENCE_OF<T, Constraint>::InfoType SEQUENCE_OF<T, Constraint>::theInfo = {
+	const typename SEQUENCE_OF<T, Constraint>::InfoType SEQUENCE_OF<T, Constraint>::theInfo = {
     SEQUENCE_OF_Base::create,
     0x10,
     0,
@@ -2458,7 +2561,7 @@ namespace ASN1 {
     }
     SET_OF<T, Constraint>* clone() const { return static_cast<SET_OF<T, Constraint>*>(Inherited::clone()); }
 
-    static const InfoType theInfo;
+    ASN1_EXPORT static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
   };
@@ -2476,7 +2579,7 @@ namespace ASN1 {
 
   typedef ASN1_STD vector<char> OpenBuf;
 
-  class OpenData : public AbstractData
+  class ASN1_API OpenData : public AbstractData
   {
   public:
     typedef AbstractData data_type;
@@ -2541,7 +2644,7 @@ namespace ASN1 {
     virtual bool do_accept(Visitor&);
   };
 
-  class TypeConstrainedOpenData : public OpenData
+  class ASN1_API TypeConstrainedOpenData : public OpenData
   {
   private:
     virtual bool do_accept(Visitor& v);
@@ -2562,7 +2665,7 @@ namespace ASN1 {
   };
 
   template <class T>
-  class Constrained_OpenData : public TypeConstrainedOpenData
+  class ASN1_API Constrained_OpenData : public TypeConstrainedOpenData
   {
     typedef T data_type;
     typedef TypeConstrainedOpenData Inherited;
@@ -2590,7 +2693,7 @@ namespace ASN1 {
     Constrained_OpenData<T>* clone() const { return static_cast<Constrained_OpenData<T>*>(OpenData::clone()); }
     void swap(Constrained_OpenData<T>& other) { OpenData::swap(other); }
 
-    static const InfoType theInfo;
+    ASN1_EXPORT static const InfoType theInfo;
     static bool equal_type(const ASN1::AbstractData& type)
     {return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -2631,7 +2734,7 @@ namespace ASN1 {
    * @see BERDecoder, PERDecoder, AVNDecoder
    */
 
-  class Visitor
+  class ASN1_API Visitor
   {
   public:
     virtual ~Visitor(){}
@@ -2765,7 +2868,7 @@ namespace ASN1 {
    *
    *@see BEREncoder, PEREncoder, AVNEncoder
    */
-  class ConstVisitor
+  class ASN1_API ConstVisitor
   {
   public:
     virtual ~ConstVisitor(){}
@@ -2827,7 +2930,7 @@ namespace ASN1 {
    *
    * @see BERDecoder
    */
-  class BEREncoder : public ConstVisitor
+  class ASN1_API BEREncoder : public ConstVisitor
   {
   public:
     /**
@@ -2886,7 +2989,7 @@ namespace ASN1 {
    *
    * @see BEREncoder
    */
-  class BERDecoder  : public Visitor
+  class ASN1_API BERDecoder  : public Visitor
   {
   public:
     /**
@@ -2967,7 +3070,7 @@ namespace ASN1 {
    *
    * @see PERDecoder
    */
-  class PEREncoder : public ConstVisitor
+  class ASN1_API PEREncoder : public ConstVisitor
   {
   public:
     /**
@@ -3109,7 +3212,7 @@ namespace ASN1 {
    *
    * @see PEREncoder
    */
-  class PERDecoder  : public Visitor
+  class ASN1_API PERDecoder  : public Visitor
   {
   public:
     /**
@@ -3297,7 +3400,7 @@ namespace ASN1 {
    *
    * @see AVNDecoder
    */
-  class AVNEncoder : public ConstVisitor
+  class ASN1_API AVNEncoder : public ConstVisitor
   {
   public:
     AVNEncoder(ASN1_STD ostream& os)
@@ -3345,7 +3448,7 @@ namespace ASN1 {
    *
    * @see PEREncoder
    */
-  class AVNDecoder  : public Visitor
+  class ASN1_API AVNDecoder  : public Visitor
   {
   public:
     AVNDecoder(ASN1_STD istream& is, CoderEnv* coder = 0)
@@ -3402,7 +3505,7 @@ namespace ASN1 {
      *
      */
 
-    class PrintHelper
+    class ASN1_API PrintHelper
     {
     public:
 
@@ -3427,7 +3530,7 @@ namespace ASN1 {
      *
      */
 
-    class AVNPrinter : public ConstVisitor
+    class ASN1_API AVNPrinter : public ConstVisitor
     {
     public:
       AVNPrinter(PrintHelper& helper_object) : helper(helper_object), indent(0) {}
@@ -3461,7 +3564,7 @@ namespace ASN1 {
 
   ///////////////////////////////////////////////////////////////////////////
 
-  class Module
+  class ASN1_API Module
   {
   public:
     virtual ~Module(){};
@@ -3472,7 +3575,7 @@ namespace ASN1 {
 
   /////////////////////////////////////////////////////////////////////////////
 
-  class CoderEnv
+  class ASN1_API CoderEnv
   {
   public:
     Module* find(const char* moduleName)

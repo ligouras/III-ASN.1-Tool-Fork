@@ -19,25 +19,25 @@ namespace ASN1 {
 //
 
 
-const void* EXTERNAL_encoding::selectionInfos[3] = {
+ASN1_API const void* EXTERNAL_encoding::selectionInfos[3] = {
     &single_ASN1_type::value_type::theInfo,
     &octet_aligned::value_type::theInfo,
     &arbitrary::value_type::theInfo
 };
 
-unsigned EXTERNAL_encoding::selectionTags[3] = {
+ASN1_API unsigned EXTERNAL_encoding::selectionTags[3] = {
     0xa0000000,
     0x80000001,
     0x80000002
 };
 
-const char* EXTERNAL_encoding::selectionNames[3] = {
+ASN1_API const char* EXTERNAL_encoding::selectionNames[3] = {
     "single-ASN1-type",
     "octet-aligned",
     "arbitrary"
 };
 
-const EXTERNAL_encoding::InfoType EXTERNAL_encoding::theInfo = {
+ASN1_API const EXTERNAL_encoding::InfoType EXTERNAL_encoding::theInfo = {
     ASN1::CHOICE::create,
     0x00000000,
     0,
@@ -53,28 +53,28 @@ const EXTERNAL_encoding::InfoType EXTERNAL_encoding::theInfo = {
 //
 
 
-const void* EXTERNAL::fieldInfos[4] = {
+ASN1_API const void* EXTERNAL::fieldInfos[4] = {
     &direct_reference::value_type::theInfo,
     &indirect_reference::value_type::theInfo,
     &data_value_descriptor::value_type::theInfo,
     &encoding::value_type::theInfo
 };
 
-int EXTERNAL::fieldIds[4] = {
+ASN1_API int EXTERNAL::fieldIds[4] = {
     0,
     1,
     2,
     -1,
 };
 
-const char* EXTERNAL::fieldNames[4] = {
+ASN1_API const char* EXTERNAL::fieldNames[4] = {
     "direct-reference",
     "indirect-reference",
     "data-value-descriptor",
     "encoding"
 };
 
-const EXTERNAL::InfoType EXTERNAL::theInfo = {
+ASN1_API const EXTERNAL::InfoType EXTERNAL::theInfo = {
     EXTERNAL::create,
     0x00000008,
     0,

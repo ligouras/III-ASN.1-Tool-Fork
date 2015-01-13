@@ -105,7 +105,7 @@ AbstractData::AbstractData(const void* information)
 
 ////////////////////////////////////////////////////////////
 
-const Null::InfoType Null::theInfo = {
+ASN1_API const Null::InfoType Null::theInfo = {
     Null::create,
     UniversalTagClass << 30 | UniversalNull,
     0
@@ -140,7 +140,7 @@ INT_TYPE Null::do_compare(const AbstractData& other) const
 
 /////////////////////////////////////////////////////////
 
-const BOOLEAN::InfoType BOOLEAN::theInfo = {
+ASN1_API const BOOLEAN::InfoType BOOLEAN::theInfo = {
   BOOLEAN::create,
   UniversalTagClass << 30 | UniversalBoolean,
   0
@@ -189,7 +189,7 @@ INT_TYPE BOOLEAN::do_compare(const AbstractData& data) const
 
 ///////////////////////////////////////////////////////////////////////
 
-const INTEGER::InfoType INTEGER::theInfo = {
+ASN1_API const INTEGER::InfoType INTEGER::theInfo = {
   &INTEGER::create,
   UniversalTagClass << 30 | UniversalInteger,
   0,
@@ -316,7 +316,7 @@ AbstractData* ENUMERATED::create(const void* info)
 
 ///////////////////////////////////////////////////////////////////////
 
-const OBJECT_IDENTIFIER::InfoType OBJECT_IDENTIFIER::theInfo = {
+ASN1_API const OBJECT_IDENTIFIER::InfoType OBJECT_IDENTIFIER::theInfo = {
     OBJECT_IDENTIFIER::create,
     UniversalTagClass << 30 | UniversalObjectId,
     0
@@ -501,7 +501,7 @@ INT_TYPE OBJECT_IDENTIFIER::do_compare(const AbstractData& other) const
 
 ///////////////////////////////////////////////////////////////////////
 
-const BIT_STRING::InfoType BIT_STRING::theInfo = {
+ASN1_API const BIT_STRING::InfoType BIT_STRING::theInfo = {
   BIT_STRING::create,
   UniversalTagClass << 30 | UniversalBitString,
   0,
@@ -557,7 +557,7 @@ INT_TYPE BIT_STRING::do_compare(const AbstractData& other) const
 }
 
 ///////////////////////////////////////////////////////////////////////
-const OCTET_STRING::InfoType OCTET_STRING::theInfo = {
+ASN1_API const OCTET_STRING::InfoType OCTET_STRING::theInfo = {
   OCTET_STRING::create,
   UniversalTagClass << 30 | UniversalOctetString,
   0,
@@ -709,7 +709,7 @@ static const char GeneralStringSet[]   =
   "\360\361\362\363\364\365\366\367"
   "\370\371\372\373\374\375\376\377";
 
-const NumericString::InfoType NumericString::theInfo = {
+ASN1_API const NumericString::InfoType NumericString::theInfo = {
   AbstractString::create,
   UniversalTagClass << 30 | UniversalNumericString,
   0,
@@ -723,7 +723,7 @@ const NumericString::InfoType NumericString::theInfo = {
   4
 };
 
-const PrintableString::InfoType PrintableString::theInfo = {
+ASN1_API const PrintableString::InfoType PrintableString::theInfo = {
   AbstractString::create,
   UniversalTagClass << 30 | UniversalPrintableString,
   0,
@@ -737,7 +737,7 @@ const PrintableString::InfoType PrintableString::theInfo = {
   8
 };
 
-const VisibleString::InfoType VisibleString::theInfo = {
+ASN1_API const VisibleString::InfoType VisibleString::theInfo = {
   AbstractString::create,
   UniversalTagClass << 30 | UniversalVisibleString,
   0,
@@ -751,7 +751,7 @@ const VisibleString::InfoType VisibleString::theInfo = {
   8
 };
 
-const IA5String::InfoType IA5String::theInfo = {
+ASN1_API const IA5String::InfoType IA5String::theInfo = {
   AbstractString::create,
   UniversalTagClass << 30 | UniversalIA5String,
   0,
@@ -765,7 +765,7 @@ const IA5String::InfoType IA5String::theInfo = {
   8
 };
 
-const GraphicString::InfoType GraphicString::theInfo = {
+ASN1_API const GraphicString::InfoType GraphicString::theInfo = {
   AbstractString::create,
   UniversalTagClass << 30 | UniversalGraphicString,
   0,
@@ -779,7 +779,7 @@ const GraphicString::InfoType GraphicString::theInfo = {
   8
 };
 
-const GeneralString::InfoType GeneralString::theInfo = {
+ASN1_API const GeneralString::InfoType GeneralString::theInfo = {
   AbstractString::create,
   UniversalTagClass << 30 | UniversalGeneralString,
   0,
@@ -795,7 +795,7 @@ const GeneralString::InfoType GeneralString::theInfo = {
 
 ///////////////////////////////////////////////////////////////////////
 
-const BMPString::InfoType BMPString::theInfo = {
+ASN1_API const BMPString::InfoType BMPString::theInfo = {
   BMPString::create,
   UniversalTagClass << 30 | UniversalBMPString,
   0,
@@ -861,7 +861,7 @@ INT_TYPE BMPString::do_compare(const AbstractData& other) const
 }
 
 ///////////////////////////////////////////////////////////////////////
-const UTCTime::InfoType UTCTime::theInfo = {
+ASN1_API const UTCTime::InfoType UTCTime::theInfo = {
   UTCTime::create,
   UniversalTagClass << 30 | UniversalUTCTime,
   0
@@ -1079,7 +1079,7 @@ AbstractData* UTCTime::do_clone() const
 }
 
 ///////////////////////////////////////////////////////////////////////
-const GeneralizedTime::InfoType GeneralizedTime::theInfo = {
+ASN1_API const GeneralizedTime::InfoType GeneralizedTime::theInfo = {
   GeneralizedTime::create,
   UniversalTagClass << 30 | UniversalGeneralisedTime,
   0
@@ -1620,7 +1620,7 @@ void SEQUENCE_OF_Base::erase(iterator first, iterator last)
 
 //////////////////////////////////////////////////////
 
-const OpenData::InfoType OpenData::theInfo = {
+ASN1_API const OpenData::InfoType OpenData::theInfo = {
   OpenData::create,
   0,
   0
