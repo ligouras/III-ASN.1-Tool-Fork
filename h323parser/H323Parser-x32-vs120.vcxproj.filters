@@ -15,82 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cxx\addressing_data_elements.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\call_completion_operations.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\call_diversion_operations.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\call_hold_operations.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\call_offer_operations.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\call_park_pickup_operations.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\call_transfer_operations.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\call_waiting_operations.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\h225_generic_parameters_definition.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\h235_security_messages.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\h323_messages.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="H323Parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\h4501_general_error_list.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\h4501_supplementary_serviceapdu_structure.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\hm_aliasaddress.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\hm_callidentifier.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\manufacturer_specific_service_extension_definition.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\media_gateway_control.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\message_waiting_indication_operations.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\mgc_signalsdescriptor.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\multimedia_system_control.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\name_operations.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="perattacher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Q931pdu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\remote_operations_apdus.cxx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cxx\remote_operations_information_objects.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
