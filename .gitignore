@@ -157,3 +157,4 @@ hs_err_pid*
 *.def
 /ipch
 /config.h.in
+/stamp-h1
