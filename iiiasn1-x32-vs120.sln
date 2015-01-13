@@ -12,7 +12,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ASN1test", "asn1\testsuite\
 		{CC4DCE75-9957-4642-A86B-EA14DBCEBF54} = {CC4DCE75-9957-4642-A86B-EA14DBCEBF54}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asnh323", "asnh323\asnh323-x32-vs120.vcxproj", "{4E4B52F7-9D54-4183-99A7-00212102BCBF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "H323rts", "asnh323\asnh323-x32-vs120.vcxproj", "{4E4B52F7-9D54-4183-99A7-00212102BCBF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "h323test", "asnh323\testsuite\h323test-x32-vs120.vcxproj", "{103FA5DD-4312-47E7-8B6A-5433EC4014D5}"
 EndProject
@@ -21,8 +21,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "H323Parser", "h323parser\H323Parser-x32-vs120.vcxproj", "{EF024D3D-64DA-4ED8-9C2B-CF9CE434D5C9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "makedef", "makedef\makedef-x32-vs120.vcxproj", "{FA18351A-6E6C-4033-AEB5-FDC8E5BC4B20}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZZZZ", "ZZZZ\ZZZZ.vcxproj", "{D17EEFEB-5C82-42A8-B18C-07A3A10123D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,10 +56,6 @@ Global
 		{FA18351A-6E6C-4033-AEB5-FDC8E5BC4B20}.Debug|Win32.Build.0 = Debug|Win32
 		{FA18351A-6E6C-4033-AEB5-FDC8E5BC4B20}.Release|Win32.ActiveCfg = Release|Win32
 		{FA18351A-6E6C-4033-AEB5-FDC8E5BC4B20}.Release|Win32.Build.0 = Release|Win32
-		{D17EEFEB-5C82-42A8-B18C-07A3A10123D5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{D17EEFEB-5C82-42A8-B18C-07A3A10123D5}.Debug|Win32.Build.0 = Debug|Win32
-		{D17EEFEB-5C82-42A8-B18C-07A3A10123D5}.Release|Win32.ActiveCfg = Release|Win32
-		{D17EEFEB-5C82-42A8-B18C-07A3A10123D5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
