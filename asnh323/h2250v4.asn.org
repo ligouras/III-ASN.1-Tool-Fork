@@ -49,16 +49,9 @@ IMPORTS
 		CryptoToken,
 		AuthenticationMechanism
 	FROM H235-SECURITY-MESSAGES
-		MultimediaSystemControlMessage,
-		OpenLogicalChannel,
 		DataProtocolCapability,
 		T38FaxProfile
-	FROM MULTIMEDIA-SYSTEM-CONTROL
-		PackagesDescriptor,
-		SignalsDescriptor
-	FROM MEDIA-GATEWAY-CONTROL
-		H4501SupplementaryService
-	FROM H4501-Supplementary-ServiceAPDU-Structure;
+	FROM MULTIMEDIA-SYSTEM-CONTROL;
 
 H323-UserInformation ::= SEQUENCE		-- root for all Q.931 related ASN.1
 {
@@ -100,13 +93,13 @@ H323-UU-PDU ::= SEQUENCE
 	},
 	nonStandardData			NonStandardParameter OPTIONAL,
 	...,
-	h4501SupplementaryService SEQUENCE OF TYPE-IDENTIFIER.&Type(H4501SupplementaryService) OPTIONAL,
+	h4501SupplementaryService	SEQUENCE OF OCTET STRING OPTIONAL,
 						-- each sequence of octet string is defined as one
 						-- H4501SupplementaryService APDU as defined in
 						-- Table 3/H.450.1
 
 	h245Tunneling			BOOLEAN, -- if TRUE, tunneling of H.245 messages is enabled
-	h245Control		SEQUENCE OF TYPE-IDENTIFIER.&Type(MultimediaSystemControlMessage) OPTIONAL,
+	h245Control			SEQUENCE OF OCTET STRING OPTIONAL,
 	nonStandardControl		SEQUENCE OF NonStandardParameter OPTIONAL,
 	callLinkage			CallLinkage OPTIONAL,
 	tunnelledSignallingMessage	SEQUENCE
@@ -140,7 +133,7 @@ Alerting-UUIE ::= SEQUENCE
 	h245SecurityMode	H245Security OPTIONAL,
 	tokens			SEQUENCE OF ClearToken OPTIONAL,
 	cryptoTokens		SEQUENCE OF CryptoH323Token OPTIONAL,
-	fastStart		SEQUENCE OF TYPE-IDENTIFIER.&Type(OpenLogicalChannel) OPTIONAL,
+	fastStart		SEQUENCE OF OCTET STRING OPTIONAL,
 	multipleCalls		BOOLEAN,
 	maintainConnection	BOOLEAN,
 	alertingAddress		SEQUENCE OF AliasAddress OPTIONAL,
@@ -162,7 +155,7 @@ CallProceeding-UUIE ::= SEQUENCE
 	h245SecurityMode	H245Security OPTIONAL,
 	tokens			SEQUENCE OF ClearToken OPTIONAL,
 	cryptoTokens		SEQUENCE OF CryptoH323Token OPTIONAL,
-	fastStart		SEQUENCE OF TYPE-IDENTIFIER.&Type(OpenLogicalChannel) OPTIONAL,
+	fastStart		SEQUENCE OF OCTET STRING OPTIONAL,
 	multipleCalls		BOOLEAN,
 	maintainConnection	BOOLEAN,
 	fastConnectRefused	NULL OPTIONAL,
@@ -180,7 +173,7 @@ Connect-UUIE ::= SEQUENCE
 	h245SecurityMode	H245Security OPTIONAL,
 	tokens			SEQUENCE OF ClearToken OPTIONAL,
 	cryptoTokens		SEQUENCE OF CryptoH323Token OPTIONAL,
-	fastStart		SEQUENCE OF TYPE-IDENTIFIER.&Type(OpenLogicalChannel) OPTIONAL,
+	fastStart		SEQUENCE OF OCTET STRING OPTIONAL,
 	multipleCalls		BOOLEAN,
 	maintainConnection	BOOLEAN,
 	language		SEQUENCE OF IA5String (SIZE (1..32)) OPTIONAL, -- RFC1766 language tag
@@ -200,7 +193,7 @@ Information-UUIE ::=SEQUENCE
 	callIdentifier		CallIdentifier,
 	tokens			SEQUENCE OF ClearToken OPTIONAL,
 	cryptoTokens		SEQUENCE OF CryptoH323Token OPTIONAL,
-	fastStart		SEQUENCE OF TYPE-IDENTIFIER.&Type(OpenLogicalChannel) OPTIONAL,
+	fastStart		SEQUENCE OF OCTET STRING OPTIONAL,
 	fastConnectRefused	NULL OPTIONAL,
 	circuitInfo		CircuitInfo OPTIONAL
 }
@@ -285,7 +278,7 @@ Setup-UUIE ::= SEQUENCE
 	h245SecurityCapability		SEQUENCE OF H245Security OPTIONAL,
 	tokens				SEQUENCE OF ClearToken OPTIONAL,
 	cryptoTokens			SEQUENCE OF CryptoH323Token OPTIONAL,
-	fastStart		SEQUENCE OF TYPE-IDENTIFIER.&Type(OpenLogicalChannel) OPTIONAL,
+	fastStart			SEQUENCE OF OCTET STRING OPTIONAL,
 	mediaWaitForConnect		BOOLEAN,
 	canOverlapSend			BOOLEAN,
 	endpointIdentifier		EndpointIdentifier OPTIONAL,
@@ -385,7 +378,7 @@ Facility-UUIE ::= SEQUENCE
 	cryptoTokens			SEQUENCE OF CryptoH323Token OPTIONAL,
 	conferences			SEQUENCE OF ConferenceList OPTIONAL,
 	h245Address			TransportAddress OPTIONAL,
-	fastStart		SEQUENCE OF TYPE-IDENTIFIER.&Type(OpenLogicalChannel) OPTIONAL,
+	fastStart			SEQUENCE OF OCTET STRING OPTIONAL,
 	multipleCalls			BOOLEAN,
 	maintainConnection		BOOLEAN,
 	fastConnectRefused		NULL OPTIONAL,
@@ -430,7 +423,7 @@ Progress-UUIE ::= SEQUENCE
 	h245SecurityMode		H245Security OPTIONAL,
 	tokens				SEQUENCE OF ClearToken OPTIONAL,
 	cryptoTokens			SEQUENCE OF CryptoH323Token OPTIONAL,
-	fastStart		SEQUENCE OF TYPE-IDENTIFIER.&Type(OpenLogicalChannel) OPTIONAL,
+	fastStart			SEQUENCE OF OCTET STRING OPTIONAL,
 	...,
 	multipleCalls			BOOLEAN,
 	maintainConnection		BOOLEAN,
@@ -953,10 +946,10 @@ ProtocolIdentifier	::=	OBJECT IDENTIFIER
 					-- shall be set to  
 					-- {itu-t (0) recommendation (0) h (8) 2250 version (0) 4}
 TimeToLive		::=	INTEGER (1..4294967295)	-- in seconds
-H248PackagesDescriptor	::=	TYPE-IDENTIFIER.&Type(PackagesDescriptor)  -- This octet string contans
+H248PackagesDescriptor	::=	OCTET STRING  -- This octet string contans
 					      -- ASN.1 PER encoded H.248
 					      -- PackageDescriptor
-H248SignalsDescriptor	::=	TYPE-IDENTIFIER.&Type(SignalsDescriptor)  -- This octet string contans
+H248SignalsDescriptor	::=	OCTET STRING  -- This octet string contans
 					      -- ASN.1 PER encoded H.248
 					      -- SignalDescriptor
 FeatureDescriptor	::=	GenericData

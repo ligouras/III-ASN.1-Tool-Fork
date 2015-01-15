@@ -14,7 +14,7 @@
 #include <config.h>
 #endif
 
-#include <multimedia_system_control.h>
+#include "multimedia_system_control.h"
 #include "asn1test.h"
 
 void H245Test()

@@ -116,7 +116,7 @@
 //
 #if defined(_MSC_VER)
 	#if !defined(ASN1_NO_AUTOMATIC_LIBS) && !defined(ASN1_EXPORTS)
-		#pragma comment(lib, "ASN1rts" ASN1_LIB_SUFFIX)
+		#pragma comment(lib, "ASN1" ASN1_LIB_SUFFIX)
 	#endif
 #endif
 

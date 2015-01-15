@@ -15,8 +15,8 @@
 #include <config.h>
 #endif
 
-#include <h323_messages.h>
-#include <msc_openlogicalchannel.h>
+#include "h323_messages.h"
+#include "msc_openlogicalchannel.h"
 #include "asn1test.h"
 
 unsigned h225oid[] = {0,0,8,2250,0,4};
@@ -210,6 +210,7 @@ void H225PERTests()
   setup.set_sourceCallSignalAddress(addr);
   setup.set_callIdentifier().set_guid().assign(callId, callId+16);
 
+#if !defined(ASN1_OS_FAMILY_WINDOWS) // FIXME
   ASN1::SEQUENCE_OF<ASN1::OCTET_STRING>& fastStart = setup.set_fastStart();
     // Push an OCTET STRING by value, NOT efficient
   fastStart.push_back( ASN1::OCTET_STRING(fastStart0, fastStart0 + sizeof(fastStart0)-1));
@@ -219,7 +220,8 @@ void H225PERTests()
   fastStart.push_back( new ASN1::OCTET_STRING(fastStart2, fastStart2 + sizeof(fastStart2)-1));
   fastStart.push_back( new ASN1::OCTET_STRING(fastStart3, fastStart3 + sizeof(fastStart3)-1));
   setup.set_fastStart(fastStart);
-//  setup.set_presentationIndicator().select_presentationAllowed();
+  
+  //  setup.set_presentationIndicator().select_presentationAllowed();
   setup.set_screeningIndicator(ScreeningIndicator::userProvidedNotScreened);
 
   ASN1::SEQUENCE_OF<ASN1::OCTET_STRING>::iterator it = fastStart.begin();
@@ -261,6 +263,7 @@ void H225PERTests()
     "\x00\x01\x00\x01\x00\x10\x80\x01"
     "\x80";
   TEST("H323_UserInformation (PER)", env ,ui, ui2, exp3, sizeof(exp3));
+#endif
 
   RasMessage rm3, rm4;
   RegistrationConfirm& rcf = rm3.select_registrationConfirm();

@@ -207,9 +207,13 @@ extern int optind;
 #endif
 
 //using namespace boost;
+using std::string;
+using std::endl;
+using std::stringstream;
+using std::vector;
 
 unsigned lineNumber;
-std::string  fileName;
+string  fileName;
 
 unsigned fatals, warnings;
 
@@ -271,13 +275,13 @@ extern int InOIDContext ;
 extern int NullTokenContext ;
 extern int InObjectSetContext;
 TypePtr ValueTypeContext;
-std::vector<std::string> RemoveList;
+std::vector<string> RemoveList;
 
 class UsefulModuleDef : public ModuleDefinition
 {
 public:
   UsefulModuleDef();
-  virtual void GenerateCplusplus(const std::string & modName, unsigned numFiles, bool verbose) {}
+  virtual void GenerateCplusplus(const string & modName, unsigned numFiles, bool verbose) {}
 };
 
 class CompareNamedNumber
@@ -328,11 +332,11 @@ std::ostream & operator<<(std::ostream & out, const StdError & e)
 //  Utility
 //
 
-void str_replace(std::string& str, const char* src, const char* target, std::string::size_type pos = 0)
+void str_replace(string& str, const char* src, const char* target, string::size_type pos = 0)
 {
   const size_t l = strlen(src);
 
-  while ( (pos = str.find(src,pos)) != std::string::npos)
+  while ( (pos = str.find(src,pos)) != string::npos)
     str.replace(pos, l, target);
 }
 
@@ -343,9 +347,9 @@ struct str_less : std::binary_function<const char*, const char*, bool>
   }
 };
 
-static std::string MakeIdentifierC(const std::string & identifier)
+static string MakeIdentifierC(const string & identifier)
 {
-  std::string s = identifier;
+  string s = identifier;
   if (s != "")
   {
     str_replace(s, "-", "_");
@@ -362,9 +366,9 @@ static std::string MakeIdentifierC(const std::string & identifier)
 // creates a short name for module names from combining the first character
 // of each '-' parted words, eg. H323-MESSAGES => HM,
 // Multimedia-System-Control => MSC
-static std::string ShortenName(const std::string& name)
+static string ShortenName(const string& name)
 {
-  std::string s ;
+  string s ;
   s += name[0];
 
   size_t i = 0;
@@ -374,40 +378,40 @@ static std::string ShortenName(const std::string& name)
   return s;
 }
 
-inline std::string ToLower(const std::string& str)
+inline string ToLower(const string& str)
 {
-  std::string result;
+  string result;
   result.resize(str.size());
   std::transform(str.begin(), str.end(), result.begin(), tolower);
   return result;
 }
 
-inline std::string ToUpper(const std::string& str)
+inline string ToUpper(const string& str)
 {
-  std::string result;
+  string result;
   result.resize(str.size());
   std::transform(str.begin(), str.end(), result.begin(), toupper);
   return result;
 }
 
-std::string GetFileName(const std::string& fullname)
+string GetFileName(const string& fullname)
 {
   int i = fullname.find_last_of(DIR_SEPARATOR);
   return fullname.substr(i+1);
 }
 
-std::string GetFileDirectory(const std::string& fullname)
+string GetFileDirectory(const string& fullname)
 {
-  std::string::size_type p = fullname.find_last_of(DIR_SEPARATOR);
-  if (p!=std::string::npos)
+  string::size_type p = fullname.find_last_of(DIR_SEPARATOR);
+  if (p!=string::npos)
     return fullname.substr(0, p);
 
-  return std::string();
+  return string();
 }
 
-std::string GetFileTitle(const std::string& fullname)
+string GetFileTitle(const string& fullname)
 {
-  std::string result = GetFileName(fullname);
+  string result = GetFileName(fullname);
   int dotpos = result.find_last_of('.');
   if (dotpos == -1)
     return result.substr(0, dotpos-1);
@@ -422,18 +426,18 @@ public:
   OutputFile() {}
   ~OutputFile() { Close(); }
 
-  bool Open(const std::string & path, const char* suffix, const char * extension);
+  bool Open(const string & path, const char* suffix, const char * extension);
   void Close();
-  const std::string& GetFilePath() const  { return filename; }
+  const string& GetFilePath() const  { return filename; }
 
 private:
   OutputFile(const OutputFile&);
   OutputFile& operator = (const OutputFile&);
-  std::string filename;
+  string filename;
 };
 
 
-bool OutputFile::Open(const std::string & path,
+bool OutputFile::Open(const string & path,
                       const char * suffix,
                       const char * extension)
 {
@@ -450,7 +454,7 @@ bool OutputFile::Open(const std::string & path,
     return true;
   }
 
-  std::cerr << "asnparser : cannot create " << filename << std::endl;
+  std::cerr << "asnparser : cannot create " << filename << endl;
   return false;
 }
 
@@ -484,7 +488,7 @@ private:
 
 void AddRemoveItem(const char* item)
 {
-    RemoveList.push_back(std::string(item));
+    RemoveList.push_back(string(item));
 }
 
 
@@ -512,11 +516,11 @@ std::ostream& operator << (std::ostream& os, const std::vector<boost::shared_ptr
 class Unfreezer
 {
 public:
-  Unfreezer(std::stringstream& strm) : stream(strm) {}
+  Unfreezer(stringstream& strm) : stream(strm) {}
   ~Unfreezer() { }
 
 private:
-  std::stringstream& stream;
+  stringstream& stream;
 };
 
 /////////////////////////////////////////////////////////
@@ -525,10 +529,17 @@ private:
 //
 
 int verbose=0;
-std::string dllMacroExport;
-std::string dllMacroDLL;
+string dllMacro;
+string dllMacroDEFINED;
+string dllMacroEXPORTS;
+string dllMacroDLL;
+string dllMacroAPI;
+string dllMacroSTATIC;
+string dllMacroLIB_SUFFIX;
+string dllMacroRTS;
+string dllMacroNO_AUTOMATIC_LIBS;
 bool includeConfigH = true;
-std::string useReinterpretCast;
+string useReinterpretCast;
 
 unsigned classesPerFile = 0;
 
@@ -543,7 +554,7 @@ int main(int argc, char** argv)
 
   int c;
   bool generateCpp = false;
-  std::string path;
+  string path;
 
   while ((c=getopt(argc, argv, opt)) != -1)
   {
@@ -578,10 +589,15 @@ int main(int argc, char** argv)
       break;
 
     case 'm':
-      dllMacroExport = optarg;
-      dllMacroExport += "_EXPORT ";
-      dllMacroDLL    = optarg;
-      dllMacroDLL    += "_DLL";
+      dllMacro					= optarg;
+      dllMacroDEFINED			= dllMacro + "_DEFINED";
+      dllMacroEXPORTS			= dllMacro + "_EXPORTS";
+      dllMacroDLL				= dllMacro + "_DLL";
+      dllMacroAPI				= dllMacro + "_API";
+      dllMacroSTATIC			= dllMacro + "_STATIC";
+      dllMacroLIB_SUFFIX		= dllMacro + "_LIB_SUFFIX";
+      dllMacroRTS				= dllMacro;
+	  dllMacroNO_AUTOMATIC_LIBS = dllMacro + "_NO_AUTOMATIC_LIBS";
       break;
 
     case 'C':
@@ -596,7 +612,7 @@ int main(int argc, char** argv)
 
   size_t fileCount = argc-optind;
 
-  std::cout << "asnparser version 2.3 by Institute for Information Industry\n" << std::endl;
+  std::cout << "asnparser version 2.3 by Institute for Information Industry\n" << endl;
 
   if (fileCount < 1 ) {
     std::cerr << "usage: asnparser [options] asnfile...\n"
@@ -611,7 +627,7 @@ int main(int argc, char** argv)
                  "  -C          If given, the generated .cxx files won't include config.h\n"
                  "  -r  name    Use reinterpret_casts rather than static_casts in the\n"
                  "              generated .inl files, if -Dname is given to the compiler\n"
-              << std::endl;
+              << endl;
     return 1;
   }
 
@@ -628,7 +644,7 @@ int main(int argc, char** argv)
     idin = fds[i] = fopen(argv[i+optind],"r");
     if (!idin) {
       std::cerr << "asnparser: cannot open \""
-                << argv[i+optind]  << '"'<<std::endl;
+                << argv[i+optind]  << '"'<<endl;
       return 1;
     }
 
@@ -638,7 +654,7 @@ int main(int argc, char** argv)
     warnings   = 0;
 
     if (verbose)
-      std::cout << "First Stage Parsing... " << fileName << std::endl;
+      std::cout << "First Stage Parsing... " << fileName << endl;
 
     idparse(); // parse the identifier types
   }
@@ -653,7 +669,7 @@ int main(int argc, char** argv)
     yyin = fds[i];
 
     if (verbose)
-      std::cout << "Second Stage Parsing... " << fileName << std::endl;
+      std::cout << "Second Stage Parsing... " << fileName << endl;
 
     rewind(yyin); // rewind the file
     yyrestart( yyin );
@@ -667,7 +683,7 @@ int main(int argc, char** argv)
   for (i = 0; i < RemoveList.size(); ++i)
   {
      int dotpos = RemoveList[i].find('.');
-     std::string modulename = RemoveList[i].substr(0, dotpos);
+     string modulename = RemoveList[i].substr(0, dotpos);
      ModuleDefinition* module = FindModule(modulename.c_str());
      if (module)
          module->AddToRemoveList(RemoveList[i].substr(dotpos+1, RemoveList[i].size()-1));
@@ -681,7 +697,7 @@ int main(int argc, char** argv)
   for (i = 0; i < Modules.size(); ++i) {
     Module = Modules[i].get();
     if (verbose > 1)
-      std::cerr << "Module " << *Module << std::endl;
+      std::cerr << "Module " << *Module << endl;
 
     if (generateCpp)
       Module->GenerateCplusplus(path,
@@ -699,9 +715,9 @@ int main(int argc, char** argv)
 //  miscellaneous
 //
 
-class indent : public std::string
+class indent : public string
 {
-  typedef std::string Base;
+  typedef string Base;
 
   public:
     indent() : Base(Module->GetIndentLevel()*3, ' ') { }
@@ -713,7 +729,7 @@ class indent : public std::string
 //  intermediate structures from parser
 //
 
-NamedNumber::NamedNumber(std::string * nam)
+NamedNumber::NamedNumber(string * nam)
   : name(*nam)
 {
   delete nam;
@@ -722,7 +738,7 @@ NamedNumber::NamedNumber(std::string * nam)
 }
 
 
-NamedNumber::NamedNumber(std::string * nam, int num)
+NamedNumber::NamedNumber(string * nam, int num)
   : name(*nam)
 {
   delete nam;
@@ -731,7 +747,7 @@ NamedNumber::NamedNumber(std::string * nam, int num)
 }
 
 
-NamedNumber::NamedNumber(std::string * nam, const std::string & ref)
+NamedNumber::NamedNumber(string * nam, const string & ref)
   : name(*nam), reference(ref)
 {
   delete nam;
@@ -865,7 +881,7 @@ void Constraint::PrintElements(std::ostream & strm) const
 }
 
 
-void Constraint::GenerateCplusplus(const std::string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
+void Constraint::GenerateCplusplus(const string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
 {
   switch (standard.size()) {
     case 0 :
@@ -873,13 +889,13 @@ void Constraint::GenerateCplusplus(const std::string & fn, std::ostream & hdr, s
     case 1 :
       break;
     default :
-      std::cerr << StdError(Warning) << "unsupported UNION constraints, ignored." << std::endl;
+      std::cerr << StdError(Warning) << "unsupported UNION constraints, ignored." << endl;
   }
 
   if (extensions.size() > 0)
-    std::cerr << StdError(Warning) << "unsupported extension constraints, ignored." << std::endl;
+    std::cerr << StdError(Warning) << "unsupported extension constraints, ignored." << endl;
 
-  std::string fn2 = fn;
+  string fn2 = fn;
   if (fn.find("ASN1::") == -1) {
     if (extendable)
       fn2 += "ASN1::ExtendableConstraint";
@@ -890,7 +906,7 @@ void Constraint::GenerateCplusplus(const std::string & fn, std::ostream & hdr, s
   standard[0]->GenerateCplusplus(fn2, hdr, cxx, inl);
 }
 
-void Constraint::GetConstraint(std::string& str) const
+void Constraint::GetConstraint(string& str) const
 {
   if (str.find("ConstrainedObject::, ") == -1 ) {
     if (extendable)
@@ -920,7 +936,7 @@ bool Constraint::ReferencesType(const TypeBase & type) const
   return false;
 }
 
-ValueSetPtr Constraint::GetValueSetFromValueField(const std::string& field) const
+ValueSetPtr Constraint::GetValueSetFromValueField(const string& field) const
 {
   const ConstraintElementVector* vectors[] = {&standard,&extensions};
   ValueSetPtr result(new ValueSetDefn);
@@ -938,7 +954,7 @@ ValueSetPtr Constraint::GetValueSetFromValueField(const std::string& field) cons
   return result;
 }
 
-ValueSetPtr Constraint::GetValueSetFromValueSetField(const std::string& field) const
+ValueSetPtr Constraint::GetValueSetFromValueSetField(const string& field) const
 {
   const ConstraintElementVector* vectors[] = {&standard,&extensions};
   ValueSetPtr result(new ValueSetDefn);
@@ -955,7 +971,7 @@ ValueSetPtr Constraint::GetValueSetFromValueSetField(const std::string& field) c
   return result;
 }
 
-ConstraintPtr Constraint::GetObjectSetFromObjectField(const std::string& field) const
+ConstraintPtr Constraint::GetObjectSetFromObjectField(const string& field) const
 {
   const ConstraintElementVector* vectors[] = {&standard,&extensions};
   ConstraintPtr result(new Constraint(extendable));
@@ -974,7 +990,7 @@ ConstraintPtr Constraint::GetObjectSetFromObjectField(const std::string& field) 
   return result;
 }
 
-ConstraintPtr Constraint::GetObjectSetFromObjectSetField(const std::string& field) const
+ConstraintPtr Constraint::GetObjectSetFromObjectSetField(const string& field) const
 {
   const ConstraintElementVector* vectors[] = {&standard,&extensions};
   ConstraintPtr result(new Constraint(extendable));
@@ -1012,7 +1028,7 @@ bool Constraint::HasPERInvisibleConstraint(const Parameter& param) const
   return false;
 }
 
-void Constraint::GenerateObjectSetInstanceCode(const std::string& prefix, std::ostream& cxx) const
+void Constraint::GenerateObjectSetInstanceCode(const string& prefix, std::ostream& cxx) const
 {
   ConstraintElementVector::const_iterator it = standard.begin(),
                                           last = standard.end();
@@ -1065,7 +1081,7 @@ const FromConstraintElement* Constraint::GetFromConstraint() const
   return result;
 }
 
-void Constraint::GetCharacterSet(std::string& characterSet) const
+void Constraint::GetCharacterSet(string& characterSet) const
 {
   ConstraintElementVector::const_iterator it = standard.begin(),
                                           last = standard.end();
@@ -1101,9 +1117,9 @@ ConstraintElementBase::ConstraintElementBase()
 ConstraintElementBase::~ConstraintElementBase()
 {}
 
-void ConstraintElementBase::GenerateCplusplus(const std::string &, std::ostream &, std::ostream &, std::ostream &) const
+void ConstraintElementBase::GenerateCplusplus(const string &, std::ostream &, std::ostream &, std::ostream &) const
 {
-  std::cerr << StdError(Warning) << "unsupported constraint, ignored." << std::endl;
+  std::cerr << StdError(Warning) << "unsupported constraint, ignored." << endl;
 }
 
 
@@ -1112,27 +1128,27 @@ bool ConstraintElementBase::ReferencesType(const TypeBase &) const
   return false;
 }
 
-ValueSetPtr ConstraintElementBase::GetValueSetFromValueField(const std::string& ) const
+ValueSetPtr ConstraintElementBase::GetValueSetFromValueField(const string& ) const
 {
-  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << std::endl;
+  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << endl;
   return ValueSetPtr();
 }
 
-ValueSetPtr ConstraintElementBase::GetValueSetFromValueSetField(const std::string& ) const
+ValueSetPtr ConstraintElementBase::GetValueSetFromValueSetField(const string& ) const
 {
-  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << std::endl;
+  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << endl;
   return ValueSetPtr();
 }
 
-ConstraintPtr ConstraintElementBase::GetObjectSetFromObjectField(const std::string& ) const
+ConstraintPtr ConstraintElementBase::GetObjectSetFromObjectField(const string& ) const
 {
-  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << std::endl;
+  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << endl;
   return ConstraintPtr();
 }
 
-ConstraintPtr ConstraintElementBase::GetObjectSetFromObjectSetField(const std::string& ) const
+ConstraintPtr ConstraintElementBase::GetObjectSetFromObjectSetField(const string& ) const
 {
-  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << std::endl;
+  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << endl;
   return ConstraintPtr();
 }
 
@@ -1146,7 +1162,7 @@ const FromConstraintElement* ConstraintElementBase::GetFromConstraint() const
   return NULL;
 }
 
-bool ConstraintElementBase::GetCharacterSet(std::string& ) const
+bool ConstraintElementBase::GetCharacterSet(string& ) const
 {
   return false;
 }
@@ -1181,13 +1197,13 @@ void ElementListConstraintElement::PrintOn(std::ostream & strm) const
 }
 
 
-void ElementListConstraintElement::GenerateCplusplus(const std::string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
+void ElementListConstraintElement::GenerateCplusplus(const string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
 {
   for (ConstraintElementVector::size_type i = 0; i < elements.size(); i++)
     elements[i]->GenerateCplusplus(fn, hdr, cxx, inl);
 }
 
-void ElementListConstraintElement::GetConstraint(std::string& str) const
+void ElementListConstraintElement::GetConstraint(string& str) const
 {
   for (ConstraintElementVector::size_type i = 0; i < elements.size(); i++)
     elements[i]->GetConstraint(str);
@@ -1202,7 +1218,7 @@ bool ElementListConstraintElement::ReferencesType(const TypeBase & type) const
   return false;
 }
 
-ValueSetPtr ElementListConstraintElement::GetValueSetFromValueField(const std::string& field) const
+ValueSetPtr ElementListConstraintElement::GetValueSetFromValueField(const string& field) const
 {
   ValueSetPtr result = elements[0]->GetValueSetFromValueField(field);
 
@@ -1214,7 +1230,7 @@ ValueSetPtr ElementListConstraintElement::GetValueSetFromValueField(const std::s
   return result;
 }
 
-ValueSetPtr ElementListConstraintElement::GetValueSetFromValueSetField(const std::string& field) const
+ValueSetPtr ElementListConstraintElement::GetValueSetFromValueSetField(const string& field) const
 {
   ValueSetPtr result = elements[0]->GetValueSetFromValueField(field);
 
@@ -1234,7 +1250,7 @@ void ElementListConstraintElement::AppendElements(
   elements.insert(elements.end(), first, last);
 }
 
-ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectField(const std::string& field) const
+ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectField(const string& field) const
 {
   boost::shared_ptr<ElementListConstraintElement>
      elem(new  ElementListConstraintElement);
@@ -1259,7 +1275,7 @@ ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectField(const st
   return ConstraintPtr();
 }
 
-ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectSetField(const std::string& field) const
+ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectSetField(const string& field) const
 {
   boost::shared_ptr<ElementListConstraintElement>
     elem(new  ElementListConstraintElement);
@@ -1296,7 +1312,7 @@ bool ElementListConstraintElement::HasPERInvisibleConstraint(const Parameter& pa
   return false;
 }
 
-void ElementListConstraintElement::GenerateObjectSetInstanceCode(const std::string& prefix, std::ostream& cxx) const
+void ElementListConstraintElement::GenerateObjectSetInstanceCode(const string& prefix, std::ostream& cxx) const
 {
   ConstraintElementVector::const_iterator i = elements.begin(), e = elements.end();
   for (; i != e; ++i)
@@ -1353,7 +1369,7 @@ void SingleValueConstraintElement::PrintOn(std::ostream & strm) const
 }
 
 
-void SingleValueConstraintElement::GenerateCplusplus(const std::string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
+void SingleValueConstraintElement::GenerateCplusplus(const string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
 {
   if (dynamic_cast<const IntegerValue*>(value.get())) {
     cxx << fn << ", ";
@@ -1371,12 +1387,12 @@ void SingleValueConstraintElement::GenerateCplusplus(const std::string & fn, std
     return;
   }
 
-  std::cerr << StdError(Warning) << "Unsupported constraint type, ignoring." << std::endl;
+  std::cerr << StdError(Warning) << "Unsupported constraint type, ignoring." << endl;
 }
 
-void SingleValueConstraintElement::GetConstraint(std::string& str) const
+void SingleValueConstraintElement::GetConstraint(string& str) const
 {
-  std::stringstream strm;
+  stringstream strm;
   Unfreezer unfreezer(strm);
 
   if (dynamic_cast<const IntegerValue*>(value.get())) {
@@ -1394,7 +1410,7 @@ bool SingleValueConstraintElement::HasPERInvisibleConstraint(const Parameter& ) 
     return false;
 }
 
-bool SingleValueConstraintElement::GetCharacterSet(std::string& characterSet) const
+bool SingleValueConstraintElement::GetCharacterSet(string& characterSet) const
 {
   const CharacterStringValue* val;
   if ((val = dynamic_cast<const CharacterStringValue*>(value.get())) != NULL)
@@ -1424,7 +1440,7 @@ void ValueRangeConstraintElement::PrintOn(std::ostream & strm) const
 }
 
 
-void ValueRangeConstraintElement::GenerateCplusplus(const std::string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
+void ValueRangeConstraintElement::GenerateCplusplus(const string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
 {
   cxx << fn << ", ";
   lower->GenerateCplusplus(hdr, cxx, inl);
@@ -1435,7 +1451,7 @@ void ValueRangeConstraintElement::GenerateCplusplus(const std::string & fn, std:
 
 
 
-void ValueRangeConstraintElement::GetConstraint(std::string& str) const
+void ValueRangeConstraintElement::GetConstraint(string& str) const
 {
   if (dynamic_cast<MinValue*>(lower.get()))
   {
@@ -1450,7 +1466,7 @@ void ValueRangeConstraintElement::GetConstraint(std::string& str) const
     str_replace(str,"FromConstraint", "FromRangeConstraint");
   }
 
-  std::stringstream strm;
+  stringstream strm;
   Unfreezer unfreezer(strm);
   strm << *lower << ", " << *upper << std::ends;
   str += strm.str();
@@ -1461,7 +1477,7 @@ bool ValueRangeConstraintElement::HasPERInvisibleConstraint(const Parameter& ) c
     return false;
 }
 
-bool ValueRangeConstraintElement::GetCharacterSet(std::string& characterSet) const
+bool ValueRangeConstraintElement::GetCharacterSet(string& characterSet) const
 {
   const CharacterValue* l = dynamic_cast<const CharacterValue*>(lower.get());
   const CharacterValue* u = dynamic_cast<const CharacterValue*>(upper.get());
@@ -1480,7 +1496,7 @@ bool ValueRangeConstraintElement::GetCharacterSet(std::string& characterSet) con
   const CharacterStringValue* uv = dynamic_cast<const CharacterStringValue*>(upper.get());
   if (lv && uv)
   {
-      std::string l, u;
+      string l, u;
       lv->GetValue(l);
       uv->GetValue(u);
       if (l.length()==1 && u.length() == 1)
@@ -1514,7 +1530,7 @@ void SubTypeConstraintElement::PrintOn(std::ostream & strm) const
 }
 
 
-void SubTypeConstraintElement::GenerateCplusplus(const std::string & str, std::ostream & , std::ostream & cxx, std::ostream& ) const
+void SubTypeConstraintElement::GenerateCplusplus(const string & str, std::ostream & , std::ostream & cxx, std::ostream& ) const
 {
   cxx << "    " << subtype->GetTypeName() << " typeConstraint;\n"
       << "    setConstraints(" ;
@@ -1525,9 +1541,9 @@ void SubTypeConstraintElement::GenerateCplusplus(const std::string & str, std::o
   cxx << " typeConstraint.getLowerLimit(), typeConstraint.getUpperLimit());\n";
 }
 
-void SubTypeConstraintElement::GetConstraint(std::string& str) const
+void SubTypeConstraintElement::GetConstraint(string& str) const
 {
-  std::stringstream strm;
+  stringstream strm;
   Unfreezer unfreezer(strm);
   strm << str << subtype->GetTypeName() << "::LowerLimit, "
        << subtype->GetTypeName() << "::UpperLimit" << std::ends;
@@ -1550,7 +1566,7 @@ const SubTypeConstraintElement* SubTypeConstraintElement::GetSubTypeConstraint()
     return this;
 }
 
-std::string SubTypeConstraintElement::GetSubTypeName() const
+string SubTypeConstraintElement::GetSubTypeName() const
 {
     return subtype->GetTypeName();
 }
@@ -1594,16 +1610,16 @@ void SizeConstraintElement::PrintOn(std::ostream & strm) const
 }
 
 
-void SizeConstraintElement::GenerateCplusplus(const std::string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
+void SizeConstraintElement::GenerateCplusplus(const string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
 {
   constraint->GenerateCplusplus(fn, hdr, cxx, inl);
 }
 
-void SizeConstraintElement::GetConstraint(std::string& str) const
+void SizeConstraintElement::GetConstraint(string& str) const
 {
   const char* cstr = "ASN1::FixedConstraint, ";
   const int len = strlen(cstr);
-  std::string::iterator itr = std::find_end(str.begin(), str.end(), cstr, cstr+len);
+  string::iterator itr = std::find_end(str.begin(), str.end(), cstr, cstr+len);
   if (itr != str.end())
     str.replace(itr, itr+len, " ASN1::SizeConstraint<");
   constraint->GetConstraint(str);
@@ -1629,14 +1645,14 @@ void FromConstraintElement::PrintOn(std::ostream & strm) const
 }
 
 
-void FromConstraintElement::GenerateCplusplus(const std::string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
+void FromConstraintElement::GenerateCplusplus(const string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
 {
-  std::string newfn = fn;
+  string newfn = fn;
   str_replace(newfn,"setConstraints(", "setCharacterSet(");
   constraint->GenerateCplusplus(newfn, hdr, cxx, inl);
 }
 
-void FromConstraintElement::GetConstraint(std::string& ) const
+void FromConstraintElement::GetConstraint(string& ) const
 {
 }
 
@@ -1645,12 +1661,12 @@ const FromConstraintElement* FromConstraintElement::GetFromConstraint() const
   return this;
 }
 
-std::string FromConstraintElement::GetCharacterSet(const char* canonicalSet, int canonicalSetSize) const
+string FromConstraintElement::GetCharacterSet(const char* canonicalSet, int canonicalSetSize) const
 {
-    std::string characterSet;
+    string characterSet;
     if (!constraint->IsExtendable())
     {
-        std::string constrainedSet;
+        string constrainedSet;
         constraint->GetCharacterSet(constrainedSet);
 
         int setSize = constrainedSet.size();
@@ -1665,9 +1681,9 @@ std::string FromConstraintElement::GetCharacterSet(const char* canonicalSet, int
 
 int FromConstraintElement::GetRange(std::ostream& cxx) const
 {
-  std::stringstream inl, hdr, tmpcxx;
+  stringstream inl, hdr, tmpcxx;
   Unfreezer unfreezer1(inl),unfreezer2(hdr),unfreezer3(tmpcxx);
-  std::string str;
+  string str;
   constraint->GenerateCplusplus(str,hdr, tmpcxx, inl);
 
   int min, max;
@@ -1679,7 +1695,7 @@ int FromConstraintElement::GetRange(std::ostream& cxx) const
 
 /////////////////////////////////////////////////////////
 
-WithComponentConstraintElement::WithComponentConstraintElement(std::string newName,
+WithComponentConstraintElement::WithComponentConstraintElement(string newName,
                                                                ConstraintPtr constraint,
                                                                int pres)
   : NestedConstraintConstraintElement(constraint)
@@ -1712,7 +1728,7 @@ void WithComponentConstraintElement::PrintOn(std::ostream & strm) const
 }
 
 
-void WithComponentConstraintElement::GenerateCplusplus(const std::string &, std::ostream &, std::ostream & , std::ostream &) const
+void WithComponentConstraintElement::GenerateCplusplus(const string &, std::ostream &, std::ostream & , std::ostream &) const
 {
 }
 
@@ -1743,7 +1759,7 @@ void InnerTypeConstraintElement::PrintOn(std::ostream & strm) const
 }
 
 
-void InnerTypeConstraintElement::GenerateCplusplus(const std::string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
+void InnerTypeConstraintElement::GenerateCplusplus(const string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
 {
   for (ConstraintElementVector::size_type i = 0; i < elements.size(); i++)
     elements[i]->GenerateCplusplus(fn, hdr, cxx, inl);
@@ -1768,7 +1784,7 @@ void UserDefinedConstraintElement::PrintOn(std::ostream & strm) const
 }
 
 
-void UserDefinedConstraintElement::GenerateCplusplus(const std::string &, std::ostream &, std::ostream &, std::ostream &) const
+void UserDefinedConstraintElement::GenerateCplusplus(const string &, std::ostream &, std::ostream &, std::ostream &) const
 {
 }
 
@@ -1784,7 +1800,7 @@ TableConstraint::~TableConstraint()
 {
 }
 
-std::string TableConstraint::GetObjectSetIdentifier() const
+string TableConstraint::GetObjectSetIdentifier() const
 {
     return MakeIdentifierC(objSet->GetName());
 }
@@ -1851,7 +1867,7 @@ void TypeBase::PrintFinish(std::ostream & strm) const
 }
 
 
-void TypeBase::SetName(const std::string& newName)
+void TypeBase::SetName(const string& newName)
 {
   name = newName;
   identifier = MakeIdentifierC(name);
@@ -1958,7 +1974,7 @@ void TypeBase::GenerateOperators(std::ostream &, std::ostream &, const TypeBase 
 }
 
 
-std::string TypeBase::GetTypeName() const
+string TypeBase::GetTypeName() const
 {
   return GetAncestorClass();
 }
@@ -2011,9 +2027,13 @@ void TypeBase::BeginGenerateCplusplus(std::ostream & hdr, std::ostream & cxx, st
 
   GenerateForwardDecls(hdr);
 
-  if (outerClassName.size() == 0)
-    hdr << templatePrefix;
-  hdr << indent << "class " ;
+  if (outerClassName.size() == 0) {
+	hdr << templatePrefix;
+  }
+  hdr << indent << "class ";
+  if (templatePrefix.empty()) 
+    hdr << dllMacroAPI << " ";
+ 
   hdr << GetIdentifier() << " : public " << GetTypeName() << "\n"
       << indent << "{" << '\n'
       << indent << "    typedef " << GetTypeName() << " Inherited;\n";
@@ -2074,8 +2094,13 @@ void TypeBase::EndGenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std:
 void TypeBase::GenerateInfo(const TypeBase* type, std::ostream & hdr, std::ostream& cxx)
 {
   Indent indent(hdr.precision()) ;
-  hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
-  cxx << GetTemplatePrefix()
+  hdr << indent << "static const InfoType theInfo;\n";
+  const string& templatePrefix = GetTemplatePrefix();
+  if (templatePrefix.empty())
+	  cxx << dllMacroAPI << " ";
+  else
+	  cxx << templatePrefix;
+  cxx 
       << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
       << "    " << GetAncestorClass() << "::create,\n"
       << "    ";
@@ -2095,7 +2120,7 @@ void TypeBase::GenerateTags(std::ostream & cxx) const
 }
 
 
-void TypeBase::GenerateCplusplusConstraints(const std::string & prefix, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
+void TypeBase::GenerateCplusplusConstraints(const string & prefix, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const
 {
   for (size_t i = 0; i < constraints.size(); i++)
     constraints[i]->GenerateCplusplus( "  "+ prefix + "setConstraints(", hdr, cxx, inl);
@@ -2134,12 +2159,12 @@ bool TypeBase::FwdDeclareMe(std::ostream & hdr)
   return false;
 }
 
-std::string TypeBase::GetPrimitiveType(const std::string& myName) const
+string TypeBase::GetPrimitiveType(const string& myName) const
 {
   if(!myName.empty())
     return myName + "::const_reference";
 
-  return std::string();
+  return string();
 }
 
 bool TypeBase::CanBeFwdDeclared(bool ) const
@@ -2166,7 +2191,7 @@ void TypeBase::RemovePERInvisibleConstraints()
 }
 
 
-const std::string& TypeBase::GetCModuleName() const
+const string& TypeBase::GetCModuleName() const
 {
   return module->GetCModuleName();
 }
@@ -2201,7 +2226,7 @@ const char* TypeBase::GetClass() const
 }
 /////////////////////////////////////////////////////////
 
-DefinedType::DefinedType(const std::string& name)
+DefinedType::DefinedType(const string& name)
   : TypeBase(Tag::IllegalUniversalTag, Module),
     referenceName(name)
 {
@@ -2227,7 +2252,7 @@ DefinedType::DefinedType(TypePtr refType, TypePtr& bType)
 }
 
 
-DefinedType::DefinedType(TypePtr refType, const std::string & refName)
+DefinedType::DefinedType(TypePtr refType, const string & refName)
   : TypeBase(*refType)
 {
   MoveConstraints(*refType);
@@ -2244,7 +2269,7 @@ DefinedType::DefinedType(TypePtr refType, const TypeBase & parent)
     ConstructFromType(refType, parent.GetName() + "_subtype");
 }
 
-void DefinedType::ConstructFromType(TypePtr& refType, const std::string & refName)
+void DefinedType::ConstructFromType(TypePtr& refType, const string & refName)
 {
   referenceName = refName;
   refType->SetName(refName);
@@ -2303,7 +2328,7 @@ void DefinedType::GenerateOperators(std::ostream & hdr, std::ostream & cxx, cons
 {
   if (baseType.get())
   {
-    std::string basicTypeName = baseType->GetPrimitiveType(std::string());
+    string basicTypeName = baseType->GetPrimitiveType(string());
 
     if (!basicTypeName.empty())
     {
@@ -2329,13 +2354,13 @@ const char * DefinedType::GetAncestorClass() const
 }
 
 
-std::string DefinedType::GetTypeName() const
+string DefinedType::GetTypeName() const
 {
   ResolveReference();
   if (baseType.get() == NULL)
     return MakeIdentifierC(referenceName);
 
-  std::string result = baseType->GetIdentifier();
+  string result = baseType->GetIdentifier();
 
   if (baseType->GetIdentifier().size() == 0 || result == GetIdentifier())
     return baseType->GetTypeName();
@@ -2410,7 +2435,7 @@ bool DefinedType::CanBeFwdDeclared(bool isComponent) const
     return true;
 }
 
-const std::string& DefinedType::GetCModuleName() const
+const string& DefinedType::GetCModuleName() const
 {
   if (GetName() == "" )
   {
@@ -2431,7 +2456,7 @@ bool DefinedType::RemoveThisType(const TypeBase& type)
     return ReferencesType(type);
 }
 
-std::string DefinedType::GetPrimitiveType(const std::string &idInContext) const
+string DefinedType::GetPrimitiveType(const string &idInContext) const
 {
   if (baseType.get())
     return baseType->GetPrimitiveType(idInContext);
@@ -2489,7 +2514,7 @@ TypePtr DefinedType::FlattenThisType(TypePtr& self, const TypeBase & parent)
 
 /////////////////////////////////////////////////////////
 
-ParameterizedType::ParameterizedType(const std::string& name, ActualParameterList& args)
+ParameterizedType::ParameterizedType(const string& name, ActualParameterList& args)
   : DefinedType(name)
 {
   arguments.swap(args);
@@ -2542,9 +2567,9 @@ bool ParameterizedType::UseType(const TypeBase & type) const
   return DefinedType::UseType(type);
 }
 
-std::string ParameterizedType::GetTypeName() const
+string ParameterizedType::GetTypeName() const
 {
-  std::string typeName = DefinedType::GetTypeName();
+  string typeName = DefinedType::GetTypeName();
   if (IsParameterizedType()) {
     typeName += '<';
     for (size_t i = 0; i < arguments.size(); ++i) {
@@ -2569,7 +2594,7 @@ TypeBase::RemoveResult ParameterizedType::CanRemoveType(const TypeBase& type)
 
 /////////////////////////////////////////////////////////
 
-SelectionType::SelectionType(const std::string& name, TypePtr base)
+SelectionType::SelectionType(const string& name, TypePtr base)
   : TypeBase(Tag::IllegalUniversalTag, Module),
     selection(name)
 {
@@ -2605,7 +2630,7 @@ TypePtr SelectionType::FlattenThisType(TypePtr& self, const TypeBase & parent)
 
 void SelectionType::GenerateCplusplus(std::ostream &, std::ostream &, std::ostream &)
 {
-  std::cerr << StdError(Fatal) << "Cannot generate code for Selection type" << std::endl;
+  std::cerr << StdError(Fatal) << "Cannot generate code for Selection type" << endl;
   isGenerated = true;
 }
 
@@ -2722,7 +2747,7 @@ void IntegerType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std:
            "\n";
 
     for (first = allowedValues.begin() ; first != last ; ++first) {
-      std::string fname = MakeIdentifierC((*first)->GetName());
+      string fname = MakeIdentifierC((*first)->GetName());
       hdr << indent << "bool is_" << fname << "() const { return value == " << fname << "; }\n"
           << indent << "void set_" << fname << "() { value = " << fname << "; }\n\n";
     }
@@ -2747,7 +2772,7 @@ void IntegerType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std:
 void IntegerType::GenerateInfo(const TypeBase* type, std::ostream& hdr , std::ostream& cxx)
 {
   Indent indent(hdr.precision()+4);
-  hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+  hdr << indent << "static const InfoType theInfo;\n";
   if ( !allowedValues.empty() )
   {
     hdr << indent-4 << "private:\n"
@@ -2789,7 +2814,7 @@ void IntegerType::GenerateInfo(const TypeBase* type, std::ostream& hdr , std::os
 
   if (type->GetConstraints().size())
   {
-    std::string strm;
+    string strm;
     type->GetConstraints()[0]->GetConstraint(strm);
     cxx << strm;
   }
@@ -2806,14 +2831,14 @@ void IntegerType::GenerateInfo(const TypeBase* type, std::ostream& hdr , std::os
 }
 
 
-std::string IntegerType::GetTypeName() const
+string IntegerType::GetTypeName() const
 {
   if (allowedValues.size())
     return "ASN1::IntegerWithNamedNumber";
 
   if (constraints.size())
   {
-    std::string result("ASN1::Constrained_INTEGER<");
+    string result("ASN1::Constrained_INTEGER<");
     constraints[0]->GetConstraint(result);
     result += "> ";
     return result;
@@ -2987,10 +3012,10 @@ void EnumeratedType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, s
       << indent <<   "};\n"
          "\n";
 
-  GenerateCplusplusConstraints(std::string(), hdr, cxx, inl);
+  GenerateCplusplusConstraints(string(), hdr, cxx, inl);
 
   for (itr = enumerations.begin(); itr != last; ++itr) {
-    std::string fname = MakeIdentifierC((*itr)->GetName());
+    string fname = MakeIdentifierC((*itr)->GetName());
     hdr << indent << "bool is_" << fname << "() const { return value == " << fname << "; }\n"
         << indent << "void set_" << fname << "() { value = " << fname << "; }\n\n";
   }
@@ -3044,7 +3069,7 @@ bool EnumeratedType::IsPrimitiveType() const
 void EnumeratedType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::ostream& cxx)
 {
    Indent indent(hdr.precision()+4);
-   hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+   hdr << indent << "static const InfoType theInfo;\n";
 
    hdr << indent-4 << "private:\n"
        << indent << "static const char * nameList[];\n";
@@ -3070,7 +3095,12 @@ void EnumeratedType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::
   cxx << "\"\n"
       << "  };\n\n";
 
-  cxx << GetTemplatePrefix()
+  const string& templatePrefix = GetTemplatePrefix();
+  if (templatePrefix.empty())
+	  cxx << dllMacroAPI << " ";
+  else
+	  cxx << templatePrefix;
+  cxx 
       << "const " << type->GetClassNameString() << "::InfoType " << type->GetClassNameString() << "::theInfo = {\n"
       << "    ASN1::ENUMERATED::create,\n"
       << "    ";
@@ -3141,11 +3171,11 @@ const char * BitStringType::GetAncestorClass() const
 }
 
 
-std::string BitStringType::GetTypeName() const
+string BitStringType::GetTypeName() const
 {
   if (constraints.size())
   {
-    std::string result("ASN1::Constrained_BIT_STRING<");
+    string result("ASN1::Constrained_BIT_STRING<");
     constraints[0]->GetConstraint(result);
     result += "> ";
     return result;
@@ -3216,7 +3246,7 @@ void BitStringType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, st
 void BitStringType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::ostream& cxx)
 {
   Indent indent(hdr.precision()+4);
-  hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+  hdr << indent  << "static const InfoType theInfo;\n";
 
   int maxNamedValue = 0;
 
@@ -3253,7 +3283,12 @@ void BitStringType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::o
   }
 
 
-  cxx << type->GetTemplatePrefix()
+  const string& templatePrefix = type->GetTemplatePrefix();
+  if (templatePrefix.empty())
+	  cxx << dllMacroAPI << " ";
+  else
+	  cxx << templatePrefix;
+  cxx 
       << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n";
 
   cxx << "    ASN1::BIT_STRING::create,\n";
@@ -3270,7 +3305,7 @@ void BitStringType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::o
   if (type->GetConstraints().size() &&
       ((sizeConstraint = type->GetConstraints()[0]->GetSizeConstraint()) != NULL))
   {
-    std::string str;
+    string str;
     sizeConstraint->GetConstraint(str);
     cxx << str.substr(0, str.size()-2);
   }
@@ -3302,11 +3337,11 @@ const char * OctetStringType::GetAncestorClass() const
 }
 
 
-std::string OctetStringType::GetTypeName() const
+string OctetStringType::GetTypeName() const
 {
   if (constraints.size())
   {
-    std::string result(GetConstrainedType());
+    string result(GetConstrainedType());
     result += '<';
     constraints[0]->GetConstraint(result);
     result += "> ";
@@ -3336,8 +3371,13 @@ void OctetStringType::GenerateConstructors(std::ostream & hdr, std::ostream & cx
 void OctetStringType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::ostream& cxx)
 {
   Indent indent(hdr.precision()+4);
-  hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
-  cxx << type->GetTemplatePrefix()
+  hdr << indent << "static const InfoType theInfo;\n";
+  const string& templatePrefix = type->GetTemplatePrefix();
+  if (templatePrefix.empty())
+	  cxx << dllMacroAPI << " ";
+  else
+	  cxx << templatePrefix;
+  cxx 
       << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
       << "    " ;
 
@@ -3355,7 +3395,7 @@ void OctetStringType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std:
   if (type->GetConstraints().size() &&
       (sizeConstraint = type->GetConstraints()[0]->GetSizeConstraint()) != NULL)
   {
-    std::string str;
+    string str;
     sizeConstraint->GetConstraint(str);
     cxx << str.substr(0, str.size()-2);
   }
@@ -3517,13 +3557,13 @@ void SequenceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std
         << indent <<   "};\n";
 
   // Output the Component scope classes and accessor/mutator functions
-  std::stringstream tmpcxx;
+  stringstream tmpcxx;
   Unfreezer unfreezer(tmpcxx);
   for (i = 0, itr=fields.begin() ; itr != last ; ++i, ++itr) {
     GenerateComponent(**itr, hdr, tmpcxx, inl, i);
   }
 
-  std::stringstream decoder;
+  stringstream decoder;
   Unfreezer unfreezer1(decoder);
   for (itr=fields.begin() ; itr != last; ++itr) {
       (*itr)->GenerateDecoder(decoder);
@@ -3624,9 +3664,9 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
   if (field.IsRemovedType())
     return;
 
-  std::string typeName =  field.GetTypeName();
-  std::string componentIdentifier = field.GetIdentifier();
-  std::string componentName = field.GetName();
+  string typeName =  field.GetTypeName();
+  string componentIdentifier = field.GetIdentifier();
+  string componentName = field.GetName();
 
   bool bIsOptional = (id >= (int)numFields || fields[id]->IsOptional() || fields[id]->HasDefaultValue());
 
@@ -3662,7 +3702,7 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
     hdr << indent << "class " << componentIdentifier << ";\n";
     SequenceOfType& type = *static_cast<SequenceOfType*>(&field);
     type.SetNonTypedef(true);
-    std::stringstream dummy;
+    stringstream dummy;
     type.GenerateCplusplus(inl, cxx, dummy);
   }
   hdr.precision(hdr.precision() - 4);
@@ -3677,8 +3717,8 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
   indent -= 4;
   hdr  << indent << "}; // end class " << componentIdentifier << "\n\n";
 
-  std::string primitiveFieldType = field.GetPrimitiveType(componentIdentifier);
-  std::string typenameKeyword;
+  string primitiveFieldType = field.GetPrimitiveType(componentIdentifier);
+  string typenameKeyword;
 
   if (templatePrefix.length()) {
     typenameKeyword = "typename ";
@@ -3686,12 +3726,12 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
       primitiveFieldType = "typename " + primitiveFieldType;
   }
 
-  std::stringstream varName;
+  stringstream varName;
   Unfreezer unfreezer1(varName);
   varName << "*static_cast<" << typenameKeyword << componentIdentifier << "::pointer>(fields[" << id << "])"
           << std::ends;
 
-  std::stringstream constVarName;
+  stringstream constVarName;
   Unfreezer unfreezer2(constVarName);
   constVarName << "*static_cast<" << typenameKeyword << componentIdentifier << "::const_pointer>(fields["
                << id << "])" << std::ends;
@@ -3754,7 +3794,7 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
   }
   else // optional component
   {
-    std::string enumName = "e_" + componentIdentifier;
+    string enumName = "e_" + componentIdentifier;
     if (field.GetTypeName() != "ASN1::Null")
     {
       hdr << indent << typenameKeyword << componentIdentifier << "::const_reference get_" << componentIdentifier << " () const";
@@ -3969,7 +4009,7 @@ void SequenceType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::os
   int nExtensions=0;
   bool hasNonOptionalFields=false;
 
-  hdr << indent << dllMacroExport << "static const Inherited::InfoType theInfo;\n\n"
+  hdr << indent << "static const Inherited::InfoType theInfo;\n\n"
       << indent-4 << "private:\n";
 
   size_t nTotalFields = fields.size();
@@ -4112,7 +4152,7 @@ void SequenceType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::os
       }
   }
 
-  std::string typenameKeyword;
+  string typenameKeyword;
   if (type->GetTemplatePrefix().size())
     typenameKeyword = "typename ";
 
@@ -4266,9 +4306,9 @@ bool SequenceOfType::UseType(const TypeBase& type) const
   return baseType->UseType(type);
 }
 
-std::string  SequenceOfType::GetTypeName() const
+string  SequenceOfType::GetTypeName() const
 {
-  std::string result("ASN1::SEQUENCE_OF<");
+  string result("ASN1::SEQUENCE_OF<");
 
   result += baseType->GetTypeName();
   if (constraints.size() )
@@ -4311,7 +4351,7 @@ TypeBase::RemoveResult SequenceOfType::CanRemoveType(const TypeBase& type)
 void SequenceOfType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::ostream& cxx)
 {
     Indent indent(hdr.precision());
-    hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+    hdr << indent  << "static const InfoType theInfo;\n";
     cxx << type->GetTemplatePrefix()
         << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
         << "    " ;
@@ -4330,7 +4370,7 @@ void SequenceOfType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::
     if (type->GetConstraints().size() &&
         ((sizeConstraint = type->GetConstraints()[0]->GetSizeConstraint()) != NULL))
     {
-      std::string str;
+      string str;
       sizeConstraint->GetConstraint(str);
       cxx << str.substr(0, str.size()-2);
     }
@@ -4370,9 +4410,9 @@ SetOfType::SetOfType(TypePtr base, ConstraintPtr constraint)
 {
 }
 
-std::string  SetOfType::GetTypeName() const
+string  SetOfType::GetTypeName() const
 {
-  std::string result("ASN1::SET_OF<");
+  string result("ASN1::SET_OF<");
   result += baseType->GetTypeName();
   if (constraints.size() )
   {
@@ -4403,9 +4443,9 @@ void ChoiceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::ost
   if (field.IsRemovedType())
     return;
 
-  std::string typeName =  field.GetTypeName();
-  std::string componentIdentifier = field.GetIdentifier();
-  std::string componentName = field.GetName();
+  string typeName =  field.GetTypeName();
+  string componentIdentifier = field.GetIdentifier();
+  string componentName = field.GetName();
   Indent indent(hdr.precision());
 
   // generate component scope class
@@ -4435,8 +4475,8 @@ void ChoiceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::ost
   field.SetName(componentName);
   str_replace(componentName,"-","_");
 
-  std::string primitiveFieldType = field.GetPrimitiveType(componentIdentifier);
-  std::string typenameKeyword;
+  string primitiveFieldType = field.GetPrimitiveType(componentIdentifier);
+  string typenameKeyword;
 
   bool field_has_typename = false;
   if (templatePrefix.length()) {
@@ -4613,7 +4653,7 @@ void ChoiceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std::
       << '\n' << indent << "unselected_ = -1";
 
   for(i = 0; i < nFields; ++i) {
-    const std::string& sfIdentifier = sortedFields[i]->GetIdentifier();
+    const string& sfIdentifier = sortedFields[i]->GetIdentifier();
     if(sfIdentifier.empty())
       continue;
 
@@ -4627,7 +4667,7 @@ void ChoiceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std::
   bool needExtraLine = false;
 
   hdr.precision(hdr.precision()+4);
-  std::stringstream tmpcxx;
+  stringstream tmpcxx;
   Unfreezer unfreezer(tmpcxx);
   for (i = 0; i < nFields; i++) {
     GenerateComponent(*sortedFields[i], hdr, tmpcxx, inl, i);
@@ -4640,7 +4680,7 @@ void ChoiceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std::
 
   //GenerateIds(hdr);
 
-  std::string typenameKeyword;
+  string typenameKeyword;
   if (templatePrefix.length())
     typenameKeyword = "typename ";
 
@@ -4706,7 +4746,7 @@ void ChoiceType::GenerateInfo(const TypeBase* type,std::ostream& hdr, std::ostre
   size_t nFields = fields.size();
   Indent indent(hdr.precision()+4);
 
-  hdr << indent << dllMacroExport << "static const InfoType theInfo;\n"
+  hdr << indent  << "static const InfoType theInfo;\n"
       << indent -4 << "private:\n";
 
   bool autoTag = true;
@@ -4774,7 +4814,7 @@ void ChoiceType::GenerateInfo(const TypeBase* type,std::ostream& hdr, std::ostre
       cxx << "};\n\n";
   }
 
-  std::string typenameKeyword;
+  string typenameKeyword;
   if (type->GetTemplatePrefix().length())
     typenameKeyword="typename ";
 
@@ -4846,7 +4886,7 @@ const char * ExternalType::GetAncestorClass() const
 
 /////////////////////////////////////////////////////////
 
-AnyType::AnyType(const std::string& ident)
+AnyType::AnyType(const string& ident)
   : TypeBase(Tag::UniversalExternalType, Module)
 {
     identifier = ident;
@@ -4918,7 +4958,7 @@ StringTypeBase::StringTypeBase(int tag)
 }
 
 
-std::string StringTypeBase::GetTypeName() const
+string StringTypeBase::GetTypeName() const
 {
   return GetAncestorClass();
 }
@@ -4934,7 +4974,7 @@ void StringTypeBase::GenerateConstructors(std::ostream & hdr, std::ostream & , s
 
 void StringTypeBase::GenerateOperators(std::ostream & hdr, std::ostream & , const TypeBase & actualType)
 {
-  std::string atname = actualType.GetIdentifier();
+  string atname = actualType.GetIdentifier();
   Indent indent(hdr.precision()+4);
   hdr << indent << atname << "& operator=(const ASN1_STD string& that)\n"
       << indent << "{ Inherited::operator=(that); return *this; }\n"
@@ -4962,7 +5002,7 @@ static size_t CountBits(unsigned range)
 void StringTypeBase::GenerateInfo(const TypeBase* type,std::ostream& hdr, std::ostream& cxx)
 {
   Indent indent(hdr.precision());
-  hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+  hdr << indent << "static const InfoType theInfo;\n";
   cxx << type->GetTemplatePrefix()
       << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
       << "    ASN1::AbstractString::create,\n"
@@ -4978,7 +5018,7 @@ void StringTypeBase::GenerateInfo(const TypeBase* type,std::ostream& hdr, std::o
 
   if (sizeConstraint != NULL)
   {
-    std::string str;
+    string str;
     sizeConstraint->GetConstraint(str);
     cxx << "    " << str.substr(0, str.size()-2) << ",\n";
   }
@@ -4993,7 +5033,7 @@ void StringTypeBase::GenerateInfo(const TypeBase* type,std::ostream& hdr, std::o
   cxx << "    ";
 
   int charSetUnalignedBits;
-  std::string characterSet;
+  string characterSet;
   if (fromConstraint != NULL &&
         (characterSet = fromConstraint->GetCharacterSet(canonicalSet, canonicalSetSize)).size())
   {
@@ -5051,7 +5091,7 @@ void BMPStringType::GenerateConstructors(std::ostream & hdr, std::ostream & , st
 
 void BMPStringType::GenerateOperators(std::ostream & hdr, std::ostream & , const TypeBase & actualType)
 {
-  std::string atname = actualType.GetIdentifier();
+  string atname = actualType.GetIdentifier();
   Indent indent(hdr.precision()+4);
   hdr << indent << atname << "& operator=(const std::wstring& that)\n"
       << indent << "{ Inherited::operator=(that); return *this; }\n"
@@ -5062,7 +5102,7 @@ void BMPStringType::GenerateOperators(std::ostream & hdr, std::ostream & , const
 void BMPStringType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::ostream& cxx)
 {
   Indent indent(hdr.precision());
-  hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+  hdr << indent << "static const InfoType theInfo;\n";
   cxx << type->GetTemplatePrefix()
       << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
       << "    ASN1::BMPString::create,\n"
@@ -5078,7 +5118,7 @@ void BMPStringType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::o
 
   if (sizeConstraint != NULL)
   {
-    std::string str;
+    string str;
     sizeConstraint->GetConstraint(str);
     cxx << "    " << str.substr(0, str.size()-2) << ",\n";
   }
@@ -5395,7 +5435,7 @@ void ObjectIdentifierType::GenerateConstructors(std::ostream & hdr, std::ostream
 /////////////////////////////////////////////////////////
 
 ObjectClassFieldType::ObjectClassFieldType(ObjectClassBasePtr  objclass,
-                       const std::string& field)
+                       const string& field)
   : TypeBase(Tag::IllegalUniversalTag, Module),
     asnObjectClass(objclass),
     asnObjectClassField(field)
@@ -5455,7 +5495,7 @@ const TypeBase* ObjectClassFieldType::GetFieldType() const
   return asnObjectClass->GetFieldType(asnObjectClassField);
 }
 
-std::string ObjectClassFieldType::GetConstrainedTypeName() const
+string ObjectClassFieldType::GetConstrainedTypeName() const
 {
     if (HasConstraints())
     {
@@ -5463,19 +5503,19 @@ std::string ObjectClassFieldType::GetConstrainedTypeName() const
         if (cons)
             return cons->GetSubTypeName();
     }
-    return std::string();
+    return string();
 }
 
-std::string ObjectClassFieldType::GetTypeName() const
+string ObjectClassFieldType::GetTypeName() const
 {
   const TypeBase* type = GetFieldType();
-  std::string result;
+  string result;
   if (type)
     return type->GetTypeName();
   else if ( (result = GetConstrainedTypeName()).size() )
-    return  std::string("ASN1::Constrained_OpenData<") + result + std::string("> ");
+    return  string("ASN1::Constrained_OpenData<") + result + string("> ");
 
-  return std::string("ASN1::OpenData");
+  return string("ASN1::OpenData");
 
 }
 
@@ -5498,10 +5538,10 @@ void ObjectClassFieldType::GenerateDecoder(std::ostream& cxx)
       }
 
       const StringList & lst = *(tableConstraint->GetAtNotations());
-      std::string keyname = lst[0];
+      string keyname = lst[0];
       if (keyname[0]== '.')
           keyname = keyname.substr(1);
-      std::string fieldIdentifier = asnObjectClassField.substr(1);
+      string fieldIdentifier = asnObjectClassField.substr(1);
       cxx << indent << tableConstraint->GetObjectSetIdentifier() << " objSet(*visitor.get_env());\n"
           << indent << "if (objSet.get())\n"
           << indent << "{\n"
@@ -5527,11 +5567,11 @@ void ObjectClassFieldType::GenerateDecoder(std::ostream& cxx)
 
 void ObjectClassFieldType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::ostream& cxx)
 {
-  std::string constrainedType = GetConstrainedTypeName();
+  string constrainedType = GetConstrainedTypeName();
   if (constrainedType.size())
   {
       Indent indent(hdr.precision()) ;
-      hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+      hdr << indent << "static const InfoType theInfo;\n";
       cxx << GetTemplatePrefix()
       << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
           << "    TypeConstrainedOpenData::create,\n"
@@ -5549,7 +5589,7 @@ void ObjectClassFieldType::GenerateInfo(const TypeBase* type, std::ostream& hdr,
 }
 /////////////////////////////////////////////////////////
 
-ImportedType::ImportedType(const std::string & theName, bool param)
+ImportedType::ImportedType(const string & theName, bool param)
   : TypeBase(Tag::IllegalUniversalTag, Module)
 {
   identifier = name = theName;
@@ -5584,7 +5624,7 @@ void ImportedType::GenerateCplusplus(std::ostream &, std::ostream &, std::ostrea
 }
 
 
-void ImportedType::SetModuleName(const std::string& mname)
+void ImportedType::SetModuleName(const string& mname)
 {
   moduleName = mname;
   cModuleName = MakeIdentifierC(mname);
@@ -5625,7 +5665,7 @@ bool ImportedType::IsPrimitiveType() const
 
 
 /////////////////////////////////////////////////////////
-TypeFromObject::TypeFromObject(InformationObjectPtr  obj, const std::string& fld)
+TypeFromObject::TypeFromObject(InformationObjectPtr  obj, const string& fld)
 : TypeBase(Tag::IllegalUniversalTag, Module)
   ,refObj(obj)
   ,field(fld)
@@ -5679,7 +5719,7 @@ const char * RemovedType::GetAncestorClass() const
 
 /////////////////////////////////////////////////////////
 
-void ValueBase::SetValueName(const std::string& name)
+void ValueBase::SetValueName(const string& name)
 {
   valueName = name;
 }
@@ -5694,17 +5734,17 @@ void ValueBase::PrintBase(std::ostream & strm) const
 
 void ValueBase::GenerateCplusplus(std::ostream &, std::ostream &, std::ostream &) const
 {
-  std::cerr << StdError(Warning) << "unsupported value type." << std::endl;
+  std::cerr << StdError(Warning) << "unsupported value type." << endl;
 }
 
 void ValueBase::GenerateConst(std::ostream &, std::ostream &) const
 {
-  std::cerr << StdError(Warning) << "unsupported const value type." << std::endl;
+  std::cerr << StdError(Warning) << "unsupported const value type." << endl;
 }
 
 /////////////////////////////////////////////////////////
 
-DefinedValue::DefinedValue(const std::string& name)
+DefinedValue::DefinedValue(const string& name)
   : referenceName(name)
 {
   unresolved = true;
@@ -5715,7 +5755,7 @@ DefinedValue::DefinedValue(const ValuePtr& base)
 {
 }
 
-DefinedValue::DefinedValue(const std::string& name, const ValuePtr& base)
+DefinedValue::DefinedValue(const string& name, const ValuePtr& base)
 : actualValue(base), unresolved(false)
 {
   referenceName = name;
@@ -5826,7 +5866,7 @@ RealValue::RealValue(double newVal)
 
 /////////////////////////////////////////////////////////
 
-OctetStringValue::OctetStringValue(const std::string& newVal)
+OctetStringValue::OctetStringValue(const string& newVal)
 {
   value.assign(newVal.begin(), newVal.end());
 }
@@ -5834,7 +5874,7 @@ OctetStringValue::OctetStringValue(const std::string& newVal)
 
 /////////////////////////////////////////////////////////
 
-BitStringValue::BitStringValue(const std::string& newVal)
+BitStringValue::BitStringValue(const string& newVal)
 {
   value = newVal;
 }
@@ -5895,7 +5935,7 @@ void CharacterValue::GenerateCplusplus(std::ostream &, std::ostream & cxx, std::
 
 /////////////////////////////////////////////////////////
 
-CharacterStringValue::CharacterStringValue(const std::string& newVal)
+CharacterStringValue::CharacterStringValue(const string& newVal)
 {
   value = newVal;
 }
@@ -5921,7 +5961,7 @@ void CharacterStringValue::GenerateCplusplus(std::ostream &, std::ostream & cxx,
   cxx << value;
 }
 
-void CharacterStringValue::GetValue(std::string& v) const
+void CharacterStringValue::GetValue(string& v) const
 {
   v = value.substr(1, value.size()-2);
 }
@@ -5929,7 +5969,7 @@ void CharacterStringValue::GetValue(std::string& v) const
 
 /////////////////////////////////////////////////////////
 
-ObjectIdentifierValue::ObjectIdentifierValue(const std::string& newVal)
+ObjectIdentifierValue::ObjectIdentifierValue(const string& newVal)
 {
   value.push_back(newVal);
 }
@@ -5954,7 +5994,7 @@ void ObjectIdentifierValue::GenerateConst(std::ostream & hdr, std::ostream & cxx
   hdr << "extern const ASN1::OBJECT_IDENTIFIER " << GetName() << ";\n\n";
   cxx << "const ASN1::OBJECT_IDENTIFIER " << GetName()  << '(';
 
-  std::stringstream dummy;
+  stringstream dummy;
   GenerateCplusplus(hdr, cxx, dummy);
 
   cxx << ");\n\n";
@@ -6039,7 +6079,7 @@ void ChoiceValue::GenerateCplusplus(std::ostream & , std::ostream & cxx, std::os
 /////////////////////////////////////////////////////////
 
 
-ImportModule::ImportModule(std::string * name, SymbolList * syms)
+ImportModule::ImportModule(string * name, SymbolList * syms)
   : fullModuleName(*name),
     shortModuleName(Module->GetImportModuleName(*name))
 {
@@ -6077,7 +6117,7 @@ void ImportModule::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std
   ModuleDefinition* module = FindModule(fullModuleName.c_str());
   if(!module)
   {
-    hdr << "#include <" << filename << ".h>\n";
+    hdr << "#include \"" << filename << ".h\"\n";
 
     for (size_t i = 0; i < symbols.size(); i++)
     {
@@ -6110,7 +6150,7 @@ void ImportModule::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std
 
 void ImportModule::GenerateUsingDirectives(std::ostream & strm) const
 {
-  std::string name = MakeIdentifierC(fullModuleName);
+  string name = MakeIdentifierC(fullModuleName);
   for (size_t i = 0; i < symbols.size(); ++i)
     symbols[i]->GenerateUsingDirective(name, strm);
 }
@@ -6147,7 +6187,7 @@ bool ImportModule::HasValuesOrObjects() const
   return false;
 }
 
-std::string ImportModule::GetCModuleName() const
+string ImportModule::GetCModuleName() const
 {
   return MakeIdentifierC(fullModuleName);
 }
@@ -6155,7 +6195,7 @@ std::string ImportModule::GetCModuleName() const
 
 /////////////////////////////////////////////////////////
 
-ModuleDefinition::ModuleDefinition(const std::string& name, Tag::Mode defTagMode)
+ModuleDefinition::ModuleDefinition(const string& name, Tag::Mode defTagMode)
   : moduleName(name)
 {
   defaultTagMode = defTagMode;
@@ -6164,7 +6204,7 @@ ModuleDefinition::ModuleDefinition(const std::string& name, Tag::Mode defTagMode
 
   for (size_t i = 0; i < Modules.size(); ++i)
   {
-    std::string str = Modules[i]->moduleName;
+    string str = Modules[i]->moduleName;
     identifiers[str]= MODULEREFERENCE;
   }
   // Create sorted list for faster searching.
@@ -6180,14 +6220,14 @@ void ModuleDefinition::SetDefinitiveObjId(StringList& id)
   definitiveId.swap(id);
 }
 
-void ModuleDefinition::AddIdentifier(std::string* name, int idType)
+void ModuleDefinition::AddIdentifier(string* name, int idType)
 {
   identifiers[*name]= idType;
   delete name;
 }
 
 
-void ModuleDefinition::AddImportedIdentifiers(StringList& imports_sl, const std::string& name)
+void ModuleDefinition::AddImportedIdentifiers(StringList& imports_sl, const string& name)
 {
   identifiers[name]= MODULEREFERENCE;
   ModuleDefinition* module = FindModule(name.c_str());
@@ -6195,7 +6235,7 @@ void ModuleDefinition::AddImportedIdentifiers(StringList& imports_sl, const std:
   {
     for (size_t i = 0; i < imports_sl.size(); ++i)
     {
-      std::string identifier = imports_sl[i];
+      string identifier = imports_sl[i];
       str_replace(identifier,"{}","");
       identifiers[identifier]= module->GetIdentifierType(identifier);
     }
@@ -6205,7 +6245,7 @@ void ModuleDefinition::AddImportedIdentifiers(StringList& imports_sl, const std:
     for (size_t i = 0; i < imports_sl.size(); ++i)
     {
       int id = TYPEREFERENCE;
-      std::string identifier = imports_sl[i];
+      string identifier = imports_sl[i];
       if (identifier.find("{}") != -1)
       {
         str_replace(identifier,"{}","");
@@ -6217,7 +6257,7 @@ void ModuleDefinition::AddImportedIdentifiers(StringList& imports_sl, const std:
 
 }
 
-int  ModuleDefinition::GetIdentifierType(const std::string& id)
+int  ModuleDefinition::GetIdentifierType(const string& id)
 {
   if (identifiers.count(id))
     return identifiers[id];
@@ -6267,7 +6307,7 @@ void ModuleDefinition::AddType(TypePtr type)
 }
 
 
-TypePtr ModuleDefinition::FindType(const std::string & name)
+TypePtr ModuleDefinition::FindType(const string & name)
 {
   const char* nam = name.c_str();
   if (typeMap.count(nam))
@@ -6276,7 +6316,7 @@ TypePtr ModuleDefinition::FindType(const std::string & name)
 }
 
 
-std::string ModuleDefinition::GetImportModuleName(const std::string & mName)
+string ModuleDefinition::GetImportModuleName(const string & mName)
 {
   if (importNames.count(mName))
     return importNames[mName];
@@ -6284,7 +6324,7 @@ std::string ModuleDefinition::GetImportModuleName(const std::string & mName)
   return ShortenName(mName);
 }
 
-void ModuleDefinition::AdjustModuleName(const std::string & sourcePath,bool isSubModule)
+void ModuleDefinition::AdjustModuleName(const string & sourcePath,bool isSubModule)
 {
   shortModuleName = ShortenName(moduleName);
   cModuleName = MakeIdentifierC(moduleName);
@@ -6296,7 +6336,7 @@ void ModuleDefinition::AdjustModuleName(const std::string & sourcePath,bool isSu
   else
   {
     path += imports[0]->GetFileName();
-    std::string tmp = imports[1]->GetFileName();
+    string tmp = imports[1]->GetFileName();
     path += tmp.substr(tmp.size()-tmp.find('_'));
   }
 
@@ -6334,7 +6374,7 @@ bool ModuleDefinition::ReorderTypes()
       if (loopDetect > rtypes.size()) {
         std::cerr << StdError(Fatal)
                   << "Recursive type definition: " << bubbleType->GetName()
-                  << " references " << (*itr)->GetName() <<std::endl;
+                  << " references " << (*itr)->GetName() <<endl;
         break;
       }
 
@@ -6357,14 +6397,14 @@ bool ModuleDefinition::ReorderTypes()
   return hasTemplates;
 }
 
-void ModuleDefinition::GenerateCplusplus(const std::string & dir,
+void ModuleDefinition::GenerateCplusplus(const string & dir,
                                          unsigned classesPerFile,
                                          bool verbose)
 {
   size_t i,classesCount = 1;
 
   Module = this;
-  std::string dpath(dir);
+  string dpath(dir);
   if (dpath.length())
     dpath += DIR_SEPARATOR;
 
@@ -6385,7 +6425,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
   }
 
   if (verbose)
-    std::cout << "Sorting " << types.size() << " types..." << std::endl;
+    std::cout << "Sorting " << types.size() << " types..." << endl;
 
   bool hasTemplates = ReorderTypes();
 
@@ -6395,11 +6435,11 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 
   // Generate the code
   if (verbose)
-    std::cout << "Generating code (" << types.size() << " classes) ..." << std::endl;
+    std::cout << "Generating code (" << types.size() << " classes) ..." << endl;
 
 
   // Output the special template closure file, if necessary
-  std::string templateFilename;
+  string templateFilename;
   if (hasTemplates) {
     OutputFile templateFile;
 
@@ -6410,7 +6450,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 
     for (i = 0; i < types.size(); i++) {
       if (types[i]->HasParameters()) {
-                    std::stringstream dummy;
+                    stringstream dummy;
                     Unfreezer uf(dummy);
                     types[i]->GenerateCplusplus(dummy, templateFile, dummy);
       }
@@ -6419,7 +6459,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
     templateFile << "} // namespace " << cModuleName << "\n\n";
 
     if (verbose)
-      std::cout << "Completed " << templateFile.GetFilePath() << std::endl;
+      std::cout << "Completed " << templateFile.GetFilePath() << endl;
 
     templateFilename = ::GetFileName(dpath) + "_t" + cppExt;//templateFile.GetFilePath().GetFileName();
   }
@@ -6450,14 +6490,14 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
     if (!cxxFile.Open(dpath, numFiles > 1 ? "_1" : "" , cppExt))
       return;
 
-    std::stringstream inl;
+    stringstream inl;
     Unfreezer unfreezer(inl);
 
-    std::string headerName = ::GetFileName(dpath) + ".h";
+    string headerName = ::GetFileName(dpath) + ".h";
 
     if (includeConfigH)
        cxxFile << "#ifdef HAVE_CONFIG_H\n"
-                  "#include <config.h>\n"
+                  "#include \"config.h\"\n"
                   "#endif\n\n";
 
    // if this define is generated - do_accept() in cxx file does not find inline function
@@ -6480,16 +6520,104 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
     for (i = 0; i < subModules.size() ; ++i)
       hdrFile << "#include \"" << subModules[i]->GetFileName() << ".h\"\n";
 
-     if (dllMacroDLL.size() > 0)
+     if (dllMacro.size() > 0)
      {
-        hdrFile << '\n'
-                << "#ifndef " << dllMacroExport << '\n'
-                << "#if defined( " << dllMacroDLL << ") && defined(_MSC_VER)\n"
-                << "#define " << dllMacroExport << " __declspec(dllimport)\n"
-                << "#else\n"
-                << "#define " << dllMacroExport << '\n'
-                << "#endif // " << dllMacroDLL << '\n'
-                << "#endif // " << dllMacroExport << "\n\n";
+		hdrFile << endl;
+#if 0
+		hdrFile 
+			<< "#ifndef " << dllMacroEXPORTS << '\n'
+			<< "#if defined( " << dllMacroDLL << ") && defined(_MSC_VER)\n"
+			<< "#define " << dllMacroEXPORTS << " __declspec(dllimport)\n"
+			<< "#else\n"
+			<< "#define " << dllMacroEXPORTS << '\n'
+			<< "#endif // " << dllMacroDLL << '\n'
+			<< "#endif // " << dllMacroEXPORTS << "\n\n";
+#else
+		hdrFile << "#ifndef " << dllMacroDEFINED << endl;
+		hdrFile << "#define " << dllMacroDEFINED << endl;
+		hdrFile << endl;
+		
+		hdrFile << "#include \"Platform.h\"" << endl;
+		hdrFile << endl;
+
+		hdrFile << "#if defined(_WIN32)" << endl;
+		hdrFile << "	#include \"Platform_WIN32.h\"" << endl;
+		hdrFile << "#elif defined(__VMS)" << endl;
+		hdrFile << "	#include \"Platform_VMS.h\"" << endl;
+		hdrFile << "#elif defined(ALS_VXWORKS)" << endl;
+		hdrFile << "	#include \"Platform_VX.h\"" << endl;
+		hdrFile << "#elif defined(ALS_OS_FAMILY_UNIX)" << endl;
+		hdrFile << "	#include \"Platform_POSIX.h\"" << endl;
+		hdrFile << "#endif" << endl;
+		hdrFile << endl;
+
+		hdrFile << "//" << endl;
+		hdrFile << "// Ensure that " << dllMacroDLL << " is default unless " << dllMacroSTATIC << " is defined" << endl;
+		hdrFile << "//" << endl;
+		hdrFile << "#if defined(_WIN32) && defined(_DLL)" << endl;
+		hdrFile << "	#if !defined(" << dllMacroDLL << ") && !defined(" << dllMacroSTATIC << ")" << endl;
+		hdrFile << "		#define " << dllMacroDLL << endl;
+		hdrFile << "	#endif" << endl;
+		hdrFile << "#endif" << endl;
+		hdrFile << endl;
+
+		hdrFile << "#if defined(_MSC_VER)" << endl;
+		hdrFile << "	#if defined(" << dllMacroDLL << ")" << endl;
+		hdrFile << "		#if defined(_DEBUG)" << endl;
+		hdrFile << "			#define " << dllMacroLIB_SUFFIX << " \"d.lib\"" << endl;
+		hdrFile << "		#else" << endl;
+		hdrFile << "			#define " << dllMacroLIB_SUFFIX << " \".lib\"" << endl;
+		hdrFile << "		#endif" << endl;
+		hdrFile << "	#elif defined(_DLL)" << endl;
+		hdrFile << "		#if defined(_DEBUG)" << endl;
+		hdrFile << "			#define " << dllMacroLIB_SUFFIX << " \"mdd.lib\"" << endl;
+		hdrFile << "		#else" << endl;
+		hdrFile << "			#define " << dllMacroLIB_SUFFIX << " \"md.lib\"" << endl;
+		hdrFile << "		#endif" << endl;
+		hdrFile << "	#else" << endl;
+		hdrFile << "		#if defined(_DEBUG)" << endl;
+		hdrFile << "			#define " << dllMacroLIB_SUFFIX << " \"mtd.lib\"" << endl;
+		hdrFile << "		#else" << endl;
+		hdrFile << "			#define " << dllMacroLIB_SUFFIX << " \"mt.lib\"" << endl;
+		hdrFile << "		#endif" << endl;
+		hdrFile << "	#endif" << endl;
+		hdrFile << "#endif" << endl;
+		hdrFile << endl;
+
+		hdrFile << "//" << endl;
+		hdrFile << "// The following block is the standard way of creating macros which make exporting" << endl;
+		hdrFile << "// from a DLL simpler. All files within this DLL are compiled with the " << dllMacroEXPORTS << endl;
+		hdrFile << "// symbol defined on the command line. this symbol should not be defined on any project" << endl;
+		hdrFile << "// that uses this DLL. This way any other project whose source files include this file see" << endl;
+		hdrFile << "// " << dllMacroAPI << " functions as being imported from a DLL, wheras this DLL sees symbols" << endl;
+		hdrFile << "// defined with this macro as being exported." << endl;
+		hdrFile << "//" << endl;
+		hdrFile << "#if defined(_WIN32) && defined(" << dllMacroDLL << ")" << endl;
+		hdrFile << "	#if defined(" << dllMacroEXPORTS << ")" << endl;
+		hdrFile << "		#define " << dllMacroAPI << " __declspec(dllexport)" << endl;
+		hdrFile << "	#else" << endl;
+		hdrFile << "		#define " << dllMacroAPI << " __declspec(dllimport)" << endl;
+		hdrFile << "	#endif" << endl;
+		hdrFile << "#endif" << endl;
+		hdrFile << endl;
+
+		hdrFile << "#if !defined(" << dllMacroAPI << ")" << endl;
+		hdrFile << "	#define " << dllMacroAPI << endl;
+		hdrFile << "#endif" << endl;
+		hdrFile << endl;
+
+		hdrFile << "//" << endl;
+		hdrFile << "// Automatically link " << dllMacro << " library." << endl;
+		hdrFile << "//" << endl;
+		hdrFile << "#if defined(_MSC_VER)" << endl;
+		hdrFile << "	#if !defined(" << dllMacroNO_AUTOMATIC_LIBS << ") && !defined(" << dllMacroEXPORTS << ")" << endl;
+		hdrFile << "		#pragma comment(lib, \"" << dllMacroRTS << "\" " << dllMacroLIB_SUFFIX << ")" << endl;
+		hdrFile << "	#endif" << endl;
+		hdrFile << "#endif" << endl;
+		hdrFile << "#endif" << endl;
+		hdrFile << endl;
+
+#endif
      }
 
     hdrFile << "namespace " << cModuleName << " {\n"
@@ -6512,9 +6640,9 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
         classesCount = i/classesPerFile+1;
 
         if (verbose)
-          std::cout << "Completed " << cxxFile.GetFilePath() << std::endl;
+          std::cout << "Completed " << cxxFile.GetFilePath() << endl;
 
-        std::stringstream suffix;
+        stringstream suffix;
         Unfreezer unfreezer(suffix);
         suffix << '_' << i/classesPerFile+1 << std::ends;
 
@@ -6526,7 +6654,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 
         if (includeConfigH)
             cxxFile << "#ifdef HAVE_CONFIG_H\n"
-                       "#include <config.h>\n"
+			"#include \"config.h\"\n"
                        "#endif\n\n";
 
    // if this define is generated - do_accept() in cxx file does not find inline function
@@ -6553,10 +6681,10 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
                    "\n";
       }
 
-      std::cerr << "Generating " << types[i]->GetName() << std::endl;
+      std::cerr << "Generating " << types[i]->GetName() << endl;
 
       if (types[i]->HasParameters()) {
-        std::stringstream dummy;
+        stringstream dummy;
         types[i]->GenerateCplusplus(hdrFile, dummy, inl);
       }
       else {
@@ -6620,7 +6748,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
     hdrFile << "#endif // __" << ToUpper(GetFileName()) << "_H\n";
 
     if (verbose)
-      std::cout << "Completed " << cxxFile.GetFilePath() << std::endl;
+      std::cout << "Completed " << cxxFile.GetFilePath() << endl;
   }
 }
 
@@ -6628,7 +6756,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& cxxFile, std::ostream& inl)
 {
   size_t i;
-  std::stringstream tmphdr, tmpcxx;
+  stringstream tmphdr, tmpcxx;
   Unfreezer unfreezer1(tmphdr),unfreezer2(tmpcxx);
   for (i = 0 ; i < informationObjects.size(); ++i)
     informationObjects[i]->GenerateCplusplus(tmphdr, tmpcxx, inl);
@@ -6637,7 +6765,7 @@ void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& 
     if (dynamic_cast<DefaultObjectDefn*>(informationObjects[i].get()))
     {
       InformationObject& obj = *informationObjects[i];
-      std::string name = MakeIdentifierC(obj.GetName());
+      string name = MakeIdentifierC(obj.GetName());
       if (obj.IsExtendable())
         tmphdr << "    " << name << "& get_" << name << "()\n"
                << "    {  return m_" << name << "; }\n";
@@ -6648,7 +6776,7 @@ void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& 
   for (i = 0; i < informationObjectSets.size(); ++i)
   {
     InformationObjectSet& objSet = *informationObjectSets[i];
-    const std::string &name = MakeIdentifierC(objSet.GetName()),
+    const string &name = MakeIdentifierC(objSet.GetName()),
                       &className = MakeIdentifierC(objSet.GetObjectClass()->GetName());
 
     if (!objSet.HasParameters())
@@ -6665,7 +6793,7 @@ void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& 
   tmphdr << std::ends;
   if (strlen(tmphdr.str().c_str()))
   {
-    hdrFile << "class Module : public ASN1::Module\n"
+    hdrFile << "class " << dllMacroAPI << " Module : public ASN1::Module\n"
             << "{\n"
             << "public:\n"
             << "    Module(";
@@ -6688,7 +6816,7 @@ void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& 
     for (i = 0 ; i < informationObjects.size(); ++i)
     {
       InformationObject& obj = *informationObjects[i];
-      std::string name = MakeIdentifierC(obj.GetName());
+      string name = MakeIdentifierC(obj.GetName());
       if (dynamic_cast<DefaultObjectDefn*>(&obj))
         hdrFile << "    " << name << " m_" << name << ";\n";
     }
@@ -6742,12 +6870,12 @@ void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& 
   }
 }
 
-ValuePtr ModuleDefinition::FindValue(const std::string& name)
+ValuePtr ModuleDefinition::FindValue(const string& name)
 {
   return FindWithName(values, name);
 }
 
-ObjectClassBasePtr ModuleDefinition::FindObjectClass(const std::string & name)
+ObjectClassBasePtr ModuleDefinition::FindObjectClass(const string & name)
 {
   ObjectClassBasePtr result = FindWithName(objectClasses, name);
   if (result.get())
@@ -6796,7 +6924,7 @@ ObjectClassBasePtr ModuleDefinition::FindObjectClass(const std::string & name)
       SymbolList *lst = new SymbolList;
       lst->push_back(SymbolPtr(new ObjectClassReference(name, false)));
 
-      AddImport(ImportModulePtr(new ImportModule(new std::string(UsefulModule->GetName()), lst)));
+      AddImport(ImportModulePtr(new ImportModule(new string(UsefulModule->GetName()), lst)));
 
       return oc;
     }
@@ -6805,12 +6933,12 @@ ObjectClassBasePtr ModuleDefinition::FindObjectClass(const std::string & name)
   return result;
 }
 
-const InformationObject* ModuleDefinition::FindInformationObject(const std::string & name)
+const InformationObject* ModuleDefinition::FindInformationObject(const string & name)
 {
   return FindWithName(informationObjects, name).get();
 }
 
-const InformationObjectSet* ModuleDefinition::FindInformationObjectSet(const std::string & name)
+const InformationObjectSet* ModuleDefinition::FindInformationObjectSet(const string & name)
 {
   return FindWithName(informationObjectSets, name).get();
 }
@@ -6823,13 +6951,13 @@ void ModuleDefinition::ResolveObjectClassReferences() const
 
 
 
-std::string ModuleDefinition::GetFileName()
+string ModuleDefinition::GetFileName()
 {
   return ToLower(GetFileTitle(path));
 }
 
 
-std::string ModuleDefinition::CreateSubModules(SymbolList& exportedSymbols)
+string ModuleDefinition::CreateSubModules(SymbolList& exportedSymbols)
 {
   unsigned clsPerFile = classesPerFile;
   if(!clsPerFile)
@@ -6843,7 +6971,7 @@ std::string ModuleDefinition::CreateSubModules(SymbolList& exportedSymbols)
   for (i = 0; i < types.size(); ++i)
     types[i]->ResolveReference();
 
-  typedef std::list<std::string> StringList;
+  typedef std::list<string> StringList;
   StringList unhandledSymbols;
   ModuleDefinitionPtr subModule(new ModuleDefinition(moduleName, defaultTagMode));
 
@@ -6892,7 +7020,7 @@ std::string ModuleDefinition::CreateSubModules(SymbolList& exportedSymbols)
       {
         if (!hasSymbolInThisModule)
         {
-          ImportModule* im = new ImportModule(new std::string(GetName()), NULL);
+          ImportModule* im = new ImportModule(new string(GetName()), NULL);
           im->SetFileName(subModules[i]->GetFileName());
           subModule->imports.push_back(ImportModulePtr(im));
           hasSymbolInThisModule = true;
@@ -6909,7 +7037,7 @@ std::string ModuleDefinition::CreateSubModules(SymbolList& exportedSymbols)
       {
         if ( exportedTypes[j]->UseType(*subModules[i]->types[k]) )
         {
-           ImportModule* im = new ImportModule(new std::string(GetName()), NULL);
+           ImportModule* im = new ImportModule(new string(GetName()), NULL);
            im->SetFileName(subModules[i]->GetFileName());
            subModule->imports.push_back(ImportModulePtr(im));
            hasSymbolInThisModule = true;
@@ -6920,7 +7048,7 @@ std::string ModuleDefinition::CreateSubModules(SymbolList& exportedSymbols)
 
   if (exportedTypes.size() ==0 && subModule->imports.size() == 1 )
   {
-    std::string result = subModule->imports[0]->GetFileName();
+    string result = subModule->imports[0]->GetFileName();
     return result;
   }
   else if (types.size()==0 && exportedTypes.size())
@@ -6939,7 +7067,7 @@ std::string ModuleDefinition::CreateSubModules(SymbolList& exportedSymbols)
            ImportModule* im= subModule->FindImportedModule(importedType->GetModuleName());
            if (im == NULL)
            {
-             im = new ImportModule(new std::string(importedType->GetModuleName()), NULL);
+             im = new ImportModule(new string(importedType->GetModuleName()), NULL);
              ImportModule* theImportedModule = this->FindImportedModule(importedType->GetModuleName());
              assert(theImportedModule);
              im->SetFileName(theImportedModule->GetFileName());
@@ -6968,7 +7096,7 @@ void ModuleDefinition::AdjustImportedModules()
   for_all(imports, boost::mem_fn(&ImportModule::Adjust));
 }
 
-bool ModuleDefinition::IsExported(const std::string& name) const
+bool ModuleDefinition::IsExported(const string& name) const
 {
   if(exportAll)
     return true;
@@ -7006,7 +7134,7 @@ void ModuleDefinition::CreateObjectSetTypes()
   }
 }
 
-void ModuleDefinition::AddToRemoveList(const std::string& reference)
+void ModuleDefinition::AddToRemoveList(const string& reference)
 {
     removeList.push_back(reference);
 }
@@ -7036,7 +7164,7 @@ void ModuleDefinition::RemoveReferences(bool verbose)
   TypesVector referencesToBeRemoved;
   for (i = 0 ; i < removeList.size(); ++i)
   {
-      const std::string& ref = removeList[i];
+      const string& ref = removeList[i];
       TypePtr typeToBeRemoved = FindType(ref);
       if (typeToBeRemoved.get() == NULL)
       {
@@ -7082,7 +7210,7 @@ void ModuleDefinition::RemoveReferences(bool verbose)
 
 }
 
-ImportModule* ModuleDefinition::FindImportedModule(const std::string& theModuleName)
+ImportModule* ModuleDefinition::FindImportedModule(const string& theModuleName)
 {
   //for (size_t i = 0; i < imports.GetSize(); ++i)
   //{
@@ -7093,13 +7221,13 @@ ImportModule* ModuleDefinition::FindImportedModule(const std::string& theModuleN
   return FindWithName(imports, theModuleName).get();
 }
 
-bool  ModuleDefinition::HasType(const std::string& name)
+bool  ModuleDefinition::HasType(const string& name)
 {
   return FindType(name).get() != NULL;
 }
 
 //////////////////////////////////////////////////////////////////////////////
-FieldSpec::FieldSpec(const std::string& nam, bool optional)
+FieldSpec::FieldSpec(const string& nam, bool optional)
 : name(nam), isOptional(optional)
 {
   identifier = MakeIdentifierC(name.substr(1));
@@ -7118,16 +7246,16 @@ void FieldSpec::PrintOn(std::ostream& strm) const
     strm << " OPTIONAL";
 }
 
-void FieldSpec::GenerateTypeField(const std::string& ,
-                   const std::string& ,
+void FieldSpec::GenerateTypeField(const string& ,
+                   const string& ,
                    const TypeBase* ,
-                   const std::string& ,
+                   const string& ,
                    std::ostream& , std::ostream& , std::ostream& ) const
 {
 }
 ////////////////////////////////////////////////////////////////////////
 
-TypeFieldSpec::TypeFieldSpec(const std::string& nam, bool optional, TypePtr defaultType)
+TypeFieldSpec::TypeFieldSpec(const string& nam, bool optional, TypePtr defaultType)
 : FieldSpec(nam, optional), type(defaultType)
 {
 }
@@ -7142,9 +7270,9 @@ bool TypeFieldSpec::HasDefault() const
 }
 
 
-std::string TypeFieldSpec::GetField() const
+string TypeFieldSpec::GetField() const
 {
-  return std::string("");
+  return string("");
 }
 
 TypePtr TypeFieldSpec::GetDefaultType()
@@ -7159,12 +7287,12 @@ int TypeFieldSpec::GetToken() const
 }
 
 
-std::string TypeFieldSpec::GetDefault() const
+string TypeFieldSpec::GetDefault() const
 {
   if (type.get())
     return type->GetName();
   else
-    return std::string("");
+    return string("");
 }
 
 
@@ -7219,15 +7347,15 @@ void TypeFieldSpec::Generate_info_type_mem(std::ostream& hdr) const
 void TypeFieldSpec::Generate_value_type(std::ostream& hdr) const
 {
   Indent indent(hdr.precision()+4);
-  std::string fname = GetIdentifier();
+  string fname = GetIdentifier();
   hdr << indent << "ASN1::AbstractData* get_" << fname << "() const { return second->get_"
       << fname << "(); }\n";
 }
 
-void TypeFieldSpec::GenerateTypeField(const std::string& templatePrefix,
-                      const std::string& classNameString,
+void TypeFieldSpec::GenerateTypeField(const string& templatePrefix,
+                      const string& classNameString,
                       const TypeBase* keyType,
-                      const std::string& objClassName,
+                      const string& objClassName,
                       std::ostream& hdr, std::ostream& cxx, std::ostream& ) const
 {
   hdr << "    ASN1::AbstractData* get_" << GetIdentifier() << "(const "
@@ -7250,7 +7378,7 @@ void TypeFieldSpec::GenerateTypeField(const std::string& templatePrefix,
 
 ////////////////////////////////////////////////////////////////////////////
 
-FixedTypeValueFieldSpec::FixedTypeValueFieldSpec(const std::string& nam, TypePtr t,
+FixedTypeValueFieldSpec::FixedTypeValueFieldSpec(const string& nam, TypePtr t,
                          bool optional, bool unique)
 : FieldSpec(nam, optional), isUnique(unique), type(t)
 {
@@ -7271,7 +7399,7 @@ bool FixedTypeValueFieldSpec::HasDefault() const
 }
 
 
-std::string FixedTypeValueFieldSpec::GetField() const
+string FixedTypeValueFieldSpec::GetField() const
 {
   return type->GetName();
 }
@@ -7321,9 +7449,9 @@ const TypeBase* FixedTypeValueFieldSpec::GetFieldType() const
   return type.get();
 }
 
-bool FixedTypeValueFieldSpec::GetKey(TypePtr& keyType, std::string& keyName)
+bool FixedTypeValueFieldSpec::GetKey(TypePtr& keyType, string& keyName)
 {
-  if (isUnique || std::string(type->GetAncestorClass()) == "ASN1::OBJECT_IDENTIFIER")
+  if (isUnique || string(type->GetAncestorClass()) == "ASN1::OBJECT_IDENTIFIER")
   {
     keyType = type;
     keyName = GetName();
@@ -7333,7 +7461,7 @@ bool FixedTypeValueFieldSpec::GetKey(TypePtr& keyType, std::string& keyName)
 }
 ////////////////////////////////////////////////////////////////////////
 
-FixedTypeValueSetFieldSpec::FixedTypeValueSetFieldSpec(const std::string& nam,
+FixedTypeValueSetFieldSpec::FixedTypeValueSetFieldSpec(const string& nam,
                              TypePtr t,
                              bool optional)
 : FieldSpec(nam, optional), type(t)
@@ -7394,8 +7522,8 @@ const TypeBase* FixedTypeValueSetFieldSpec::GetFieldType() const
 
 /////////////////////////////////////////////////////////////////////
 
-VariableTypeValueFieldSpec::VariableTypeValueFieldSpec(const std::string& nam,
-                             const std::string& fieldname,
+VariableTypeValueFieldSpec::VariableTypeValueFieldSpec(const string& nam,
+                             const string& fieldname,
                              bool optional)
 : FieldSpec(nam, optional), fieldName(fieldname)
 {
@@ -7410,7 +7538,7 @@ bool VariableTypeValueFieldSpec::HasDefault() const
   return defaultValue.get() != NULL;
 }
 
-TypePtr GetFieldType(FieldSettingList* parsedFields, const std::string& fieldname)
+TypePtr GetFieldType(FieldSettingList* parsedFields, const string& fieldname)
 {
   if (parsedFields != NULL)
   {
@@ -7486,8 +7614,8 @@ void VariableTypeValueFieldSpec::ResolveReference() const
 
 ////////////////////////////////////////////////////////////////
 
-VariableTypeValueSetFieldSpec::VariableTypeValueSetFieldSpec(const std::string& nam,
-                               const std::string& fieldname,
+VariableTypeValueSetFieldSpec::VariableTypeValueSetFieldSpec(const string& nam,
+                               const string& fieldname,
                                bool optional)
 : FieldSpec(nam, optional), fieldName(fieldname)
 {
@@ -7550,7 +7678,7 @@ void VariableTypeValueSetFieldSpec::ResolveReference() const
 
 /////////////////////////////////////////////////////////////////////////////////
 
-ObjectFieldSpec::ObjectFieldSpec(const std::string& nam,
+ObjectFieldSpec::ObjectFieldSpec(const string& nam,
                  DefinedObjectClass* oclass,
                  bool optional)
 : FieldSpec(nam, optional),objectClass(oclass)
@@ -7567,7 +7695,7 @@ bool ObjectFieldSpec::HasDefault() const
 }
 
 
-std::string ObjectFieldSpec::GetField() const
+string ObjectFieldSpec::GetField() const
 {
   return objectClass->GetName();
 }
@@ -7608,7 +7736,7 @@ void ObjectFieldSpec::ResolveReference() const
 /////////////////////////////////////////////////////////////////////////////////
 
 
-ObjectSetFieldSpec::ObjectSetFieldSpec(const std::string& nam, DefinedObjectClassPtr oclass,  bool optional)
+ObjectSetFieldSpec::ObjectSetFieldSpec(const string& nam, DefinedObjectClassPtr oclass,  bool optional)
 : FieldSpec(nam, optional),objectClass(oclass)
 {
 }
@@ -7624,7 +7752,7 @@ bool ObjectSetFieldSpec::HasDefault() const
 }
 
 
-std::string ObjectSetFieldSpec::GetField() const
+string ObjectSetFieldSpec::GetField() const
 {
   return objectClass->GetName();
 }
@@ -7695,10 +7823,10 @@ void ObjectSetFieldSpec::Generate_value_type(std::ostream& hdr) const
       <<  GetIdentifier() << "(); }\n";
 }
 
-void ObjectSetFieldSpec::GenerateTypeField(const std::string& templatePrefix,
-                         const std::string& classNameString,
+void ObjectSetFieldSpec::GenerateTypeField(const string& templatePrefix,
+                         const string& classNameString,
                          const TypeBase* keyType,
-                         const std::string& objClassName,
+                         const string& objClassName,
                          std::ostream& hdr, std::ostream& cxx, std::ostream& ) const
 {
   hdr << "    const " << MakeIdentifierC(objectClass->GetName()) << "* get_" << GetIdentifier()
@@ -7720,7 +7848,7 @@ void ObjectSetFieldSpec::GenerateTypeField(const std::string& templatePrefix,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ObjectClassBase::SetName(const std::string& nam)
+void ObjectClassBase::SetName(const string& nam)
 {
   name = nam;
 }
@@ -7751,7 +7879,7 @@ void ObjectClassDefn::SetFieldSpecs(std::auto_ptr<FieldSpecsList> list)
     (*fieldSpecs)[i]->EstablishFieldRelation(fieldSpecs.get());
 }
 
-FieldSpec* ObjectClassDefn::GetField(const std::string& fieldName)
+FieldSpec* ObjectClassDefn::GetField(const string& fieldName)
 {
   FieldSpec* result = FindWithName(*fieldSpecs, fieldName).get();
   if (result)
@@ -7761,7 +7889,7 @@ FieldSpec* ObjectClassDefn::GetField(const std::string& fieldName)
   return NULL;
 }
 
-const FieldSpec* ObjectClassDefn::GetField(const std::string& fieldName) const
+const FieldSpec* ObjectClassDefn::GetField(const string& fieldName) const
 {
   FieldSpec* result = FindWithName(*fieldSpecs, fieldName).get();
   if (result)
@@ -7905,11 +8033,11 @@ void ObjectClassDefn::GenerateCplusplus(std::ostream& hdr, std::ostream& cxx, st
   size_t i;
   for (i = 0; i < fieldSpecs->size(); ++i)
   {
-    std::stringstream strm;
+    stringstream strm;
     Unfreezer unfreezer(strm);
     (*fieldSpecs)[i]->FwdDeclare(strm);
     strm << std::ends;
-    std::string str = strm.str();
+    string str = strm.str();
     if (str.find(GetName()) != -1)
       continue;
     hdr << str;
@@ -7917,9 +8045,9 @@ void ObjectClassDefn::GenerateCplusplus(std::ostream& hdr, std::ostream& cxx, st
 
   ResolveKey();
 
-  const std::string &className = MakeIdentifierC(GetName());
+  const string &className = MakeIdentifierC(GetName());
 
-  hdr << "class " << className << "\n"
+  hdr << "class "  << dllMacroAPI << " " << className << "\n"
       << "{\n"
       << "public:\n"
       << "    typedef "<< keyType->GetTypeName() << " key_type;\n"
@@ -8074,7 +8202,7 @@ DefinedObjectClass::DefinedObjectClass(ObjectClassBase* ref)
 }
 
 
-DefinedObjectClass::DefinedObjectClass(const std::string& nam, ObjectClassBase* ref)
+DefinedObjectClass::DefinedObjectClass(const string& nam, ObjectClassBase* ref)
 : referenceName(nam), reference(ref)
 {
 }
@@ -8093,12 +8221,12 @@ const ObjectClassBase* DefinedObjectClass::GetReference() const
     return reference;
 }
 
-FieldSpec* DefinedObjectClass::GetField(const std::string& fieldName)
+FieldSpec* DefinedObjectClass::GetField(const string& fieldName)
 {
     return GetReference()->GetField(fieldName);
 }
 
-const FieldSpec* DefinedObjectClass::GetField(const std::string& fieldName) const
+const FieldSpec* DefinedObjectClass::GetField(const string& fieldName) const
 {
     return GetReference()->GetField(fieldName);
 }
@@ -8109,7 +8237,7 @@ bool DefinedObjectClass::VerifyDefaultSyntax(FieldSettingList* fieldSettings) co
 }
 
 
-bool DefinedObjectClass::HasLiteral(const std::string& str) const
+bool DefinedObjectClass::HasLiteral(const string& str) const
 {
     return GetReference()->HasLiteral(str);
 }
@@ -8158,12 +8286,12 @@ void DefinedObjectClass::ResolveReference() const
         reference = Module->FindObjectClass(referenceName).get();
 }
 
-TypeBase* DefinedObjectClass::GetFieldType(const std::string& fieldName)
+TypeBase* DefinedObjectClass::GetFieldType(const string& fieldName)
 {
     return GetReference()->GetFieldType(fieldName);
 }
 
-const TypeBase* DefinedObjectClass::GetFieldType(const std::string& fieldName) const
+const TypeBase* DefinedObjectClass::GetFieldType(const string& fieldName) const
 {
     return GetReference()->GetFieldType(fieldName);
 }
@@ -8326,7 +8454,7 @@ void TokenGroup::CancelMakeDefaultSyntax() const
 }
 
 
-bool TokenGroup::HasLiteral(const std::string& str) const
+bool TokenGroup::HasLiteral(const string& str) const
 {
     for (size_t i = 0; i < tokenOrGroupSpecList.size(); ++i)
     {
@@ -8344,7 +8472,7 @@ void TokenGroup::Reset()
 
 /////////////////////////////////////////////////////////////////////////////////
 
-FieldSetting::FieldSetting(const std::string& fieldname,  std::auto_ptr<Setting> aSetting)
+FieldSetting::FieldSetting(const string& fieldname,  std::auto_ptr<Setting> aSetting)
 : name(fieldname), setting(aSetting)
 {
     identifier = name.c_str()+1;
@@ -8360,14 +8488,14 @@ void FieldSetting::PrintOn(std::ostream & strm) const
 }
 
 
-void FieldSetting::GenerateCplusplus(const std::string& prefix, std::ostream & hdr, std::ostream & cxx, std::ostream & inl, unsigned& flag)
+void FieldSetting::GenerateCplusplus(const string& prefix, std::ostream & hdr, std::ostream & cxx, std::ostream & inl, unsigned& flag)
 {
     setting->GenerateCplusplus(prefix, identifier, hdr, cxx, inl, flag);
 }
 
 void FieldSetting::GenerateInitializationList(std::ostream & hdr, std::ostream & cxx, std::ostream & inl)
 {
-  std::stringstream tmp;
+  stringstream tmp;
   Unfreezer unfreezer(tmp);
   setting->GenerateInitializationList(hdr, tmp, inl);
   tmp << std::ends;
@@ -8386,7 +8514,7 @@ bool FieldSetting::IsExtendable() const
   return setting->IsExtendable();
 }
 
-void FieldSetting::GenerateInstanceCode(const std::string& prefix, std::ostream& cxx) const
+void FieldSetting::GenerateInstanceCode(const string& prefix, std::ostream& cxx) const
 {
   setting->GenerateInstanceCode(prefix + identifier + ".", cxx);
 }
@@ -8397,7 +8525,7 @@ InformationObject::~InformationObject()
 {
 }
 
-const std::string& InformationObject::GetClassName() const
+const string& InformationObject::GetClassName() const
 {
     return GetObjectClass()->GetName();
 }
@@ -8420,7 +8548,7 @@ void InformationObject::SetParameters(std::auto_ptr<ParameterList> list)
 
 /////////////////////////////////////////////////////////////////////////////////
 
-DefinedObject::DefinedObject(const std::string& nam, const InformationObject* ref)
+DefinedObject::DefinedObject(const string& nam, const InformationObject* ref)
 : referenceName(nam), reference(ref)
 {
     name = nam;
@@ -8462,7 +8590,7 @@ bool DefinedObject::VerifyObjectDefinition()
     return false;
 }
 
-const Setting* DefinedObject::GetSetting(const std::string& fieldname) const
+const Setting* DefinedObject::GetSetting(const string& fieldname) const
 {
     return GetReference()->GetSetting(fieldname);
 }
@@ -8501,7 +8629,7 @@ bool DefaultObjectDefn::VerifyObjectDefinition()
     return referenceClass->VerifyDefaultSyntax(settings.get());
 }
 
-const Setting* DefaultObjectDefn::GetSetting(const std::string& fieldname) const
+const Setting* DefaultObjectDefn::GetSetting(const string& fieldname) const
 {
 
   const FieldSetting*  result = FindWithName(*settings, fieldname).get();
@@ -8525,12 +8653,12 @@ void DefaultObjectDefn::PrintOn(std::ostream & strm) const
 
 void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx, std::ostream & inl)
 {
-  std::stringstream tmphdr;
+  stringstream tmphdr;
   Unfreezer unfreezer(tmphdr);
   tmphdr << std::setprecision(8);
   unsigned flags =0;
   size_t i;
-  std::string prefix("Module::");
+  string prefix("Module::");
   prefix += name;
   for (i = 0; i < settings->size(); ++i)
     (*settings)[i]->GenerateCplusplus(prefix, tmphdr, cxx, inl, flags);
@@ -8542,9 +8670,9 @@ void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx
     int has_type_setting = (flags & Setting::has_type_setting);
     int has_objectSet_setting = (flags & Setting::has_objectSet_setting);
 
-    const std::string &className = MakeIdentifierC(referenceClass->GetName());
+    const string &className = MakeIdentifierC(referenceClass->GetName());
 
-    std::string keyName = referenceClass->GetKeyName().substr(1);
+    string keyName = referenceClass->GetKeyName().substr(1);
     hdr << "    class " << name << '\n'
         << "    {\n"
         << "    public:\n"
@@ -8584,7 +8712,7 @@ void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx
     bool hasInitizationList = false;
     for (i = 0 ; i < settings->size(); ++i)
     {
-      std::stringstream tmp;
+      stringstream tmp;
       Unfreezer unfreezer(tmp);
       (*settings)[i]->GenerateInitializationList(hdr, tmp, inl);
       tmp << std::ends;
@@ -8621,7 +8749,7 @@ bool DefaultObjectDefn::IsExtendable() const
 
 void DefaultObjectDefn::GenerateInstanceCode(std::ostream& cxx) const
 {
-   std::string nam("  m_");
+   string nam("  m_");
    nam += MakeIdentifierC(name);
    nam += ".";
 
@@ -8632,7 +8760,7 @@ void DefaultObjectDefn::GenerateInstanceCode(std::ostream& cxx) const
 /////////////////////////////////////////////////////////////////////////////////
 
 ObjectFromObject::ObjectFromObject(InformationObjectPtr referenceObj,
-                   const std::string& fld)
+                   const string& fld)
 : refObj(referenceObj), field(fld)
 {
 }
@@ -8654,7 +8782,7 @@ void ObjectFromObject::PrintOn(std::ostream & strm) const
     strm << *refObj << "." << field;
 }
 
-const Setting* ObjectFromObject::GetSetting(const std::string& fieldname) const
+const Setting* ObjectFromObject::GetSetting(const string& fieldname) const
 {
     return refObj->GetSetting(fieldname);
 }
@@ -8672,14 +8800,14 @@ void ObjectFromObject::GenerateInstanceCode(std::ostream& ) const
 /////////////////////////////////////////////////////////////////////////////////
 
 
-FieldSettingPtr SettingToken::MatchSetting(const std::string& fieldName)
+FieldSettingPtr SettingToken::MatchSetting(const string& fieldName)
 {
   return FieldSettingPtr (new FieldSetting(fieldName, setting));
 }
 
 /////////////////////////////////////////////////////////////////////////////////
 
-void TypeSetting::GenerateCplusplus(const std::string& prefix, const std::string& name, std::ostream& hdr, std::ostream& cxx, std::ostream& inl, unsigned& flag)
+void TypeSetting::GenerateCplusplus(const string& prefix, const string& name, std::ostream& hdr, std::ostream& cxx, std::ostream& inl, unsigned& flag)
 {
     type->SetOuterClassName(prefix);
     type->SetName(name);
@@ -8687,7 +8815,7 @@ void TypeSetting::GenerateCplusplus(const std::string& prefix, const std::string
     flag |= has_type_setting;
 }
 
-void TypeSetting::GenerateInfo(const std::string& name,std::ostream& hdr)
+void TypeSetting::GenerateInfo(const string& name,std::ostream& hdr)
 {
   Indent indent(hdr.precision());
   hdr << indent << "m_" << name << "= &" << name << "::theInfo;\n";
@@ -8701,7 +8829,7 @@ void TypeSetting::PrintOn(std::ostream & strm) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ValueSetting::GenerateCplusplus(const std::string& , const std::string& name, std::ostream& hdr, std::ostream& , std::ostream& , unsigned& flag)
+void ValueSetting::GenerateCplusplus(const string& , const string& name, std::ostream& hdr, std::ostream& , std::ostream& , unsigned& flag)
 {
   Indent indent(hdr.precision());
   if (type->GetTypeName() != "ASN1::BOOLEAN")
@@ -8748,7 +8876,7 @@ void ValueSetSetting::PrintOn(std::ostream & strm) const
     strm << *valueSet;
 }
 
-void ValueSetSetting::GenerateCplusplus(const std::string& , const std::string& , std::ostream& , std::ostream& , std::ostream& , unsigned& flag)
+void ValueSetSetting::GenerateCplusplus(const string& , const string& , std::ostream& , std::ostream& , std::ostream& , unsigned& flag)
 {
   flag |= has_valueSet_setting;
 }
@@ -8765,7 +8893,7 @@ void ObjectSetting::PrintOn(std::ostream & strm) const
     strm << *object;
 }
 
-void ObjectSetting::GenerateCplusplus(const std::string& , const std::string& , std::ostream& , std::ostream& , std::ostream& , unsigned& flag)
+void ObjectSetting::GenerateCplusplus(const string& , const string& , std::ostream& , std::ostream& , std::ostream& , unsigned& flag)
 {
   flag |= has_object_setting;
 }
@@ -8785,7 +8913,7 @@ void ObjectSetSetting::PrintOn(std::ostream & strm) const
     strm << *objectSet;
 }
 
-void ObjectSetSetting::GenerateCplusplus(const std::string& , const std::string& name, std::ostream& hdr, std::ostream& , std::ostream& , unsigned& flag)
+void ObjectSetSetting::GenerateCplusplus(const string& , const string& name, std::ostream& hdr, std::ostream& , std::ostream& , unsigned& flag)
 {
   Indent indent(hdr.precision());
   hdr << indent;
@@ -8796,20 +8924,20 @@ void ObjectSetSetting::GenerateCplusplus(const std::string& , const std::string&
   flag |= has_objectSet_setting;
 }
 
-void ObjectSetSetting::GenerateInfo(const std::string& name,std::ostream& hdr)
+void ObjectSetSetting::GenerateInfo(const string& name,std::ostream& hdr)
 {
   Indent indent(hdr.precision());
   hdr << indent << "m_" << name << "= &(parent-> " << name << ");\n";
 }
 
-void ObjectSetSetting::GenerateInstanceCode(const std::string& prefix, std::ostream& cxx) const
+void ObjectSetSetting::GenerateInstanceCode(const string& prefix, std::ostream& cxx) const
 {
   objectSet->GenerateObjectSetInstanceCode(prefix + "insert(", cxx);
 }
 
 /////////////////////////////////////////////////////////////////////////////////
 
-InformationObjectSetDefn::InformationObjectSetDefn(const std::string& nam,
+InformationObjectSetDefn::InformationObjectSetDefn(const string& nam,
                         ObjectClassBasePtr objClass,
                         ConstraintPtr set,
                         ParameterListPtr list)
@@ -8826,22 +8954,22 @@ const ObjectClassBase* InformationObjectSetDefn::GetObjectClass() const
     return objectClass.get();
 }
 
-ValueSetPtr InformationObjectSetDefn::GetValueSetFromValueField(const std::string& field) const
+ValueSetPtr InformationObjectSetDefn::GetValueSetFromValueField(const string& field) const
 {
     return rep->GetValueSetFromValueField(field);
 }
 
-ValueSetPtr InformationObjectSetDefn::GetValueSetFromValueSetField(const std::string& field) const
+ValueSetPtr InformationObjectSetDefn::GetValueSetFromValueSetField(const string& field) const
 {
     return rep->GetValueSetFromValueSetField(field);
 }
 
-ConstraintPtr InformationObjectSetDefn::GetObjectSetFromObjectField(const std::string& field) const
+ConstraintPtr InformationObjectSetDefn::GetObjectSetFromObjectField(const string& field) const
 {
     return rep->GetObjectSetFromObjectField(field);
 }
 
-ConstraintPtr InformationObjectSetDefn::GetObjectSetFromObjectSetField(const std::string& field) const
+ConstraintPtr InformationObjectSetDefn::GetObjectSetFromObjectSetField(const string& field) const
 {
     return rep->GetObjectSetFromObjectSetField(field);
 }
@@ -8871,9 +8999,9 @@ void InformationObjectSetDefn::GenerateInstanceCode(std::ostream& cxx) const
 
 void InformationObjectSetDefn::GenerateType(std::ostream& hdr, std::ostream& cxx, std::ostream& ) const
 {
-  std::string typeName = MakeIdentifierC(GetName());
-  std::string classNameString = typeName;
-  std::string templatePrefix;
+  string typeName = MakeIdentifierC(GetName());
+  string classNameString = typeName;
+  string templatePrefix;
 
   if (parameters.get())
     parameters->GenerateCplusplus(templatePrefix, classNameString);
@@ -8883,7 +9011,7 @@ void InformationObjectSetDefn::GenerateType(std::ostream& hdr, std::ostream& cxx
          "// " << classNameString << "\n"
          "//\n\n";
 
-  std::string objClassName = MakeIdentifierC(GetObjectClass()->GetName());
+  string objClassName = MakeIdentifierC(GetObjectClass()->GetName());
 
   hdr << templatePrefix
       << "class " << typeName << "\n"
@@ -8932,7 +9060,7 @@ void InformationObjectSetDefn::GenerateType(std::ostream& hdr, std::ostream& cxx
 
 bool InformationObjectSetDefn::GenerateTypeConstructor(std::ostream& cxx) const
 {
-  std::stringstream tmp;
+  stringstream tmp;
   Unfreezer unfreezer(tmp);
   rep->GenerateObjSetAccessCode(tmp);
   tmp << std::ends;
@@ -8954,7 +9082,7 @@ bool InformationObjectSetDefn::GenerateTypeConstructor(std::ostream& cxx) const
 
 /////////////////////////////////////////////////////////////////////////////////
 
-DefinedObjectSet::DefinedObjectSet(const std::string& ref)
+DefinedObjectSet::DefinedObjectSet(const string& ref)
 : referenceName(ref)
 , reference(NULL)
 {
@@ -8987,22 +9115,22 @@ const ObjectClassBase* DefinedObjectSet::GetObjectClass() const
     return GetReference()->GetObjectClass();
 }
 
-ValueSetPtr DefinedObjectSet::GetValueSetFromValueField(const std::string& field) const
+ValueSetPtr DefinedObjectSet::GetValueSetFromValueField(const string& field) const
 {
     return GetReference()->GetValueSetFromValueField(field);
 }
 
-ValueSetPtr DefinedObjectSet::GetValueSetFromValueSetField(const std::string& field) const
+ValueSetPtr DefinedObjectSet::GetValueSetFromValueSetField(const string& field) const
 {
     return GetReference()->GetValueSetFromValueSetField(field);
 }
 
-ConstraintPtr DefinedObjectSet::GetObjectSetFromObjectField(const std::string& field) const
+ConstraintPtr DefinedObjectSet::GetObjectSetFromObjectField(const string& field) const
 {
     return GetReference()->GetObjectSetFromObjectField(field);
 }
 
-ConstraintPtr DefinedObjectSet::GetObjectSetFromObjectSetField(const std::string& field) const
+ConstraintPtr DefinedObjectSet::GetObjectSetFromObjectSetField(const string& field) const
 {
     return GetReference()->GetObjectSetFromObjectSetField(field);
 }
@@ -9018,7 +9146,7 @@ bool DefinedObjectSet::HasPERInvisibleConstraint(const Parameter& ) const
 }
 /////////////////////////////////////////////////////////////////////////////////
 
-ParameterizedObjectSet::ParameterizedObjectSet(const std::string& ref,
+ParameterizedObjectSet::ParameterizedObjectSet(const string& ref,
                          ActualParameterListPtr args)
 : DefinedObjectSet(ref), arguments(args)
 {
@@ -9028,12 +9156,12 @@ ParameterizedObjectSet::~ParameterizedObjectSet()
 {
 }
 
-std::string ParameterizedObjectSet::GetName() const
+string ParameterizedObjectSet::GetName() const
 {
-  std::stringstream strm;
+  stringstream strm;
   Unfreezer unfreezer(strm);
   strm << referenceName << *arguments << std::ends;
-  return std::string(strm.str());
+  return string(strm.str());
 }
 
 void ParameterizedObjectSet::PrintOn(std::ostream & strm) const
@@ -9043,7 +9171,7 @@ void ParameterizedObjectSet::PrintOn(std::ostream & strm) const
 
 /////////////////////////////////////////////////////////////////////////////////
 
-ObjectSetFromObject::ObjectSetFromObject(InformationObjectPtr obj, const std::string& fld)
+ObjectSetFromObject::ObjectSetFromObject(InformationObjectPtr obj, const string& fld)
 : refObj(obj), field(fld)
 {
 }
@@ -9057,27 +9185,27 @@ const ObjectClassBase* ObjectSetFromObject::GetObjectClass() const
     return refObj->GetObjectClass();
 }
 
-std::string ObjectSetFromObject::GetName() const
+string ObjectSetFromObject::GetName() const
 {
     return refObj->GetName() + field;
 }
 
-ValueSetPtr ObjectSetFromObject::GetValueSetFromValueField(const std::string& fld) const
+ValueSetPtr ObjectSetFromObject::GetValueSetFromValueField(const string& fld) const
 {
     return GetRepresentation()->GetValueSetFromValueField(fld);
 }
 
-ValueSetPtr ObjectSetFromObject::GetValueSetFromValueSetField(const std::string& fld) const
+ValueSetPtr ObjectSetFromObject::GetValueSetFromValueSetField(const string& fld) const
 {
     return GetRepresentation()->GetValueSetFromValueSetField(fld);
 }
 
-ConstraintPtr ObjectSetFromObject::GetObjectSetFromObjectField(const std::string& fld) const
+ConstraintPtr ObjectSetFromObject::GetObjectSetFromObjectField(const string& fld) const
 {
     return GetRepresentation()->GetObjectSetFromObjectField(fld);
 }
 
-ConstraintPtr ObjectSetFromObject::GetObjectSetFromObjectSetField(const std::string& fld) const
+ConstraintPtr ObjectSetFromObject::GetObjectSetFromObjectSetField(const string& fld) const
 {
     return GetRepresentation()->GetObjectSetFromObjectSetField(fld);
 }
@@ -9107,7 +9235,7 @@ bool ObjectSetFromObject::HasPERInvisibleConstraint(const Parameter& ) const
 /////////////////////////////////////////////////////////////////////////////////
 
 ObjectSetFromObjects::ObjectSetFromObjects(ObjectSetConstraintElementPtr objSet,
-                       const std::string& fld)
+                       const string& fld)
 : refObjSet(objSet), field(fld)
 {
 }
@@ -9121,27 +9249,27 @@ const ObjectClassBase* ObjectSetFromObjects::GetObjectClass() const
     return refObjSet->GetObjectClass();
 }
 
-std::string ObjectSetFromObjects::GetName() const
+string ObjectSetFromObjects::GetName() const
 {
     return refObjSet->GetName() + field;
 }
 
-ValueSetPtr ObjectSetFromObjects::GetValueSetFromValueField(const std::string& fld) const
+ValueSetPtr ObjectSetFromObjects::GetValueSetFromValueField(const string& fld) const
 {
     return GetRepresentation()->GetValueSetFromValueField(fld);
 }
 
-ValueSetPtr ObjectSetFromObjects::GetValueSetFromValueSetField(const std::string& fld) const
+ValueSetPtr ObjectSetFromObjects::GetValueSetFromValueSetField(const string& fld) const
 {
     return GetRepresentation()->GetValueSetFromValueSetField(fld);
 }
 
-ConstraintPtr ObjectSetFromObjects::GetObjectSetFromObjectField(const std::string& fld) const
+ConstraintPtr ObjectSetFromObjects::GetObjectSetFromObjectField(const string& fld) const
 {
     return GetRepresentation()->GetObjectSetFromObjectField(fld);
 }
 
-ConstraintPtr ObjectSetFromObjects::GetObjectSetFromObjectSetField(const std::string& fld) const
+ConstraintPtr ObjectSetFromObjects::GetObjectSetFromObjectSetField(const string& fld) const
 {
     return GetRepresentation()->GetObjectSetFromObjectSetField(fld);
 }
@@ -9245,7 +9373,7 @@ void SingleObjectConstraintElement::PrintOn(std::ostream & strm ) const
     strm << *object;
 }
 
-ValueSetPtr SingleObjectConstraintElement::GetValueSetFromValueField(const std::string& fld) const
+ValueSetPtr SingleObjectConstraintElement::GetValueSetFromValueField(const string& fld) const
 {
     ValueSetting* setting = (ValueSetting*) object->GetSetting(fld);
     if (setting)
@@ -9263,7 +9391,7 @@ ValueSetPtr SingleObjectConstraintElement::GetValueSetFromValueField(const std::
     //return ValueSetPtr(new ValueSetDefn);
 }
 
-ValueSetPtr SingleObjectConstraintElement::GetValueSetFromValueSetField(const std::string& fld) const
+ValueSetPtr SingleObjectConstraintElement::GetValueSetFromValueSetField(const string& fld) const
 {
     ValueSetSetting* setting = (ValueSetSetting*) object->GetSetting(fld);
     if (setting)
@@ -9277,7 +9405,7 @@ ValueSetPtr SingleObjectConstraintElement::GetValueSetFromValueSetField(const st
     //return ValueSetPtr(new ValueSetDefn);
 }
 
-ConstraintPtr SingleObjectConstraintElement::GetObjectSetFromObjectField(const std::string& fld) const
+ConstraintPtr SingleObjectConstraintElement::GetObjectSetFromObjectField(const string& fld) const
 {
   ConstraintPtr result;
   ObjectSetting* setting = (ObjectSetting*) object->GetSetting(fld);
@@ -9291,7 +9419,7 @@ ConstraintPtr SingleObjectConstraintElement::GetObjectSetFromObjectField(const s
   return result;
 }
 
-ConstraintPtr SingleObjectConstraintElement::GetObjectSetFromObjectSetField(const std::string& fld) const
+ConstraintPtr SingleObjectConstraintElement::GetObjectSetFromObjectSetField(const string& fld) const
 {
     ObjectSetSetting* setting = (ObjectSetSetting*) object->GetSetting(fld);
     if (setting)
@@ -9305,7 +9433,7 @@ bool SingleObjectConstraintElement::HasPERInvisibleConstraint(const Parameter& )
     return false;
 }
 
-void SingleObjectConstraintElement::GenerateObjectSetInstanceCode(const std::string& prefix, std::ostream& cxx) const
+void SingleObjectConstraintElement::GenerateObjectSetInstanceCode(const string& prefix, std::ostream& cxx) const
 {
   cxx << prefix;
   object->GenerateInstanceCode(cxx);
@@ -9382,7 +9510,7 @@ void ValueSetDefn::ResolveReference() const
 ////////////////////////////////////////////////////////////////////////////////////////
 
 ValueSetFromObject::ValueSetFromObject(InformationObjectPtr obj
-                     , const std::string& fld)
+                     , const string& fld)
 : object(obj), field(fld)
 {
 }
@@ -9437,7 +9565,7 @@ ValueSetPtr ValueSetFromObject::GetRepresentation()
 
 
 ValueSetFromObjects::ValueSetFromObjects(ObjectSetConstraintElementPtr objSet,
-                     const std::string& fld)
+                     const string& fld)
 : objectSet(objSet), field(fld)
 {
 }
@@ -9491,7 +9619,7 @@ ValueSetPtr ValueSetFromObjects::GetRepresentation()
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-Symbol::Symbol(const std::string& sym, bool param)
+Symbol::Symbol(const string& sym, bool param)
 : name(sym), parameterized(param)
 {
 }
@@ -9517,7 +9645,7 @@ void TypeReference::AppendToModule(ModuleDefinition* from, ModuleDefinition* to)
   to->AddType(type);
 }
 
-void TypeReference::AppendToModule(const std::string& fromName, ModuleDefinition* to)
+void TypeReference::AppendToModule(const string& fromName, ModuleDefinition* to)
 {
   assert(to);
   boost::shared_ptr<ImportedType> type(new ImportedType(name, parameterized));
@@ -9525,7 +9653,7 @@ void TypeReference::AppendToModule(const std::string& fromName, ModuleDefinition
   to->AddType(type);
 }
 
-void TypeReference::GenerateUsingDirective(const std::string& , std::ostream & ) const
+void TypeReference::GenerateUsingDirective(const string& , std::ostream & ) const
 {
    // strm << "using " << moduleName << "::" << name << ";\n";
 }
@@ -9552,7 +9680,7 @@ void ObjectClassReference::AppendToModule(ModuleDefinition* from, ModuleDefiniti
   to->AddObjectClass(oc);
 }
 
-void ObjectClassReference::GenerateUsingDirective(const std::string& moduleName, std::ostream & strm) const
+void ObjectClassReference::GenerateUsingDirective(const string& moduleName, std::ostream & strm) const
 {
   strm << "using " << moduleName << "::" << MakeIdentifierC(name) << ";\n";
 }
@@ -9567,7 +9695,7 @@ void ObjectSetReference::AppendToModule(ModuleDefinition* from, ModuleDefinition
                               to->AddInformationObjectSet(ios);
 }
 
-void ObjectSetReference::GenerateUsingDirective(const std::string& moduleName, std::ostream & strm) const
+void ObjectSetReference::GenerateUsingDirective(const string& moduleName, std::ostream & strm) const
 {
   strm << "using " << moduleName << "::" << MakeIdentifierC(name) << ";\n";
 }
@@ -9583,14 +9711,14 @@ void ObjectReference::AppendToModule(ModuleDefinition* from, ModuleDefinition* t
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-Parameter::Parameter(const std::string& nam)
+Parameter::Parameter(const string& nam)
 : name(nam), identifierType(TYPEREFERENCE)
 {
 }
 
 
 
-Parameter::Parameter(const std::string& nam, int type)
+Parameter::Parameter(const string& nam, int type)
 : name(nam), identifierType(type)
 {
 }
@@ -9606,7 +9734,7 @@ int Parameter::GetIdentifierType()
     return identifierType;
 }
 
-const std::string& Parameter::GetName() const
+const string& Parameter::GetName() const
 {
     return name;
 }
@@ -9629,7 +9757,7 @@ ActualParameterPtr Parameter::MakeActualParameter() const
 
 /////////////////////////////////////////////////
 
-ValueParameter::ValueParameter(TypePtr gover, const std::string& nam)
+ValueParameter::ValueParameter(TypePtr gover, const string& nam)
 : Parameter(nam, isupper(nam[0]) ? TYPEREFERENCE : VALUEREFERENCE)
 , governor(gover)
 {
@@ -9661,7 +9789,7 @@ ActualParameterPtr ValueParameter::MakeActualParameter() const
 ///////////////////////////////////////////////////
 
 ObjectParameter::ObjectParameter(DefinedObjectClassPtr gover,
-                 const std::string& nam)
+                 const string& nam)
 : Parameter(nam, isupper(nam[0]) ? OBJECTSETREFERENCE : OBJECTREFERENCE)
 , governor(gover)
 {
@@ -9731,7 +9859,7 @@ void ParameterList::PrintOn(std::ostream& strm) const
 }
 
 
-void ParameterList::GenerateCplusplus(std::string& templatePrefix, std::string& classNameString)
+void ParameterList::GenerateCplusplus(string& templatePrefix, string& classNameString)
 {
     if (rep.size())
     {
@@ -9744,7 +9872,7 @@ void ParameterList::GenerateCplusplus(std::string& templatePrefix, std::string& 
                 classNameString += ", ";
             }
 
-            std::string ident = MakeIdentifierC(rep[i]->GetName());
+            string ident = MakeIdentifierC(rep[i]->GetName());
             templatePrefix += "class " + ident;
             classNameString += ident;
             outputDelimeter = true;
@@ -9799,7 +9927,7 @@ bool ActualTypeParameter::UseType(const TypeBase & type) const
     return param->UseType(type);
 }
 
-bool ActualTypeParameter::GenerateTemplateArgument(std::string& name) const
+bool ActualTypeParameter::GenerateTemplateArgument(string& name) const
 {
     name += param->GetTypeName();
     return true;
@@ -9847,7 +9975,7 @@ bool ActualValueSetParameter::UseType(const TypeBase & type) const
     return param->UseType(type);
 }
 
-bool ActualValueSetParameter::GenerateTemplateArgument(std::string& name) const
+bool ActualValueSetParameter::GenerateTemplateArgument(string& name) const
 {
     name += param->GetTypeName();
     return true;
@@ -9875,7 +10003,7 @@ void ActualObjectParameter::PrintOn(std::ostream & strm) const
     strm << param->GetName();
 }
 
-bool ActualObjectParameter::GenerateTemplateArgument(std::string& name) const
+bool ActualObjectParameter::GenerateTemplateArgument(string& name) const
 {
     name += param->GetName();
     return true;
@@ -9907,7 +10035,7 @@ void ActualObjectSetParameter::PrintOn(std::ostream & strm) const
     strm << '{' << param->GetName() << '}' ;
 }
 
-bool ActualObjectSetParameter::GenerateTemplateArgument(std::string& name) const
+bool ActualObjectSetParameter::GenerateTemplateArgument(string& name) const
 {
   name += param->GetName();
   str_replace(name,"{","<");

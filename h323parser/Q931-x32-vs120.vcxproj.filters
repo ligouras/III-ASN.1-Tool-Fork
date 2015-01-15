@@ -13,6 +13,12 @@
       <UniqueIdentifier>{5317dbdd-a6a0-4552-878f-4c747030c489}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
+    <Filter Include="csn">
+      <UniqueIdentifier>{71202934-fa2a-464a-a79d-1b53a2cd243b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="asn">
+      <UniqueIdentifier>{4d2f1b7f-4097-4de5-82c9-8418b1f9a2d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="H323Parser.cpp">
@@ -24,10 +30,16 @@
     <ClCompile Include="Q931pdu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cxx\h323_messages.cxx">
+      <Filter>csn</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="H323.def">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="cxx\h323_messages.inl">
+      <Filter>csn</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -40,11 +52,11 @@
     <ClInclude Include="netmon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="cxx\h323_messages.h">
+      <Filter>csn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\asnh323\h2250v4.asn">
-      <Filter>Source Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="h2250v4_new.asn">
       <Filter>Source Files</Filter>
     </CustomBuild>

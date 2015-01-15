@@ -15,8 +15,8 @@
 #include <config.h>
 #endif
 
-#include <call_transfer_operations.h>
-#include <h4501_supplementary_serviceapdu_structure.h>
+#include "call_transfer_operations.h"
+#include "h4501_supplementary_serviceapdu_structure.h"
 #include "asn1test.h"
 
 #ifdef ASN1_HAS_IOSTREAM
@@ -60,6 +60,8 @@ void H450Test()
 
   // CTInitiate.invoke
   H4501::H4501SupplementaryService pdu1, pdu2;
+  
+  H4501::InvokeIDs invokeIDs;
 
   pdu1.set_serviceApdu().select_rosApdus().resize(1);
   ROA::ROS<H4501::InvokeIdSet, H4501::OperationSet, H4501::OperationSet>& ros = pdu1.ref_serviceApdu().ref_rosApdus()[0];

@@ -12,8 +12,8 @@
  */
 #ifndef ASN1TEST_H
 #define ASN1TEST_H
-#include <asn1.h>
 #include <stdio.h>
+#include "asn1.h"
 
 
 #define TEST(str, env, v1, v2, encodedStrm, len) CoderTest(str, env, v1, v2, encodedStrm, len, __LINE__)

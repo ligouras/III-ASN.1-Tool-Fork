@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4E4B52F7-9D54-4183-99A7-00212102BCBF}</ProjectGuid>
-    <ProjectName>H323rts</ProjectName>
+    <ProjectName>H323</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -84,7 +84,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.;../asn1;../asnh323/cxx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;__WIN32__;WIN32;_USRDLL;H323_EXPORTS;H323_DLL;ASN1_HAS_IOSTREAM;ASN1_ALLOCATOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;__WIN32__;WIN32;_USRDLL;H323_EXPORTS;ASN1_HAS_IOSTREAM;ASN1_ALLOCATOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -111,6 +111,8 @@
     </Link>
     <Link>
       <ProgramDatabaseFile>../lib/$(TargetName).pdb</ProgramDatabaseFile>
+      <ProfileGuidedDatabase>../lib/$(TargetName).pgd</ProfileGuidedDatabase>
+      <ImportLibrary>../lib/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -144,7 +146,7 @@ del cxx\cidmodule.h
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\asn1\ASN1rts-x32-vs120.vcxproj">
+    <ProjectReference Include="..\asn1\ASN1-x32-vs120.vcxproj">
       <Project>{cc4dce75-9957-4642-a86b-ea14dbcebf54}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
@@ -176,9 +178,9 @@ del cxx\cidmodule.h
     <ClCompile Include="cxx\manufacturer_specific_service_extension_definition.cxx" />
     <ClCompile Include="cxx\media_gateway_control.cxx" />
     <ClCompile Include="cxx\message_waiting_indication_operations.cxx" />
+    <ClCompile Include="cxx\mgc_signalsdescriptor.cxx" />
     <ClCompile Include="cxx\msc_capabilitytableentry.cxx" />
     <ClCompile Include="cxx\msc_openlogicalchannel.cxx" />
-    <ClCompile Include="cxx\msc_t38faxprofile.cxx" />
     <ClCompile Include="cxx\msc_transportaddress.cxx" />
     <ClCompile Include="cxx\multimedia_system_control.cxx" />
     <ClCompile Include="cxx\name_operations.cxx" />
@@ -209,9 +211,9 @@ del cxx\cidmodule.h
     <ClInclude Include="cxx\manufacturer_specific_service_extension_definition.h" />
     <ClInclude Include="cxx\media_gateway_control.h" />
     <ClInclude Include="cxx\message_waiting_indication_operations.h" />
+    <ClInclude Include="cxx\mgc_signalsdescriptor.h" />
     <ClInclude Include="cxx\msc_capabilitytableentry.h" />
     <ClInclude Include="cxx\msc_openlogicalchannel.h" />
-    <ClInclude Include="cxx\msc_t38faxprofile.h" />
     <ClInclude Include="cxx\msc_transportaddress.h" />
     <ClInclude Include="cxx\multimedia_system_control.h" />
     <ClInclude Include="cxx\name_operations.h" />
@@ -239,9 +241,9 @@ del cxx\cidmodule.h
     <None Include="cxx\manufacturer_specific_service_extension_definition.inl" />
     <None Include="cxx\media_gateway_control.inl" />
     <None Include="cxx\message_waiting_indication_operations.inl" />
+    <None Include="cxx\mgc_signalsdescriptor.inl" />
     <None Include="cxx\msc_capabilitytableentry.inl" />
     <None Include="cxx\msc_openlogicalchannel.inl" />
-    <None Include="cxx\msc_t38faxprofile.inl" />
     <None Include="cxx\msc_transportaddress.inl" />
     <None Include="cxx\multimedia_system_control.inl" />
     <None Include="cxx\name_operations.inl" />
