@@ -156,3 +156,6 @@ hs_err_pid*
 **/cxx/
 *.def
 /autom4te.cache
+/ipch
+/config.h.in
+/stamp-h1
