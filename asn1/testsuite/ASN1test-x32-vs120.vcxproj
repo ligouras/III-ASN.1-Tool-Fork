@@ -135,7 +135,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="test.asn">
+    <CustomBuild Include="test1.asn">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\lib\ASN1cmpd -c -v -o cxx test.asn
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cxx\myhttp.cxx;cxx\myhttp.inl;cxx\myhttp.h;cxx\test1.cxx;cxx\test1.inl;cxx\test1.h;%(Outputs)</Outputs>

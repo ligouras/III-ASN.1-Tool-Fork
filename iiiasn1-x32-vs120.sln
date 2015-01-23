@@ -29,6 +29,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "H323test", "asnh323\testsui
 		{4E4B52F7-9D54-4183-99A7-00212102BCBF} = {4E4B52F7-9D54-4183-99A7-00212102BCBF}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ACSE-1", "ACSE-1\ACSE-1.vcxproj", "{92DE7D0F-1E25-41A9-BC22-A448DEA39858}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1EED4B13-2A75-4C49-A198-12F2A46F5944} = {1EED4B13-2A75-4C49-A198-12F2A46F5944}
+		{CC4DCE75-9957-4642-A86B-EA14DBCEBF54} = {CC4DCE75-9957-4642-A86B-EA14DBCEBF54}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -63,6 +69,10 @@ Global
 		{F1B070AA-DF28-45EC-BD67-AA5DCC203F38}.Debug|Win32.Build.0 = Debug|Win32
 		{F1B070AA-DF28-45EC-BD67-AA5DCC203F38}.Release|Win32.ActiveCfg = Release|Win32
 		{F1B070AA-DF28-45EC-BD67-AA5DCC203F38}.Release|Win32.Build.0 = Release|Win32
+		{92DE7D0F-1E25-41A9-BC22-A448DEA39858}.Debug|Win32.ActiveCfg = Debug|Win32
+		{92DE7D0F-1E25-41A9-BC22-A448DEA39858}.Debug|Win32.Build.0 = Debug|Win32
+		{92DE7D0F-1E25-41A9-BC22-A448DEA39858}.Release|Win32.ActiveCfg = Release|Win32
+		{92DE7D0F-1E25-41A9-BC22-A448DEA39858}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

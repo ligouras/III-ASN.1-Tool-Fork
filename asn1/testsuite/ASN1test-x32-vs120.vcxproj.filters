@@ -19,9 +19,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="test.asn" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="cxx\myhttp.inl">
       <Filter>cxx</Filter>
     </None>
@@ -33,5 +30,8 @@
     <Filter Include="cxx">
       <UniqueIdentifier>{a5a6a761-8b9d-4b77-9d44-3f8ea54ab7cb}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="test1.asn" />
   </ItemGroup>
 </Project>
