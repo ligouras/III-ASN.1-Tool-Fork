@@ -34,7 +34,7 @@ AM_CPPFLAGS =  @PIPEFLAG@ @DEBUGFLAG@  -I$(top_builddir)/asn1 -I$(top_srcdir)/as
 h323test_LDADD =$(top_builddir)/asnh323/libasnh323.a $(top_builddir)/asn1/libasn1.a @LIBSTL@
 			
 h323test_SOURCES = \
-	323test.cpp \
+	h323test.cpp \
 	h225test.cpp \
 	h245test.cpp \
 	h248test.cpp \
