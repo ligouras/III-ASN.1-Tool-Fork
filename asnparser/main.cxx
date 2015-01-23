@@ -207,6 +207,9 @@ extern int optind;
 #endif
 
 //using namespace boost;
+using std::endl;
+using std::ends;
+using std::string;
 
 unsigned lineNumber;
 std::string  fileName;
@@ -450,7 +453,7 @@ bool OutputFile::Open(const std::string & path,
     return true;
   }
 
-  std::cerr << "asnparser : cannot create " << filename << std::endl;
+  std::cerr << "asnparser : cannot create " << filename << endl;
   return false;
 }
 
@@ -459,7 +462,7 @@ void OutputFile::Close()
 {
   if (is_open()) {
     std::ostream& strm = *this;
-    strm << "\n// End of " << GetFileName(filename) << '\n';
+    strm << "\n// End of " << GetFileName(filename) << endl;
   }
   using namespace std;
 
@@ -596,7 +599,7 @@ int main(int argc, char** argv)
 
   size_t fileCount = argc-optind;
 
-  std::cout << "asnparser version 2.3 by Institute for Information Industry\n" << std::endl;
+  std::cout << "asnparser version 2.3 by Institute for Information Industry\n" << endl;
 
   if (fileCount < 1 ) {
     std::cerr << "usage: asnparser [options] asnfile...\n"
@@ -611,7 +614,7 @@ int main(int argc, char** argv)
                  "  -C          If given, the generated .cxx files won't include config.h\n"
                  "  -r  name    Use reinterpret_casts rather than static_casts in the\n"
                  "              generated .inl files, if -Dname is given to the compiler\n"
-              << std::endl;
+              << endl;
     return 1;
   }
 
@@ -628,7 +631,7 @@ int main(int argc, char** argv)
     idin = fds[i] = fopen(argv[i+optind],"r");
     if (!idin) {
       std::cerr << "asnparser: cannot open \""
-                << argv[i+optind]  << '"'<<std::endl;
+                << argv[i+optind]  << '"'<<endl;
       return 1;
     }
 
@@ -638,7 +641,7 @@ int main(int argc, char** argv)
     warnings   = 0;
 
     if (verbose)
-      std::cout << "First Stage Parsing... " << fileName << std::endl;
+      std::cout << "First Stage Parsing... " << fileName << endl;
 
     idparse(); // parse the identifier types
   }
@@ -653,7 +656,7 @@ int main(int argc, char** argv)
     yyin = fds[i];
 
     if (verbose)
-      std::cout << "Second Stage Parsing... " << fileName << std::endl;
+      std::cout << "Second Stage Parsing... " << fileName << endl;
 
     rewind(yyin); // rewind the file
     yyrestart( yyin );
@@ -681,7 +684,7 @@ int main(int argc, char** argv)
   for (i = 0; i < Modules.size(); ++i) {
     Module = Modules[i].get();
     if (verbose > 1)
-      std::cerr << "Module " << *Module << std::endl;
+      std::cerr << "Module " << *Module << endl;
 
     if (generateCpp)
       Module->GenerateCplusplus(path,
@@ -873,11 +876,11 @@ void Constraint::GenerateCplusplus(const std::string & fn, std::ostream & hdr, s
     case 1 :
       break;
     default :
-      std::cerr << StdError(Warning) << "unsupported UNION constraints, ignored." << std::endl;
+      std::cerr << StdError(Warning) << "unsupported UNION constraints, ignored." << endl;
   }
 
   if (extensions.size() > 0)
-    std::cerr << StdError(Warning) << "unsupported extension constraints, ignored." << std::endl;
+    std::cerr << StdError(Warning) << "unsupported extension constraints, ignored." << endl;
 
   std::string fn2 = fn;
   if (fn.find("ASN1::") == -1) {
@@ -1103,7 +1106,7 @@ ConstraintElementBase::~ConstraintElementBase()
 
 void ConstraintElementBase::GenerateCplusplus(const std::string &, std::ostream &, std::ostream &, std::ostream &) const
 {
-  std::cerr << StdError(Warning) << "unsupported constraint, ignored." << std::endl;
+  std::cerr << StdError(Warning) << "unsupported constraint, ignored." << endl;
 }
 
 
@@ -1114,25 +1117,25 @@ bool ConstraintElementBase::ReferencesType(const TypeBase &) const
 
 ValueSetPtr ConstraintElementBase::GetValueSetFromValueField(const std::string& ) const
 {
-  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << std::endl;
+  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << endl;
   return ValueSetPtr();
 }
 
 ValueSetPtr ConstraintElementBase::GetValueSetFromValueSetField(const std::string& ) const
 {
-  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << std::endl;
+  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << endl;
   return ValueSetPtr();
 }
 
 ConstraintPtr ConstraintElementBase::GetObjectSetFromObjectField(const std::string& ) const
 {
-  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << std::endl;
+  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << endl;
   return ConstraintPtr();
 }
 
 ConstraintPtr ConstraintElementBase::GetObjectSetFromObjectSetField(const std::string& ) const
 {
-  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << std::endl;
+  std::cerr << StdError(Fatal) << "Invalid ObjectSet." << endl;
   return ConstraintPtr();
 }
 
@@ -1371,7 +1374,7 @@ void SingleValueConstraintElement::GenerateCplusplus(const std::string & fn, std
     return;
   }
 
-  std::cerr << StdError(Warning) << "Unsupported constraint type, ignoring." << std::endl;
+  std::cerr << StdError(Warning) << "Unsupported constraint type, ignoring." << endl;
 }
 
 void SingleValueConstraintElement::GetConstraint(std::string& str) const
@@ -1380,11 +1383,11 @@ void SingleValueConstraintElement::GetConstraint(std::string& str) const
   Unfreezer unfreezer(strm);
 
   if (dynamic_cast<const IntegerValue*>(value.get())) {
-    strm << *value << ", " << *value << std::ends;
+    strm << *value << ", " << *value ;
     str += strm.str();
   }
   else  if (dynamic_cast<const CharacterStringValue*>(value.get())) {
-    strm << *value << std::ends;
+    strm << *value;
     str += strm.str();
   }
 }
@@ -1452,7 +1455,7 @@ void ValueRangeConstraintElement::GetConstraint(std::string& str) const
 
   std::stringstream strm;
   Unfreezer unfreezer(strm);
-  strm << *lower << ", " << *upper << std::ends;
+  strm << *lower << ", " << *upper ;
   str += strm.str();
 }
 
@@ -1530,7 +1533,7 @@ void SubTypeConstraintElement::GetConstraint(std::string& str) const
   std::stringstream strm;
   Unfreezer unfreezer(strm);
   strm << str << subtype->GetTypeName() << "::LowerLimit, "
-       << subtype->GetTypeName() << "::UpperLimit" << std::ends;
+       << subtype->GetTypeName() << "::UpperLimit" ;
   str = strm.str();
 }
 
@@ -1847,7 +1850,7 @@ void TypeBase::PrintFinish(std::ostream & strm) const
     strm << " OPTIONAL";
   if (defaultValue.get() != NULL)
     strm << " DEFAULT " << *defaultValue;
-  strm << '\n';
+  strm << endl;
 }
 
 
@@ -2015,7 +2018,7 @@ void TypeBase::BeginGenerateCplusplus(std::ostream & hdr, std::ostream & cxx, st
     hdr << templatePrefix;
   hdr << indent << "class " ;
   hdr << GetIdentifier() << " : public " << GetTypeName() << "\n"
-      << indent << "{" << '\n'
+      << indent << "{" << endl
       << indent << "    typedef " << GetTypeName() << " Inherited;\n";
 
   hdr << indent << "protected:\n"
@@ -2036,7 +2039,7 @@ void TypeBase::EndGenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std:
   hdr << indent << shortClassNameString << " * clone() const";
   if(noInlineFiles)
   {
-    hdr << '\n'
+    hdr << endl
         << indent << "{ return static_cast<"<< shortClassNameString << "*> (Inherited::clone()); }" << "\n";
   }
   else
@@ -2052,7 +2055,7 @@ void TypeBase::EndGenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std:
   hdr << indent << "static bool equal_type(const ASN1::AbstractData& type)";
   if(noInlineFiles)
   {
-    hdr << '\n'
+    hdr << endl
         << indent << "{ return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo); }" << "\n";
   }
   else
@@ -2605,7 +2608,7 @@ TypePtr SelectionType::FlattenThisType(TypePtr& self, const TypeBase & parent)
 
 void SelectionType::GenerateCplusplus(std::ostream &, std::ostream &, std::ostream &)
 {
-  std::cerr << StdError(Fatal) << "Cannot generate code for Selection type" << std::endl;
+  std::cerr << StdError(Fatal) << "Cannot generate code for Selection type" << endl;
   isGenerated = true;
 }
 
@@ -2928,17 +2931,17 @@ EnumeratedType::EnumeratedType(NamedNumberList& enums, bool extend, NamedNumberL
 void EnumeratedType::PrintOn(std::ostream & strm) const
 {
   PrintStart(strm);
-  strm << '\n';
+  strm << endl;
 
   size_t i;
   NamedNumberList::const_iterator itr, last = enumerations.end();
   for (i = 0, itr = enumerations.begin() ; i < numEnums; i++, ++itr)
-    strm << indent() << **itr << '\n';
+    strm << indent() << **itr << endl;
 
   if (extendable) {
     strm << "...\n";
     for (; itr != last; ++itr)
-      strm << indent() << **itr << '\n';
+      strm << indent() << **itr << endl;
   }
   PrintFinish(strm);
 }
@@ -3183,7 +3186,7 @@ void BitStringType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, st
     BeginGenerateCplusplus(hdr, cxx, inl);
 
     // Generate enumerations and complete the constructor implementation
-    hdr << '\n' << indent << "enum NamedBits {\n";
+    hdr << endl << indent << "enum NamedBits {\n";
 
     int prevNum = -1;
 
@@ -3417,7 +3420,7 @@ SequenceType::SequenceType(TypesVector* a_std,
 void SequenceType::PrintOn(std::ostream & strm) const
 {
   PrintStart(strm);
-  strm << '\n';
+  strm << endl;
 
   size_t i;
   for (i = 0; i < numFields; ++i)
@@ -3547,7 +3550,7 @@ void SequenceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std
   hdr << indent << shortClassNameString << " * clone() const";
   if(noInlineFiles)
   {
-    hdr << '\n'
+    hdr << endl
         << indent << "{ return static_cast<"<< shortClassNameString << "*> (Inherited::clone()); }" << "\n";
   }
   else
@@ -3563,10 +3566,9 @@ void SequenceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std
 
   GenerateInfo(this, hdr, cxx);
 
-  decoder << std::ends;
-  if (strlen(decoder.str().c_str()) )
+  if (!decoder.str().empty())
   {
-      hdr << indent << "static ASN1::AbstractData* create(const void*);\n"
+	  hdr << indent << "static ASN1::AbstractData* create(const void*);\n"
           << indent << "bool do_accept(ASN1::Visitor& visitor);\n";
 
       cxx << GetTemplatePrefix()
@@ -3587,12 +3589,12 @@ void SequenceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std
           << "  return false;\n"
           << "}\n\n";
   }
-
+  decoder << ends;
   indent -= 4;
   hdr << indent << "}; // end class " << shortClassNameString << "\n\n";
 
-  tmpcxx << std::ends;
   cxx << tmpcxx.str();
+  tmpcxx << ends;
   isGenerated = true;
 }
 
@@ -3636,8 +3638,8 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
 
   // generate component scope class
 
-  hdr << '\n'
-      << indent << "class " << componentIdentifier << '\n'
+  hdr << endl
+      << indent << "class " << componentIdentifier << endl
       << indent << "{\n"
       << indent << "public:\n";
 
@@ -3688,13 +3690,11 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
 
   std::stringstream varName;
   Unfreezer unfreezer1(varName);
-  varName << "*static_cast<" << typenameKeyword << componentIdentifier << "::pointer>(fields[" << id << "])"
-          << std::ends;
+  varName << "*static_cast<" << typenameKeyword << componentIdentifier << "::pointer>(fields[" << id << "])";
 
   std::stringstream constVarName;
   Unfreezer unfreezer2(constVarName);
-  constVarName << "*static_cast<" << typenameKeyword << componentIdentifier << "::const_pointer>(fields["
-               << id << "])" << std::ends;
+  constVarName << "*static_cast<" << typenameKeyword << componentIdentifier << "::const_pointer>(fields[" << id << "])";
 
   // generate accessor/mutator functions
 
@@ -3740,7 +3740,7 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
     // SUN cannot handle properly this function if inlined
     if(noInlineFiles || templatePrefix.length())
     {
-      hdr << '\n'
+      hdr << endl
           << indent << "{ return " << varName.str() << " = v; }\n";
     }
     else
@@ -3760,7 +3760,7 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
       hdr << indent << typenameKeyword << componentIdentifier << "::const_reference get_" << componentIdentifier << " () const";
       if(noInlineFiles)
       {
-        hdr << '\n'
+        hdr << endl
             << indent << "{\n"
             << indent << "  assert(hasOptionalField(" << enumName <<"));\n"
             << indent << "  return " << constVarName.str() << ";\n"
@@ -3781,7 +3781,7 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
       hdr << indent << typenameKeyword << componentIdentifier << "::reference ref_" << componentIdentifier << " ()";
       if(noInlineFiles)
       {
-        hdr << '\n'
+        hdr << endl
             << indent << "{\n"
             << indent << "  assert(hasOptionalField(" << enumName <<"));\n"
             << indent << "  return " << varName.str() << ";\n"
@@ -3803,7 +3803,7 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
     hdr << indent << typenameKeyword << componentIdentifier << "::reference set_" << componentIdentifier << " ()";
     if(noInlineFiles)
     {
-      hdr << '\n'
+      hdr << endl
           << indent << "{\n"
           << indent << "  includeOptionalField( "<< enumName << ", " << id << ");\n"
           << indent << "  return " << varName.str() << ";\n"
@@ -3827,7 +3827,7 @@ void SequenceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::o
       // SUN cannot handle properly this function if inlined
       if(noInlineFiles || templatePrefix.length())
       {
-        hdr << '\n'
+        hdr << endl
             << indent << "{\n"
             << indent << "  includeOptionalField( "<< enumName << ", " << id << ");\n"
             << indent << "  return " << varName.str() << " = v;\n"
@@ -3900,7 +3900,7 @@ void SequenceType::GenerateForwardDecls(std::ostream & hdr)
   }
 
   if (needExtraLine)
-    hdr << '\n';
+    hdr << endl;
 }
 
 bool SequenceType::ReferencesType(const TypeBase & type) const
@@ -4097,7 +4097,7 @@ void SequenceType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::os
           if (i != fields.size() -1)
               cxx << ",\n";
           else
-              cxx << '\n'
+              cxx << endl
                   << "};\n\n";
       }
   }
@@ -4208,7 +4208,7 @@ void SequenceOfType::PrintOn(std::ostream & strm) const
   if (baseType.get() == NULL)
     strm << "!!Null Type!!\n";
   else
-    strm << *baseType << '\n';
+    strm << *baseType << endl;
   PrintFinish(strm);
 }
 
@@ -4240,7 +4240,7 @@ bool SequenceOfType::IsPrimitiveType() const
 void SequenceOfType::GenerateForwardDecls(std::ostream & hdr)
 {
   if (FwdDeclareMe(hdr))
-    hdr << '\n';
+    hdr << endl;
 }
 
 
@@ -4410,7 +4410,7 @@ void ChoiceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::ost
 
   // generate component scope class
 
-  hdr << '\n' << indent << "class " << componentIdentifier << '\n'
+  hdr << endl << indent << "class " << componentIdentifier << endl
       << indent << "{\n"
       << indent << "public:\n";
 
@@ -4462,7 +4462,7 @@ void ChoiceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::ost
     hdr << indent << typenameKeyword << componentIdentifier << "::const_reference get_" << componentName << " () const";
     if(noInlineFiles)
     {
-      hdr << '\n'
+      hdr << endl
           << indent << "{\n"
           << indent << "    assert(currentSelection() == " << componentIdentifier << "::eid);\n"
           << indent << "    return *static_cast<" << typenameKeyword  << componentIdentifier << "::const_pointer>(choice.get());\n"
@@ -4483,7 +4483,7 @@ void ChoiceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::ost
     hdr << indent << typenameKeyword << componentIdentifier << "::reference ref_" << componentName << " ()";
     if(noInlineFiles)
     {
-      hdr << '\n'
+      hdr << endl
           << indent << "{\n"
           << indent << "    assert(currentSelection() == " << componentIdentifier << "::eid);\n"
           << indent << "    return *static_cast<" << typenameKeyword << componentIdentifier << "::pointer>(choice.get());\n"
@@ -4505,7 +4505,7 @@ void ChoiceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::ost
   hdr << indent << typenameKeyword << componentIdentifier << "::reference select_" << componentName << " ()";
   if(noInlineFiles)
   {
-    hdr << '\n'
+    hdr << endl
         << indent << "{\n"
         << indent << "    return *static_cast<" << typenameKeyword << componentIdentifier << "::pointer>(setSelection(" << componentIdentifier << "::eid, ASN1::AbstractData::create( &" <<  componentIdentifier << "::value_type::theInfo)));\n"
         << indent << "}\n";
@@ -4564,7 +4564,7 @@ void ChoiceType::GenerateComponent(TypeBase& field, std::ostream & hdr, std::ost
   hdr << primitiveFieldType << " v)";
   if(noInlineFiles)
   {
-    hdr << '\n'
+    hdr << endl
         << indent << "   : Inherited(&theInfo, id, new "  << typenameKeyword << componentIdentifier << "::value_type(v))"
         << " {}\n";
   }
@@ -4609,8 +4609,8 @@ void ChoiceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std::
   hdr << indent << "enum Choice_Ids {";
   indent += 2;
 
-  hdr << '\n' << indent << "unknownSelection_ = -2,"
-      << '\n' << indent << "unselected_ = -1";
+  hdr << endl << indent << "unknownSelection_ = -2,"
+      << endl << indent << "unselected_ = -1";
 
   for(i = 0; i < nFields; ++i) {
     const std::string& sfIdentifier = sortedFields[i]->GetIdentifier();
@@ -4621,7 +4621,7 @@ void ChoiceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std::
   }
   indent -= 2;
 
-  hdr << '\n' << indent << "};\n";
+  hdr << endl << indent << "};\n";
 
   // Generate code for type safe cast operators of selected choice object
   bool needExtraLine = false;
@@ -4634,7 +4634,7 @@ void ChoiceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std::
   }
 
   if (needExtraLine)
-    hdr << '\n';
+    hdr << endl;
 
   hdr.precision(hdr.precision()-4);
 
@@ -4645,8 +4645,8 @@ void ChoiceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std::
     typenameKeyword = "typename ";
 
   EndGenerateCplusplus(hdr, cxx, inl);
-  tmpcxx << std::ends;
   cxx << tmpcxx.str();
+  tmpcxx << ends;
 
   isGenerated = true;
 }
@@ -4753,7 +4753,7 @@ void ChoiceType::GenerateInfo(const TypeBase* type,std::ostream& hdr, std::ostre
               if (i != nFields-1)
                   cxx << ",\n";
               else
-                  cxx << '\n';
+                  cxx << endl;
           }
           cxx << "};\n\n";
       }
@@ -5688,18 +5688,18 @@ void ValueBase::SetValueName(const std::string& name)
 void ValueBase::PrintBase(std::ostream & strm) const
 {
   if (!valueName.empty())
-    strm << '\n' << indent() << valueName << " ::= ";
+    strm << endl << indent() << valueName << " ::= ";
 }
 
 
 void ValueBase::GenerateCplusplus(std::ostream &, std::ostream &, std::ostream &) const
 {
-  std::cerr << StdError(Warning) << "unsupported value type." << std::endl;
+  std::cerr << StdError(Warning) << "unsupported value type." << endl;
 }
 
 void ValueBase::GenerateConst(std::ostream &, std::ostream &) const
 {
-  std::cerr << StdError(Warning) << "unsupported const value type." << std::endl;
+  std::cerr << StdError(Warning) << "unsupported const value type." << endl;
 }
 
 /////////////////////////////////////////////////////////
@@ -5970,7 +5970,7 @@ void ObjectIdentifierValue::PrintOn(std::ostream & strm) const
     for (size_t i = 1; i < value.size(); i++)
       strm << '.' << value[i];
   }
-  strm << '\n';
+  strm << endl;
 }
 
 
@@ -6068,7 +6068,7 @@ void ImportModule::PrintOn(std::ostream & strm) const
   strm << "  " << fullModuleName << " (" << shortModuleName << "):\n";
   for (size_t i = 0; i < symbols.size(); i++)
     strm << "    " << *symbols[i];
-  strm << '\n';
+  strm << endl;
 }
 
 
@@ -6248,7 +6248,7 @@ void ModuleDefinition::PrintOn(std::ostream & strm) const
     strm << "\n  ";
     for (size_t i = 0; i < exports.size(); i++)
       strm << *exports[i] << ' ';
-    strm << '\n';
+    strm << endl;
   }
 
   strm << "Imports:\n" << imports << "\n"
@@ -6334,7 +6334,7 @@ bool ModuleDefinition::ReorderTypes()
       if (loopDetect > rtypes.size()) {
         std::cerr << StdError(Fatal)
                   << "Recursive type definition: " << bubbleType->GetName()
-                  << " references " << (*itr)->GetName() <<std::endl;
+                  << " references " << (*itr)->GetName() <<endl;
         break;
       }
 
@@ -6385,7 +6385,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
   }
 
   if (verbose)
-    std::cout << "Sorting " << types.size() << " types..." << std::endl;
+    std::cout << "Sorting " << types.size() << " types..." << endl;
 
   bool hasTemplates = ReorderTypes();
 
@@ -6395,7 +6395,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 
   // Generate the code
   if (verbose)
-    std::cout << "Generating code (" << types.size() << " classes) ..." << std::endl;
+    std::cout << "Generating code (" << types.size() << " classes) ..." << endl;
 
 
   // Output the special template closure file, if necessary
@@ -6419,7 +6419,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
     templateFile << "} // namespace " << cModuleName << "\n\n";
 
     if (verbose)
-      std::cout << "Completed " << templateFile.GetFilePath() << std::endl;
+      std::cout << "Completed " << templateFile.GetFilePath() << endl;
 
     templateFilename = ::GetFileName(dpath) + "_t" + cppExt;//templateFile.GetFilePath().GetFileName();
   }
@@ -6456,9 +6456,9 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
     std::string headerName = ::GetFileName(dpath) + ".h";
 
     if (includeConfigH)
-       cxxFile << "#ifdef HAVE_CONFIG_H\n"
-                  "#include <config.h>\n"
-                  "#endif\n\n";
+       cxxFile << "#ifdef HAVE_CONFIG_H" << endl
+               << "#include <config.h>" << endl
+               << "#endif\n\n";
 
    // if this define is generated - do_accept() in cxx file does not find inline function
 //    cxxFile << "#define " << cModuleName << "_CXX\n";
@@ -6482,13 +6482,13 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 
      if (dllMacroDLL.size() > 0)
      {
-        hdrFile << '\n'
-                << "#ifndef " << dllMacroExport << '\n'
+        hdrFile << endl
+                << "#ifndef " << dllMacroExport << endl
                 << "#if defined( " << dllMacroDLL << ") && defined(_MSC_VER)\n"
                 << "#define " << dllMacroExport << " __declspec(dllimport)\n"
                 << "#else\n"
-                << "#define " << dllMacroExport << '\n'
-                << "#endif // " << dllMacroDLL << '\n'
+                << "#define " << dllMacroExport << endl
+                << "#endif // " << dllMacroDLL << endl
                 << "#endif // " << dllMacroExport << "\n\n";
      }
 
@@ -6498,8 +6498,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
                                  _1,
                                  boost::ref(hdrFile)));
 
-    cxxFile << "namespace " << cModuleName << "{\n"
-               "\n";
+    cxxFile << "namespace " << cModuleName << "{\n\n";
 
     for(i = 0; i < values.size(); i++)
       values[i]->GenerateConst(hdrFile, cxxFile);
@@ -6512,11 +6511,11 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
         classesCount = i/classesPerFile+1;
 
         if (verbose)
-          std::cout << "Completed " << cxxFile.GetFilePath() << std::endl;
+          std::cout << "Completed " << cxxFile.GetFilePath() << endl;
 
         std::stringstream suffix;
         Unfreezer unfreezer(suffix);
-        suffix << '_' << i/classesPerFile+1 << std::ends;
+        suffix << '_' << i/classesPerFile+1;
 
         if (!cxxFile.Open(dpath, suffix.str().c_str(), cppExt))
         {
@@ -6553,7 +6552,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
                    "\n";
       }
 
-      std::cerr << "Generating " << types[i]->GetName() << std::endl;
+      std::cerr << "Generating " << types[i]->GetName() << endl;
 
       if (types[i]->HasParameters()) {
         std::stringstream dummy;
@@ -6579,8 +6578,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
     //if (useNamespaces)
     cxxFile << "} // namespace " << cModuleName << "\n";
 
-    inl << std::ends;
-    if (strlen(inl.str().c_str()))
+    if (!inl.str().empty())
     {
       OutputFile inlFile;
       if (!inlFile.Open(dpath, "", ".inl"))
@@ -6612,15 +6610,14 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
       hdrFile << "#include \"" << ::GetFileName(dpath) + ".inl"//inlFile.GetFilePath().GetFileName()
               << "\"\n\n";
     }
+	inl << ends;
 
     // Close off the files
-    hdrFile << "} // namespace " << cModuleName
-            << "\n\n";
-
+    hdrFile << "} // namespace " << cModuleName << "\n\n";
     hdrFile << "#endif // __" << ToUpper(GetFileName()) << "_H\n";
 
     if (verbose)
-      std::cout << "Completed " << cxxFile.GetFilePath() << std::endl;
+      std::cout << "Completed " << cxxFile.GetFilePath() << endl;
   }
 }
 
@@ -6662,8 +6659,7 @@ void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& 
     }
   }
 
-  tmphdr << std::ends;
-  if (strlen(tmphdr.str().c_str()))
+  if (!tmphdr.str().empty())
   {
     hdrFile << "class Module : public ASN1::Module\n"
             << "{\n"
@@ -6683,6 +6679,7 @@ void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& 
     hdrFile << ");\n";
 
     hdrFile << tmphdr.str();
+	tmphdr << ends;
 
     hdrFile << "private:\n";
     for (i = 0 ; i < informationObjects.size(); ++i)
@@ -6702,12 +6699,12 @@ void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& 
 
     hdrFile << "}; // class Module\n\n";
 
-    tmpcxx << std::ends;
     cxxFile << "#ifdef _MSC_VER\n"
             << "#pragma warning(disable: 4355)\n"
             << "#endif\n\n"
             << tmpcxx.str()
             << "Module::Module(";
+    tmpcxx << ends;
 
     for (i = 0, needComma = false; i < imports.size(); ++i)
       if (imports[i]->HasValuesOrObjects())
@@ -6956,8 +6953,8 @@ std::string ModuleDefinition::CreateSubModules(SymbolList& exportedSymbols)
   else
   {
     std::cerr << "Unexpected Situation, Do not use selective imports option\n";
-    std::cerr << "unresolved imported types (" << exportedTypes.size() << ") :" << exportedTypes << '\n';
-    std::cerr << subModule->imports.size() << '\n';
+    std::cerr << "unresolved imported types (" << exportedTypes.size() << ") :" << exportedTypes << endl;
+    std::cerr << subModule->imports.size() << endl;
     exit(1);
     //return "";
   }
@@ -7196,8 +7193,7 @@ void TypeFieldSpec::Generate_info_type_constructor(std::ostream& cxx) const
 void TypeFieldSpec::Generate_info_type_memfun(std::ostream& hdr) const
 {
   Indent indent(hdr.precision()+4);
-  hdr << indent << "ASN1::AbstractData* get_" << GetIdentifier()
-      << "() const { return ";
+  hdr << indent << "ASN1::AbstractData* get_" << GetIdentifier() << "() const { return ";
 
   if (!type.get())
     hdr << "m_" << GetIdentifier() << " ? ASN1::AbstractData::create(m_"
@@ -7426,7 +7422,7 @@ TypePtr GetFieldType(FieldSettingList* parsedFields, const std::string& fieldnam
     }
   }
 
-  std::cerr << StdError(Fatal) << "Invalid Object Field : "<< fieldname << '\n';
+  std::cerr << StdError(Fatal) << "Invalid Object Field : "<< fieldname << endl;
   return TypePtr();
 }
 
@@ -7445,7 +7441,7 @@ void VariableTypeValueFieldSpec::EstablishFieldRelation(FieldSpecsList* specs)
     }
   }
 
-  std::cerr << StdError(Fatal) << "Invalid Object Class Definition at Field : "<< fieldName << '\n';
+  std::cerr << StdError(Fatal) << "Invalid Object Class Definition at Field : "<< fieldName << endl;
 }
 
 void VariableTypeValueFieldSpec::BeginParseSetting(FieldSettingList* parsedFields) const
@@ -7513,7 +7509,7 @@ void VariableTypeValueSetFieldSpec::EstablishFieldRelation(FieldSpecsList* specs
     }
   }
 
-  std::cerr << StdError(Fatal) << "Invalid Object Class Definition at Field : "<< fieldName << '\n';
+  std::cerr << StdError(Fatal) << "Invalid Object Class Definition at Field : "<< fieldName << endl;
 }
 
 void VariableTypeValueSetFieldSpec::BeginParseSetting(FieldSettingList* parsedFields) const
@@ -7665,7 +7661,7 @@ void ObjectSetFieldSpec::FwdDeclare(std::ostream& hdr) const
   }
 
   hdr << "class " << MakeIdentifierC(objectClass->GetName()) << ";\n"
-      << '\n';
+      << endl;
 }
 
 void ObjectSetFieldSpec::Generate_info_type_constructor(std::ostream& cxx) const
@@ -7807,7 +7803,7 @@ bool ObjectClassDefn::VerifyDefaultSyntax(FieldSettingList* fieldSettings) const
     else
     {
       std::cerr << StdError(Fatal) << "Unrecognized field name : "
-                << (*fieldSettings)[settingIndex]->GetName() <<  '\n';
+                << (*fieldSettings)[settingIndex]->GetName() <<  endl;
       exit(1);
     }
   }
@@ -7866,7 +7862,7 @@ void ObjectClassDefn::PrintOn(std::ostream& strm) const
     strm << '\t' << *(*fieldSpecs)[i];
     if (i != fieldSpecs->size()-1)
       strm << ',';
-    strm << '\n';
+    strm << endl;
   }
   strm << "}\n";
   if (withSyntaxSpec.get())
@@ -7908,8 +7904,8 @@ void ObjectClassDefn::GenerateCplusplus(std::ostream& hdr, std::ostream& cxx, st
     std::stringstream strm;
     Unfreezer unfreezer(strm);
     (*fieldSpecs)[i]->FwdDeclare(strm);
-    strm << std::ends;
     std::string str = strm.str();
+    strm << ends;
     if (str.find(GetName()) != -1)
       continue;
     hdr << str;
@@ -8174,9 +8170,9 @@ const TypeBase* DefinedObjectClass::GetFieldType(const std::string& fieldName) c
 void Literal::PrintOn(std::ostream & strm) const
 {
   strm << name;
-  // use skipws flag to indicate whether to output '\n' or not
+  // use skipws flag to indicate whether to output endl or not
   if (((strm.flags() & std::ios::skipws) == 0) && name == ",")
-     strm << '\n';
+     strm << endl;
 }
 
 
@@ -8194,9 +8190,9 @@ TokenOrGroupSpec::MakeDefaultSyntaxResult  Literal::MakeDefaultSyntax(DefinedSyn
 void PrimitiveFieldName::PrintOn(std::ostream & strm) const
 {
   strm << name;
-  // use skipws flag to indicate whether to output '\n' or not
+  // use skipws flag to indicate whether to output endl or not
   if ((strm.flags() & std::ios::skipws) == 0)
-      strm  << '\n';
+      strm  << endl;
 }
 
 bool PrimitiveFieldName::ValidateField(FieldSpecsList* fields)
@@ -8242,7 +8238,7 @@ void TokenGroup::PrintOn(std::ostream & strm) const
   if (optional)
   {
     strm << "[" ;
-    strm.setf(std::ios::skipws);     // use skipws flag to indicate not to output '\n' for PrimitiveField or ','
+    strm.setf(std::ios::skipws);     // use skipws flag to indicate not to output endl for PrimitiveField or ','
   }
 
   for (size_t i = 0; i < tokenOrGroupSpecList.size(); ++i)
@@ -8370,9 +8366,9 @@ void FieldSetting::GenerateInitializationList(std::ostream & hdr, std::ostream &
   std::stringstream tmp;
   Unfreezer unfreezer(tmp);
   setting->GenerateInitializationList(hdr, tmp, inl);
-  tmp << std::ends;
-  if (strlen(tmp.str().c_str())) {
-        cxx << identifier << "(" << tmp.str() << ")";
+  if (!tmp.str().empty()) {
+     cxx << identifier << "(" << tmp.str() << ")";
+     tmp << ends;
   }
 }
 
@@ -8470,7 +8466,7 @@ const Setting* DefinedObject::GetSetting(const std::string& fieldname) const
 void DefinedObject::PrintOn(std::ostream & strm) const
 {
     PrintBase(strm);
-    strm << referenceName << '\n';
+    strm << referenceName << endl;
 }
 
 void DefinedObject::GenerateInstanceCode(std::ostream& cxx) const
@@ -8518,7 +8514,7 @@ void DefaultObjectDefn::PrintOn(std::ostream & strm) const
     PrintBase(strm);
     strm << "{\n";
     for (size_t i = 0; i < settings->size(); ++i)
-        strm << '\t' << *(*settings)[i] << '\n';
+        strm << '\t' << *(*settings)[i] << endl;
     strm << "}\n";
 }
 
@@ -8536,8 +8532,7 @@ void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx
     (*settings)[i]->GenerateCplusplus(prefix, tmphdr, cxx, inl, flags);
 
 
-  tmphdr << std::ends;
-  if (strlen(tmphdr.str().c_str()))
+  if (!tmphdr.str().empty())
   {
     int has_type_setting = (flags & Setting::has_type_setting);
     int has_objectSet_setting = (flags & Setting::has_objectSet_setting);
@@ -8545,7 +8540,7 @@ void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx
     const std::string &className = MakeIdentifierC(referenceClass->GetName());
 
     std::string keyName = referenceClass->GetKeyName().substr(1);
-    hdr << "    class " << name << '\n'
+    hdr << "    class " << name << endl
         << "    {\n"
         << "    public:\n"
         << "        " << name << "();\n"
@@ -8553,6 +8548,7 @@ void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx
         << "        " << className << "::value_type make() const\n"
            "        { return " << className << "::value_type(" << keyName << ",&info ); }\n"
            "    private:\n";
+    tmphdr << ends;
 
     if (has_type_setting || has_objectSet_setting)
     {
@@ -8587,8 +8583,7 @@ void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx
       std::stringstream tmp;
       Unfreezer unfreezer(tmp);
       (*settings)[i]->GenerateInitializationList(hdr, tmp, inl);
-      tmp << std::ends;
-      if (strlen(tmp.str().c_str()))
+      if (!tmp.str().empty())
       {
         if (!hasInitizationList)
           cxx << "\n  : " << tmp.str();
@@ -8597,6 +8592,7 @@ void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx
           cxx << ", " << tmp.str();
           hasInitizationList = true;
         }
+        tmp << ends;
       }
     }
 
@@ -8935,10 +8931,10 @@ bool InformationObjectSetDefn::GenerateTypeConstructor(std::ostream& cxx) const
   std::stringstream tmp;
   Unfreezer unfreezer(tmp);
   rep->GenerateObjSetAccessCode(tmp);
-  tmp << std::ends;
-  if (strlen(tmp.str().c_str()))
+  if (!tmp.str().empty())
   {
     cxx << tmp.str();
+    tmp << ends;
     return true;
   }
 
@@ -9032,7 +9028,7 @@ std::string ParameterizedObjectSet::GetName() const
 {
   std::stringstream strm;
   Unfreezer unfreezer(strm);
-  strm << referenceName << *arguments << std::ends;
+  strm << referenceName << *arguments;
   return std::string(strm.str());
 }
 
