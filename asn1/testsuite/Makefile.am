@@ -38,6 +38,7 @@ asn1test_SOURCES = $(BUILT_SOURCES) asn1test.cpp
 
 $(BUILT_SOURCES) : test1.asn
 	@ASNPARSER@ -v -c $(srcdir)/test1.asn
+	@ASNPARSER@ -v -c -o cxx $(srcdir)/test1.asn
 
 DISTFILES = $(DIST_COMMON) $(EXTRA_DIST) asn1test.h asn1test.cpp
 
