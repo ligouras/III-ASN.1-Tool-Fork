@@ -153,6 +153,7 @@ hs_err_pid*
 
 # ASN.1 generated files # 
 ########################
+**/csn/
 **/cxx/
 *.def
 /ipch
