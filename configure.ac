@@ -36,6 +36,7 @@ dnl RANLIB LDFLAGS CFLAGS CXXFLAGS CPPFLAGS from that file, otherwise
 dnl use AC_PROG_CXX and AC_PROG_RANLIB to find a suitable setting.
 dnl
 
+AC_PROG_RANLIB
 
 III_CROSS_TOOLS
 
