@@ -266,6 +266,16 @@ AC_SUBST(ASNPARSER)
 dnl
 dnl 
 dnl 
+AC_ARG_ENABLE(shared,
+[  --enable-shared     Turn on -fPIC],
+[shared="${enableval}"],[shared=no])
+
+
+if test "x${shared}" = xyes ; then
+CXXFLAGS="${CXXFLAGS} -fPIC"
+else
+CXXFLAGS="${CXXFLAGS} -fPIC"
+fi
 
 AC_ARG_ENABLE(optimizations,
 [  --enable-optimizations     Turn on optimizations],
@@ -273,9 +283,9 @@ AC_ARG_ENABLE(optimizations,
 
 
 if test "x${optimizations}" = xyes ; then
-CXXFLAGS="-O2"
+CXXFLAGS="${CXXFLAGS} -O2"
 else
-CXXFLAGS="-O0"
+CXXFLAGS="${CXXFLAGS} -O0"
 fi
 
 AC_ARG_ENABLE(debug,
