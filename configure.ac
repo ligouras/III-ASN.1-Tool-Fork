@@ -267,13 +267,24 @@ dnl
 dnl 
 dnl 
 
+AC_ARG_ENABLE(optimizations,
+[  --enable-optimizations     Turn on optimizations],
+[optimizations="${enableval}"],[optimizations=no])
+
+
+if test "x${optimizations}" = xyes ; then
+CXXFLAGS="-O2"
+else
+CXXFLAGS="-O0"
+fi
+
 AC_ARG_ENABLE(debug,
 [  --enable-debug     Turn on debugging],
 [debug="${enableval}"],[debug=no])
 
 
 if test "x${debug}" = xyes ; then
-CXXFLAGS="-g"
+CXXFLAGS="${CXXFLAGS} -g -ggdb"
 DEBUGFLAG="-D_DEBUG"
 else
 DEBUGFLAG="-DNDEBUG"
