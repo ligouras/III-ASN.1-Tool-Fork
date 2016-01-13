@@ -274,7 +274,7 @@ AC_ARG_ENABLE(shared,
 if test "x${shared}" = xyes ; then
 CXXFLAGS="${CXXFLAGS} -fPIC"
 else
-CXXFLAGS="${CXXFLAGS} -fPIC"
+CXXFLAGS="${CXXFLAGS}"
 fi
 
 AC_ARG_ENABLE(optimizations,
