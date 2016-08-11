@@ -20,12 +20,10 @@ dnl ASN.1 types. For details, see the III ASN.1 Tool World-Wide-Web page,
 dnl `http://iiiasn1.sourceforge.net'.
 dnl
 
-AC_INIT
-
+AC_INIT([iiiasn1], [2_12])
+AC_CONFIG_SRCDIR([asn1/asn1.h])
 AC_CONFIG_AUX_DIR(config)
-
-AC_CANONICAL_SYSTEM
-AM_INIT_AUTOMAKE(iiiasn1, 2_12)
+AM_INIT_AUTOMAKE
 
 dnl 
 dnl Choose the correct C++ compiler tool setting.
